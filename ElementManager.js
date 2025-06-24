@@ -141,6 +141,29 @@ class ElementManager {
         const mesh = this.beamObjects.get(elementId);
         if (!element || !mesh || element.kind !== 'beam') return;
 
+        // If the element is a child of a group, calculate and store the offset
+        if (element.parentId) {
+            const parent = this.getElement(element.parentId);
+            if (parent && parent.type === 'goalpost') {
+                const idealPosition = new THREE.Vector3();
+                const col1_base = new THREE.Vector3(...parent.start);
+                const col2_base = new THREE.Vector3(...parent.end);
+
+                if (element.id === parent.children[0]) { // Column 1
+                    idealPosition.copy(pointType === 'start' ? col1_base : col1_base.clone().add(new THREE.Vector3(0, parent.height, 0)));
+                } else if (element.id === parent.children[1]) { // Column 2
+                    idealPosition.copy(pointType === 'start' ? col2_base : col2_base.clone().add(new THREE.Vector3(0, parent.height, 0)));
+                } else if (element.id === parent.children[2]) { // Beam
+                    const beamStartIdeal = col1_base.clone().add(new THREE.Vector3(0, parent.height, 0));
+                    const beamEndIdeal = col2_base.clone().add(new THREE.Vector3(0, parent.height, 0));
+                    idealPosition.copy(pointType === 'start' ? beamStartIdeal : beamEndIdeal);
+                }
+                
+                const offset = newPosition.clone().sub(idealPosition);
+                element[pointType + 'Offset'] = offset.toArray();
+            }
+        }
+
         // Update the data
         element[pointType] = [newPosition.x, newPosition.y, newPosition.z];
 
@@ -158,6 +181,17 @@ class ElementManager {
         GeometryUtils.positionBeam(mesh, start, end, element);
     }
 
+    updateGroupPoints(elementId, pointType, newPosition) {
+        const group = this.getElement(elementId);
+        if (!group || group.kind !== 'group') return;
+
+        group[pointType] = [newPosition.x, newPosition.y, newPosition.z];
+
+        if (group.type === 'goalpost') {
+            this.updateGoalPostChildren(group.id);
+        }
+    }
+
     addNewBeam(start, end, profile, material, orientation) {
         const newId = `element-${this.nextElementId++}`;
 
@@ -169,7 +203,9 @@ class ElementManager {
             start: [start.x, start.y, start.z],
             end: [end.x, end.y, end.z],
             orientation: orientation,
-            operationIds: []
+            operationIds: [],
+            startOffset: [0, 0, 0],
+            endOffset: [0, 0, 0]
         };
 
         this.structureData.elements.push(newElement);
@@ -178,6 +214,79 @@ class ElementManager {
         
         console.log('New beam added:', newElement);
         return newElement;
+    }
+
+    addNewColumn(basePoint, params) {
+        const newId = `element-${this.nextElementId++}`;
+        const start = basePoint;
+        const end = basePoint.clone().add(new THREE.Vector3(0, params.height, 0));
+
+        const newElement = {
+            id: newId,
+            kind: 'beam',
+            profile: params.profile,
+            material: params.material,
+            start: [start.x, start.y, start.z],
+            end: [end.x, end.y, end.z],
+            orientation: 0,
+            operationIds: []
+        };
+
+        this.structureData.elements.push(newElement);
+        this.createBeam(newElement);
+        this.viewer.uiManager.addElementToList(newElement);
+        
+        console.log('New column added:', newElement);
+        return newElement;
+    }
+
+    addNewGoalPost(p1, p2, params) {
+        // Create the main group element
+        const goalPostId = `group-${this.nextElementId++}`;
+        const goalPostElement = {
+            id: goalPostId,
+            kind: 'group',
+            type: 'goalpost',
+            start: [p1.x, p1.y, p1.z],
+            end: [p2.x, p2.y, p2.z],
+            children: [],
+            ...params
+        };
+
+        // Create child elements
+        const column1 = this.addNewColumn(p1, {
+            height: params.height,
+            profile: params.columnProfile,
+            material: params.material
+        });
+        const column2 = this.addNewColumn(p2, {
+            height: params.height,
+            profile: params.columnProfile,
+            material: params.material
+        });
+
+        const beamStart = p1.clone().add(new THREE.Vector3(0, params.height, 0));
+        const beamEnd = p2.clone().add(new THREE.Vector3(0, params.height, 0));
+        const beam = this.addNewBeam(
+            beamStart,
+            beamEnd,
+            params.beamProfile,
+            params.material,
+            0
+        );
+        
+        // Link children to parent
+        column1.parentId = goalPostId;
+        column2.parentId = goalPostId;
+        beam.parentId = goalPostId;
+        
+        goalPostElement.children = [column1.id, column2.id, beam.id];
+
+        this.structureData.elements.push(goalPostElement);
+        this.viewer.uiManager.addElementToList(goalPostElement);
+        
+        console.log('New goalpost added:', goalPostElement);
+        return goalPostElement;
     }
 
     addNewPlate() {
@@ -216,6 +325,8 @@ class ElementManager {
             this.createBeam(element);
         } else if (element.kind === 'plate') {
             this.createPlate(element);
+        } else if (element.kind === 'group' && element.type === 'goalpost') {
+            this.updateGoalPostChildren(element.id);
         }
 
         console.log('Element updated:', element);
@@ -230,6 +341,11 @@ class ElementManager {
             // Remove from data
             const elementIndex = this.structureData.elements.findIndex(el => el.id === elementId);
             if (elementIndex !== -1) {
+                const element = this.structureData.elements[elementIndex];
+                // If it's a group, delete its children as well
+                if (element.kind === 'group' && element.children) {
+                    this.deleteElements(element.children);
+                }
                 this.structureData.elements.splice(elementIndex, 1);
             }
         });
@@ -340,5 +456,55 @@ class ElementManager {
 
     getElementMeshById(elementId) {
         return this.beamObjects.get(elementId);
+    }
+
+    updateGoalPostChildren(groupId) {
+        const group = this.getElement(groupId);
+        if (!group || group.type !== 'goalpost') return;
+
+        const [col1Id, col2Id, beamId] = group.children;
+        const col1 = this.getElement(col1Id);
+        const col2 = this.getElement(col2Id);
+        const beam = this.getElement(beamId);
+
+        const groupStart = new THREE.Vector3(...group.start);
+        const groupEnd = new THREE.Vector3(...group.end);
+        const height = group.height;
+
+        // Update Column 1
+        const col1IdealStart = groupStart.clone();
+        const col1IdealEnd = groupStart.clone().add(new THREE.Vector3(0, height, 0));
+        const col1StartOffset = new THREE.Vector3(...(col1.startOffset || [0,0,0]));
+        const col1EndOffset = new THREE.Vector3(...(col1.endOffset || [0,0,0]));
+        this.updateElement(col1Id, {
+            start: col1IdealStart.add(col1StartOffset).toArray(),
+            end: col1IdealEnd.add(col1EndOffset).toArray(),
+            profile: group.columnProfile,
+            material: group.material
+        });
+        
+        // Update Column 2
+        const col2IdealStart = groupEnd.clone();
+        const col2IdealEnd = groupEnd.clone().add(new THREE.Vector3(0, height, 0));
+        const col2StartOffset = new THREE.Vector3(...(col2.startOffset || [0,0,0]));
+        const col2EndOffset = new THREE.Vector3(...(col2.endOffset || [0,0,0]));
+        this.updateElement(col2Id, {
+            start: col2IdealStart.add(col2StartOffset).toArray(),
+            end: col2IdealEnd.add(col2EndOffset).toArray(),
+            profile: group.columnProfile,
+            material: group.material
+        });
+
+        // Update Beam
+        const beamIdealStart = groupStart.clone().add(new THREE.Vector3(0, height, 0));
+        const beamIdealEnd = groupEnd.clone().add(new THREE.Vector3(0, height, 0));
+        const beamStartOffset = new THREE.Vector3(...(beam.startOffset || [0,0,0]));
+        const beamEndOffset = new THREE.Vector3(...(beam.endOffset || [0,0,0]));
+        this.updateElement(beamId, {
+            start: beamIdealStart.add(beamStartOffset).toArray(),
+            end: beamIdealEnd.add(beamEndOffset).toArray(),
+            profile: group.beamProfile,
+            material: group.material
+        });
     }
 } 

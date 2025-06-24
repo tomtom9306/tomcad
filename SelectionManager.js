@@ -127,10 +127,18 @@ class SelectionManager {
             
             if (intersects.length > 0) {
                 const elementId = intersects[0].object.userData.elementId;
+                const element = this.elementManager.getElement(elementId);
+                
+                let idToSelect = elementId;
+                // If the element has a parent and Alt key is NOT pressed, select the parent group
+                if (element && element.parentId && !event.altKey) {
+                    idToSelect = element.parentId;
+                }
+
                 if (event.ctrlKey) {
-                    this.toggleSelection(elementId);
+                    this.toggleSelection(idToSelect);
                 } else {
-                    this.setSelection([elementId]);
+                    this.setSelection([idToSelect]);
                 }
             } else {
                 this.clearSelection();
@@ -219,22 +227,40 @@ class SelectionManager {
         // Clear existing control points before redrawing anything
         this.clearControlPoints();
 
+        // Collect all element IDs that should be highlighted
+        const highlightedIds = new Set();
+        this.selectedElements.forEach(id => {
+            const element = this.elementManager.getElement(id);
+            if (element && element.kind === 'group') {
+                element.children.forEach(childId => highlightedIds.add(childId));
+            } else {
+                highlightedIds.add(id);
+            }
+        });
+
         // Update 3D objects
         this.beamObjects.forEach((mesh, id) => {
-            const isSelected = this.selectedElements.includes(id);
-            if (isSelected) {
+            const isHighlighted = highlightedIds.has(id);
+            if (isHighlighted) {
                 mesh.material.color.setHex(0xff4444);
                 mesh.material.opacity = 1.0;
-                
-                // Create control points for selected elements
-                const elementData = this.elementManager.getElement(id);
-                if (elementData && elementData.kind === 'beam') {
-                    this.createControlPoint(elementData, 'start');
-                    this.createControlPoint(elementData, 'end');
-                }
             } else {
                 if (mesh.userData.originalMaterial) {
                     mesh.material.copy(mesh.userData.originalMaterial);
+                }
+            }
+        });
+
+        // Create control points for the actual selected elements
+        this.selectedElements.forEach(id => {
+            const elementData = this.elementManager.getElement(id);
+            if (elementData) {
+                if (elementData.kind === 'beam') {
+                    this.createControlPoint(elementData, 'start');
+                    this.createControlPoint(elementData, 'end');
+                } else if (elementData.kind === 'group' && elementData.type === 'goalpost') {
+                    this.createControlPoint(elementData, 'start');
+                    this.createControlPoint(elementData, 'end');
                 }
             }
         });
@@ -281,10 +307,11 @@ class SelectionManager {
     initDragControls() {
         if (this.controlPoints.length > 0) {
             this.dragControls = new THREE.DragControls(this.controlPoints, this.camera, this.renderer.domElement);
+            
             this.dragControls.addEventListener('dragstart', (event) => {
+                this.isDraggingControlPoint = true;
                 this.cameraControls.enabled = false;
                 event.object.material.color.setHex(0x00ff00);
-                this.isDraggingControlPoint = true;
 
                 // Axis snap
                 const element = this.elementManager.getElement(event.object.userData.elementId);
@@ -297,24 +324,31 @@ class SelectionManager {
 
             this.dragControls.addEventListener('drag', (event) => {
                 const draggedPoint = event.object;
-                const elementId = draggedPoint.userData.elementId;
-                const pointType = draggedPoint.userData.pointType;
-                const mouse = event.mouse;
-            
+                const { elementId, pointType } = draggedPoint.userData;
+                const element = this.elementManager.getElement(elementId);
+                
+                // Find snap point
                 const raycaster = new THREE.Raycaster();
+                const mouse = new THREE.Vector2(
+                    (event.clientX / this.renderer.domElement.clientWidth) * 2 - 1,
+                    -(event.clientY / this.renderer.domElement.clientHeight) * 2 + 1
+                );
                 raycaster.setFromCamera(mouse, this.camera);
-            
                 const snapPoint = this.snapManager.findSnapPoint(raycaster, mouse, elementId);
 
                 if (snapPoint) {
                     draggedPoint.position.copy(snapPoint);
                 }
-            
-                // Update the actual beam element
-                this.elementManager.updateElementPoint(elementId, pointType, draggedPoint.position);
+                
+                // Update element
+                if (element.kind === 'group') {
+                    this.elementManager.updateGroupPoints(elementId, pointType, draggedPoint.position);
+                } else {
+                    this.elementManager.updateElementPoint(elementId, pointType, draggedPoint.position);
+                }
 
                 // Update tooltip position
-                const snapTooltip = this.snapManager.snapTooltip; // Access from snapManager
+                const snapTooltip = this.snapManager.snapTooltip;
                 if (snapTooltip && snapTooltip.style.display === 'block') {
                     snapTooltip.style.left = `${event.clientX + 15}px`;
                     snapTooltip.style.top = `${event.clientY + 15}px`;
@@ -322,10 +356,20 @@ class SelectionManager {
             });
 
             this.dragControls.addEventListener('dragend', (event) => {
+                this.isDraggingControlPoint = false;
                 this.cameraControls.enabled = true;
                 event.object.material.color.setHex(0xffff00);
-                this.isDraggingControlPoint = false;
                 
+                // Final update after dragging ends
+                const { elementId, pointType } = event.object.userData;
+                const newPosition = event.object.position;
+                const element = this.elementManager.getElement(elementId);
+                if (element.kind === 'group') {
+                    this.elementManager.updateGroupPoints(elementId, pointType, newPosition);
+                } else {
+                    this.elementManager.updateElementPoint(elementId, pointType, newPosition);
+                }
+
                 // End axis snap
                 this.snapManager.endAxisSnap();
                 this.snapManager.snapIndicator.visible = false;

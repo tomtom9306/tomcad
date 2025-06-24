@@ -476,8 +476,11 @@
         <div id="status-bar" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 5px; z-index: 200; color: #ffaa4a; font-weight: bold; display: none; pointer-events: none;"></div>
 
         <div id="top-toolbar">
-            <button class="btn" onclick="startBeamCreation()">Add Beam</button>
-            <button class="btn" onclick="startPlateCreation()">Add Plate</button>
+            <button id="add-beam-btn" class="btn">Add Beam</button>
+            <button id="add-column-btn" class="btn">Add Column</button>
+            <button id="add-goalpost-btn" class="btn">Add Goalpost</button>
+            <button id="add-plate-btn" class="btn">Add Plate</button>
+            <button id="delete-btn" class="btn btn-danger">Delete Selected</button>
         </div>
 
         <div id="info-panel">
@@ -498,6 +501,7 @@
             <p><strong>Mouse Wheel:</strong> Zoom In/Out</p>
             <p><strong>Ctrl + Mouse Wheel:</strong> Pan Up/Down</p>
             <p><strong>Click Element:</strong> Select/Edit</p>
+            <p><strong>Alt + Click Element:</strong> Select single element in a group</p>
             <p><strong>+ Button:</strong> Add New Element</p>
             <div style="margin-top: 15px;">
                 <div style="display: flex; gap: 5px; margin-bottom: 5px;">
@@ -517,41 +521,60 @@
         </div>
 
         <div id="creation-panel" style="display: none;">
-            <h3>Create Beam</h3>
-            <div class="edit-section">
+            <h3>Create Element</h3>
+            <div id="beam-creation-inputs">
                 <div class="input-group">
                     <label for="create-profile">Profile</label>
-                    <select id="create-profile">
-                        <optgroup label="HEA">
-                            <option>HEA100</option>
-                            <option>HEA120</option>
-                            <option>HEA140</option>
-                            <option>HEA160</option>
-                            <option>HEA180</option>
-                            <option selected>HEA200</option>
-                            <option>HEA220</option>
-                            <option>HEA240</option>
-                        </optgroup>
-                        <optgroup label="IPE">
-                            <option>IPE160</option>
-                            <option>IPE180</option>
-                            <option>IPE200</option>
-                        </optgroup>
-                         <optgroup label="RHS">
-                            <option>RHS60x4</option>
-                        </optgroup>
-                    </select>
+                    <input type="text" id="create-profile" value="IPE 200">
                 </div>
                 <div class="input-group">
                     <label for="create-material">Material</label>
                     <select id="create-material">
                         <option>S235JR</option>
-                        <option selected>S355JR</option>
+                        <option>S355JR</option>
                     </select>
                 </div>
                 <div class="input-group">
-                    <label for="create-orientation">Orientation (°)</label>
-                    <input type="number" id="create-orientation" value="0" step="15">
+                    <label for="create-orientation">Orientation</label>
+                    <input type="number" id="create-orientation" value="0">
+                </div>
+            </div>
+            <div id="column-creation-inputs">
+                <div class="input-group">
+                    <label for="create-column-height">Height (mm)</label>
+                    <input type="number" id="create-column-height" value="3000">
+                </div>
+                 <div class="input-group">
+                    <label for="create-column-profile">Profile</label>
+                    <input type="text" id="create-column-profile" value="SHS 100x100x5">
+                </div>
+                <div class="input-group">
+                    <label for="create-column-material">Material</label>
+                    <select id="create-column-material">
+                        <option>S235JR</option>
+                        <option>S355JR</option>
+                    </select>
+                </div>
+            </div>
+            <div id="goalpost-creation-inputs">
+                <div class="input-group">
+                    <label for="create-goalpost-height">Height (mm)</label>
+                    <input type="number" id="create-goalpost-height" value="3000">
+                </div>
+                <div class="input-group">
+                    <label for="create-goalpost-column-profile">Column Profile</label>
+                    <input type="text" id="create-goalpost-column-profile" value="SHS 100x100x5">
+                </div>
+                <div class="input-group">
+                    <label for="create-goalpost-beam-profile">Beam Profile</label>
+                    <input type="text" id="create-goalpost-beam-profile" value="IPE 200">
+                </div>
+                <div class="input-group">
+                    <label for="create-goalpost-material">Material</label>
+                    <select id="create-goalpost-material">
+                        <option>S235JR</option>
+                        <option>S355JR</option>
+                    </select>
                 </div>
             </div>
             <div class="edit-buttons">
@@ -606,6 +629,22 @@
                             <input type="number" id="edit-thickness" step="1">
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="edit-section" id="goalpost-edit-inputs" style="display: none;">
+                <h4>Goalpost Properties</h4>
+                <div class="input-group">
+                    <label>Height</label>
+                    <input type="number" id="edit-goalpost-height" step="10">
+                </div>
+                <div class="input-group">
+                    <label>Column Profile</label>
+                    <input type="text" id="edit-goalpost-column-profile">
+                </div>
+                <div class="input-group">
+                    <label>Beam Profile</label>
+                    <input type="text" id="edit-goalpost-beam-profile">
                 </div>
             </div>
 
@@ -700,25 +739,28 @@
     
     <!-- App source -->
     <script src="GeometryUtils.js"></script>
-    <script src="DragControls.js"></script>
-    <script src="CameraControls.js"></script>
     <script src="GridManager.js"></script>
     <script src="SnapManager.js"></script>
+    <script src="CameraControls.js"></script>
+    <script src="DragControls.js"></script>
+    <script src="CopyManager.js"></script>
     <script src="SelectionManager.js"></script>
     <script src="ElementManager.js"></script>
-    <script src="OperationManager.js"></script>
-    <script src="ImportExport.js"></script>
     <script src="UIManager.js"></script>
+    <script src="creators/BeamCreator.js"></script>
+    <script src="creators/ColumnCreator.js"></script>
+    <script src="creators/GoalPostCreator.js"></script>
     <script src="CreationManager.js"></script>
-    <script src="CopyManager.js"></script>
-    
+    <script src="ImportExport.js"></script>
+    <script src="OperationManager.js"></script>
+
     <!-- Operation Definitions -->
     <script src="operations/HoleOperation.js"></script>
     <script src="operations/SlotOperation.js"></script>
     <script src="operations/RectCutOperation.js"></script>
 
     <!-- Main Application Logic -->
-    <script src="app.js"></script>
     <script src="BeamViewer.js"></script>
+    <script src="app.js"></script>
 </body>
 </html> 

@@ -7,6 +7,7 @@ class UIManager {
         this.editMode = false;
         this.statusBar = document.getElementById('status-bar');
         this.creationPanel = document.getElementById('creation-panel');
+        this.creationType = null;
     }
 
     setupUI() {
@@ -24,22 +25,57 @@ class UIManager {
         const beamItems = document.getElementById('beam-items');
         beamItems.innerHTML = ''; // Clear existing items
         
-        this.structureData.elements.forEach(element => {
-            this.addElementToList(element);
+        const elements = this.structureData.elements;
+        const processedElements = new Set();
+
+        elements.forEach(element => {
+            if (!element.parentId) {
+                this.addElementToList(element);
+                if (element.kind === 'group' && element.children) {
+                    element.children.forEach(childId => {
+                        const childElement = this.elementManager.getElement(childId);
+                        if (childElement) {
+                            this.addElementToList(childElement, true);
+                            processedElements.add(childId);
+                        }
+                    });
+                }
+                processedElements.add(element.id);
+            }
+        });
+
+        // Add any remaining elements that might not have been processed (e.g. children of non-existent groups)
+        elements.forEach(element => {
+            if (!processedElements.has(element.id)) {
+                this.addElementToList(element);
+            }
         });
     }
 
-    addElementToList(element) {
+    addElementToList(element, isChild = false) {
         const beamItems = document.getElementById('beam-items');
         const item = document.createElement('div');
         item.className = 'beam-item';
         item.dataset.elementId = element.id;
+
+        if (isChild) {
+            item.style.marginLeft = '20px';
+        }
         
-        item.innerHTML = `
-            <div class="beam-id">${element.id}</div>
-            <div class="beam-profile">${element.profile || 'Plate'}</div>
-            <div class="beam-material">${element.material}</div>
-        `;
+        let content;
+        if (element.kind === 'group') {
+            content = `
+                <div class="beam-id">${element.id} (Goalpost)</div>
+                <div class="beam-profile">Contains ${element.children.length} elements</div>
+            `;
+        } else {
+            content = `
+                <div class="beam-id">${element.id}</div>
+                <div class="beam-profile">${element.profile || 'Plate'}</div>
+                <div class="beam-material">${element.material}</div>
+            `;
+        }
+        item.innerHTML = content;
         
         item.addEventListener('click', (event) => {
             if (event.ctrlKey) {
@@ -82,9 +118,18 @@ class UIManager {
         const plateDimensions = document.getElementById('plate-dimensions');
         const profileGroup = document.getElementById('edit-profile').parentElement;
         const orientationGroup = document.getElementById('edit-orientation').parentElement;
+        const goalpostGroup = document.getElementById('goalpost-edit-inputs');
+
+        // Hide all optional sections by default
+        endRow.style.display = 'none';
+        plateDimensions.style.display = 'none';
+        profileGroup.style.display = 'none';
+        orientationGroup.style.display = 'none';
+        goalpostGroup.style.display = 'none';
 
         // Set element type selector
         document.getElementById('edit-element-type').value = element.kind;
+        document.getElementById('edit-element-type').disabled = true; // Don't allow changing type for now
 
         // Populate form fields
         if (element.kind === 'beam') {
@@ -114,6 +159,11 @@ class UIManager {
             plateDimensions.style.display = 'block';
             profileGroup.style.display = 'none';
             orientationGroup.style.display = 'none';
+        } else if (element.kind === 'group' && element.type === 'goalpost') {
+            goalpostGroup.style.display = 'block';
+            document.getElementById('edit-goalpost-height').value = element.height;
+            document.getElementById('edit-goalpost-column-profile').value = element.columnProfile;
+            document.getElementById('edit-goalpost-beam-profile').value = element.beamProfile;
         }
 
         document.getElementById('edit-material').value = element.material;
@@ -189,6 +239,16 @@ class UIManager {
                 height: height,
                 thickness: thickness
             });
+        } else if (currentType === 'group' && element.type === 'goalpost') {
+            const height = parseFloat(document.getElementById('edit-goalpost-height').value);
+            const columnProfile = document.getElementById('edit-goalpost-column-profile').value;
+            const beamProfile = document.getElementById('edit-goalpost-beam-profile').value;
+
+            Object.assign(newData, {
+                height,
+                columnProfile,
+                beamProfile
+            });
         }
 
         // Update element
@@ -246,23 +306,55 @@ class UIManager {
     }
 
     showCreationPanel(type) {
-        // For now, only beam creation is supported
+        this.creationType = type;
+        const beamInputs = document.getElementById('beam-creation-inputs');
+        const columnInputs = document.getElementById('column-creation-inputs');
+        const goalpostInputs = document.getElementById('goalpost-creation-inputs');
+
+        beamInputs.style.display = 'none';
+        columnInputs.style.display = 'none';
+        goalpostInputs.style.display = 'none';
+
         if (type === 'beam') {
-            this.creationPanel.querySelector('h3').textContent = 'Create Beam';
+            beamInputs.style.display = 'block';
+        } else if (type === 'column') {
+            columnInputs.style.display = 'block';
+        } else if (type === 'goalpost') {
+            goalpostInputs.style.display = 'block';
+        }
+        
+        if (type) {
             this.creationPanel.style.display = 'block';
-            this.closeEditPanel(); // Close edit panel if it's open
         }
     }
 
     hideCreationPanel() {
         this.creationPanel.style.display = 'none';
+        this.creationType = null;
     }
 
     getCreationParams() {
-        const profile = document.getElementById('create-profile').value;
-        const material = document.getElementById('create-material').value;
-        const orientation = parseFloat(document.getElementById('create-orientation').value) || 0;
-        return { profile, material, orientation };
+        if (this.creationType === 'beam') {
+            return {
+                profile: document.getElementById('create-profile').value,
+                material: document.getElementById('create-material').value,
+                orientation: parseFloat(document.getElementById('create-orientation').value)
+            };
+        } else if (this.creationType === 'column') {
+            return {
+                height: parseFloat(document.getElementById('create-column-height').value),
+                profile: document.getElementById('create-column-profile').value,
+                material: document.getElementById('create-column-material').value
+            };
+        } else if (this.creationType === 'goalpost') {
+            return {
+                height: parseFloat(document.getElementById('create-goalpost-height').value),
+                columnProfile: document.getElementById('create-goalpost-column-profile').value,
+                beamProfile: document.getElementById('create-goalpost-beam-profile').value,
+                material: document.getElementById('create-goalpost-material').value
+            };
+        }
+        return {};
     }
 
     onSelectionChanged(selectedElements) {

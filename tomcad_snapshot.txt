@@ -1,0 +1,4888 @@
+==================== C:\Users\t93to\Desktop\tomcad\data\struktura.js ====================
+// Structure data for the beam viewer
+const strukturaData = {
+    "meta": {
+      "projectId":   "72db0cb1-d8d7-4f93-a1f6-db21f3d9fd2e",
+      "name":        "Schody – magazyn A",
+      "createdUtc":  "2025-06-18T09:12:00Z",
+      "units":       "mm",
+      "angleUnits":  "degrees",
+      "schemaVersion": "2.2",
+      "orderId":     "PO-2025-001",
+      "phase":       "1"
+    },
+  
+    /* ───────────────────────── GLOBAL OPERATIONS (mandatory start & end) ───────────────────────── */
+    "operations": [
+  
+      /* HEA200 – dwa górne otwory Ø18 */
+      { "id": "op-h-01", "type": "hole", "shape": "circle", "diameter": 18,
+        "start": [   0,   50, 2900 ], "end": [   0,  150, 2900 ] },
+  
+      { "id": "op-h-02", "type": "hole", "shape": "circle", "diameter": 18,
+        "start": [   0,   50, 2800 ], "end": [   0,  150, 2800 ] },
+  
+      /* otwory Ø18 w płycie poziomej 300×200×12 */
+      { "id": "op-h-21", "type": "hole", "shape": "circle", "diameter": 18,
+        "start": [ 200, 2750, 2975 ], "end": [ 200, 2750, 3025 ] },
+  
+      { "id": "op-h-22", "type": "hole", "shape": "circle", "diameter": 18,
+        "start": [ 200, 2850, 2975 ], "end": [ 200, 2850, 3025 ] },
+  
+      /* slot 40×18 w belce ukośnej IPE160 */
+      { "id": "op-slot-01", "type": "slot", "length": 40, "width": 18,
+        "start": [ 1768, 1718, 3000 ], "end": [ 1768, 1818, 3000 ] },
+  
+      /* cope 60×60 (z promieniem 10) w płycie bazowej */
+      { "id": "op-cope-1", "type": "rectCut", "width": 60, "height": 60, "cornerRadius": 10,
+        "start": [ -205,    0, 1280 ], "end": [  -95,    0, 1280 ] },
+  
+      /* kołowy otwór Ø50 w płycie bazowej */
+      { "id": "op-cut-circle-01", "type": "hole", "shape": "circle", "diameter": 50,
+        "start": [ -175,  -50, 1250 ], "end": [ -175,   50, 1250 ] },
+  
+      /* otwór Ø12 w łuku handrail (RHS60x4, wypukłość +Z) w odległości 500 mm po łuku */
+      { "id": "op-h-11", "type": "hole", "shape": "circle", "diameter": 12,
+        "start": [  500,    0,    0 ], "end": [  500,   50,    0 ] },
+  
+      /* otwór Ø12 w drugim łuku handrail (RHS60x4, wypukłość –Z) */
+      { "id": "op-h-12", "type": "hole", "shape": "circle", "diameter": 12,
+        "start": [ 1000,    0,    0 ], "end": [ 1000,   50,    0 ] }
+    ],
+  
+    /* ───────────────────────── BOLT GROUPS ───────────────────────── */
+    "boltGroups": [
+      { "id": "BG-01",
+        "spec": { "diameter": 18, "length": 70, "grade": "8.8", "head": "hex", "nuts": 1, "washers": 2 },
+        "memberLinks": [
+          { "elementId": "beam-01",  "operationId": "op-h-01" },
+          { "elementId": "plate-01", "operationId": "op-h-21" }
+        ] },
+  
+      { "id": "BG-02",
+        "spec": { "diameter": 18, "length": 70, "grade": "8.8", "head": "hex", "nuts": 1, "washers": 2 },
+        "memberLinks": [
+          { "elementId": "beam-01",  "operationId": "op-h-02" },
+          { "elementId": "plate-01", "operationId": "op-h-22" }
+        ] }
+    ],
+  
+    /* ───────────────────────── ELEMENTS (reference operationIds only) ───────────────────────── */
+    "elements": [
+  
+      { "id": "beam-01", "kind": "beam", "profile": "HEA200", "material": "S355JR",
+        "start": [ 0, 0, 0 ],  "end": [ 0, 0, 3000 ],
+        "operationIds": ["op-h-01","op-h-02"] },
+  
+      { "id": "beam-02", "kind": "beam", "profile": "IPE160", "material": "S355JR",
+        "start": [ 0, 0, 3000 ], "end": [ 2500, 2500, 3000 ], "orientation": 90,
+        "operationIds": ["op-slot-01"] },
+  
+      { "id": "curve-01", "kind": "beam", "profile": "RHS60x4", "material": "S235JR",
+        "start": [ 0, 0, 0 ], "end": [ 2000, 0, 0 ],
+        "arc": { "radius": 1500, "normal": [0,0,1], "side": "left" },
+        "operationIds": ["op-h-11"] },
+  
+      { "id": "curve-02", "kind": "beam", "profile": "RHS60x4", "material": "S235JR",
+        "start": [ 0, 0, 0 ], "end": [ 2000, 0, 0 ],
+        "arc": { "radius": 1500, "normal": [0,0,1], "side": "right" },
+        "operationIds": ["op-h-12"] },
+  
+      { "id": "curve-03", "kind": "beam", "profile": "CHS76x3.2", "material": "S235JR",
+        "start": [ 0, 0, 0 ], "end": [ 0, 0, 2500 ],
+        "arc": { "radius": 2000, "normal": [0,1,0], "side": "left" },
+        "operationIds": [] },
+  
+      { "id": "plate-01", "kind": "plate", "material": "S355JR",
+        "origin": [ 100, 2650, 3000 ],
+        "rotation": { "type":"Euler","order":"ZYX","values":[0,90,0],"units":"degrees" },
+        "width": 300, "height": 200, "thickness": 12,
+        "operationIds": ["op-h-21","op-h-22"] },
+  
+      { "id": "plate-02", "kind": "plate", "material": "S355JR",
+        "origin": [ -300, 0, 1250 ],
+        "rotation": { "type":"Euler","order":"ZYX","values":[0,90,0],"units":"degrees" },
+        "width": 250, "height": 250, "thickness": 12,
+        "operationIds": ["op-cope-1","op-cut-circle-01"] },
+  
+      { "id": "tube-01", "kind": "beam", "profile": "CHS168x6.3", "material": "S355JR",
+        "start": [ -1000, -1000, 0 ], "end": [ -1000, -1000, 3500 ],
+        "operationIds": [] }
+    ],
+
+    "grids": [
+    {
+      "id": "grid-main",
+      "type": "rectangular",
+
+      /* global położenie i orientacja całego układu siatek */
+      "origin":   [ -500, -500, 0 ],
+      "rotation": { "type": "Euler", "order": "ZYX", "values": [0, 0, 0], "units": "degrees" },
+
+      /* odległości kolejnych przerw (mm) – jak w Tekli: 3000+3000+3000+3000 */
+      "xSpacings": [ 3000, 3000, 3000, 3000 ],
+      "ySpacings": [ 4000, 4000, 4000 ],
+
+      /* poziomy Z – wysokości kondygnacji */
+      "zLevels": [ 0, 3000, 6000 ],
+
+      /* etykiety osi – długość = liczba punktów (spacings + 1) */
+      "xLabels": [ "1", "2", "3", "4", "5" ],
+      "yLabels": [ "A", "B", "C", "D" ],
+      "zLabels": [ "0", "+3", "+6" ],
+
+      /* wysunięcia linii siatki poza skrajne osie (mm) */
+      "xExtensions": [ 1000, 1000 ],
+      "yExtensions": [ 1000, 1000 ],
+      "zExtensions": [ 1000, 1000 ]
+    }
+  ]
+};
+==================== C:\Users\t93to\Desktop\tomcad\operations\HoleOperation.js ====================
+class HoleOperation {
+    constructor(opData) {
+        this.data = opData;
+    }
+
+    createVisualization() {
+        const { diameter, start, end } = this.data;
+        if (!diameter || !start || !end) {
+            console.warn(`HoleOperation '${this.data.id}' is missing required parameters (diameter, start, end).`);
+            return null;
+        }
+        const startPoint = new THREE.Vector3(...start);
+        const endPoint = new THREE.Vector3(...end);
+        const length = startPoint.distanceTo(endPoint);
+        const radius = diameter / 2;
+        const geometry = new THREE.CylinderGeometry(radius, radius, length, 16);
+        const material = new THREE.MeshBasicMaterial({
+            color: 0x00ffff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.6
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.copy(startPoint).lerp(endPoint, 0.5);
+        const up = new THREE.Vector3(0, 1, 0);
+        const axis = new THREE.Vector3().subVectors(endPoint, startPoint).normalize();
+        if (!(axis.y > 0.999 || axis.y < -0.999)) {
+            const quaternion = new THREE.Quaternion().setFromUnitVectors(up, axis);
+            mesh.quaternion.copy(quaternion);
+        }
+        return mesh;
+    }
+
+    apply() {}
+} 
+==================== C:\Users\t93to\Desktop\tomcad\operations\RectCutOperation.js ====================
+class RectCutOperation {
+    constructor(opData) {
+        this.data = opData;
+    }
+
+    createVisualization() {
+        const { width, height, start, end } = this.data;
+        if (!width || !height || !start || !end) {
+            console.warn(`RectCutOperation '${this.data.id}' is missing required parameters (width, height, start, end).`);
+            return null;
+        }
+        const startPoint = new THREE.Vector3(...start);
+        const endPoint = new THREE.Vector3(...end);
+        const length = startPoint.distanceTo(endPoint);
+        const geometry = new THREE.BoxGeometry(width, height, length);
+        const material = new THREE.MeshBasicMaterial({
+            color: 0xff00ff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.5
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.copy(startPoint).lerp(endPoint, 0.5);
+        const up = new THREE.Vector3(0, 1, 0);
+        const axis = new THREE.Vector3().subVectors(endPoint, startPoint).normalize();
+        const quaternion = new THREE.Quaternion().setFromUnitVectors(up, axis);
+        mesh.quaternion.copy(quaternion);
+        return mesh;
+    }
+
+    apply() {}
+} 
+==================== C:\Users\t93to\Desktop\tomcad\operations\SlotOperation.js ====================
+class SlotOperation {
+    constructor(operationData) {
+        this.data = operationData;
+    }
+
+    createVisualization() {
+        if (!this.data || this.data.type !== 'slot') {
+            return null;
+        }
+        const startPoint = new THREE.Vector3(...this.data.start);
+        const endPoint = new THREE.Vector3(...this.data.end);
+        const width = this.data.width;
+        const radius = width / 2;
+        const length = startPoint.distanceTo(endPoint);
+        const capsule = new THREE.Group();
+        const material = new THREE.MeshBasicMaterial({
+            color: 0xffa500,
+            transparent: true,
+            opacity: 0.7
+        });
+        const cylinderGeom = new THREE.CylinderGeometry(radius, radius, length, 16);
+        const cylinder = new THREE.Mesh(cylinderGeom, material);
+        const direction = new THREE.Vector3().subVectors(endPoint, startPoint);
+        cylinder.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.clone().normalize());
+        cylinder.position.copy(startPoint).add(direction.multiplyScalar(0.5));
+        const sphereGeom = new THREE.SphereGeometry(radius, 16, 16);
+        const startSphere = new THREE.Mesh(sphereGeom, material);
+        startSphere.position.copy(startPoint);
+        const endSphere = new THREE.Mesh(sphereGeom, material);
+        endSphere.position.copy(endPoint);
+        capsule.add(cylinder);
+        capsule.add(startSphere);
+        capsule.add(endSphere);
+        capsule.userData.isOperationVisualization = true;
+        capsule.userData.operationId = this.data.id;
+        return capsule;
+    }
+
+    apply() {}
+} 
+==================== C:\Users\t93to\Desktop\tomcad\app.js ====================
+// Main application entry point
+// Global viewer instance
+let viewer = null;
+
+// Initialize application when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Show loading indicator
+    const loadingElement = document.getElementById('loading');
+    if (loadingElement) {
+        loadingElement.style.display = 'flex'; // Use flex for centering
+    }
+
+    try {
+        // Check if strukturaData is available
+        if (typeof strukturaData === 'undefined') {
+            throw new Error('strukturaData not found. Make sure struktura.js is loaded.');
+        }
+
+        // Check if BeamViewer class is available
+        if (typeof BeamViewer === 'undefined') {
+            throw new Error('BeamViewer class not found. Make sure BeamViewer.js is loaded.');
+        }
+
+        // Initialize the viewer
+        viewer = new BeamViewer();
+        viewer.init();
+    } catch (error) {
+        console.error('Error initializing TomCAD:', error);
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.textContent = 'Error loading application: ' + error.message;
+        }
+    }
+
+    // Global functions for UI buttons
+    window.startBeamCreation = () => viewer?.creationManager.startBeamCreation();
+    window.startPlateCreation = () => viewer?.creationManager.startPlateCreation();
+    window.cancelCreation = () => viewer?.creationManager.cancelCreation();
+    window.applyChanges = () => viewer?.applyChanges();
+    window.deleteElement = () => viewer?.deleteElement();
+    window.startCopy = () => viewer?.startCopy();
+    window.exportStructure = () => viewer?.exportStructure();
+    window.importStructure = (event) => {
+        const file = event.target.files[0];
+        if (file && viewer) {
+            viewer.importStructure(file);
+        }
+        // Reset the input so the same file can be imported again
+        event.target.value = '';
+    };
+    window.focusOnSelected = () => viewer?.focusOnSelected();
+    window.fitToView = () => viewer?.fitToView();
+    window.resetView = () => viewer?.resetView();
+
+    // Export viewer for debugging
+    window.viewer = viewer;
+}); 
+==================== C:\Users\t93to\Desktop\tomcad\BeamViewer.js ====================
+// Main BeamViewer class that orchestrates all modules
+class BeamViewer {
+    constructor() {
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+        this.controls = null;
+        this.beamObjects = new Map();
+        this.structureData = null;
+        this.mouse = { x: 0, y: 0 };
+        
+        // Module instances
+        this.elementManager = null;
+        this.selectionManager = null;
+        this.uiManager = null;
+        this.importExport = null;
+        this.copyManager = null;
+        this.gridManager = null;
+        this.snapManager = null;
+        this.creationManager = null;
+        this.operationManager = null;
+
+        this.raycaster = new THREE.Raycaster();
+        this.raycaster.params.Line.threshold = 50; // Adjust threshold for line intersection
+    }
+
+    async init() {
+        const loadingElement = document.getElementById('loading');
+        try {
+            // Load structure data
+            this.loadStructureData();
+            
+            // Initialize Three.js
+            this.initThreeJS();
+            
+            // Initialize all managers
+            this.initializeManagers();
+            
+            // Create beams and other elements
+            this.elementManager.createBeams();
+
+            // NOW initialize operations, as they depend on element meshes
+            this.operationManager.init();
+
+            this.updateControlsObjects();
+            
+            // Setup UI
+            this.uiManager.setupUI();
+            
+            // Fit camera to view all elements
+            setTimeout(() => {
+                this.fitToView();
+            }, 100);
+            
+            // Start render loop
+            this.animate();
+            
+            // Add global event listeners
+            this.setupGlobalEventListeners();
+            
+        } catch (error) {
+            console.error('Error initializing viewer:', error);
+            if(loadingElement) {
+                loadingElement.textContent = `Error: ${error.message}`;
+                loadingElement.style.color = 'red';
+            }
+        } finally {
+            // ALWAYS hide loading indicator after a short delay
+            setTimeout(() => {
+                if (loadingElement && !loadingElement.textContent.startsWith('Error')) {
+                    loadingElement.style.display = 'none';
+                }
+            }, 500);
+        }
+    }
+
+    loadStructureData() {
+        // Use the global strukturaData variable
+        if (typeof strukturaData !== 'undefined') {
+            this.structureData = strukturaData;
+        } else {
+            throw new Error('strukturaData not found. Make sure struktura.js is loaded.');
+        }
+    }
+
+    initThreeJS() {
+        const container = document.getElementById('canvas-container');
+        
+        // Scene
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x1a1a1a);
+        
+        // Camera
+        const aspect = container.clientWidth / container.clientHeight;
+        this.frustumSize = 5000;
+        this.camera = new THREE.OrthographicCamera(
+            this.frustumSize * aspect / -2, 
+            this.frustumSize * aspect / 2,
+            this.frustumSize / 2,
+            this.frustumSize / -2,
+            0.1, 
+            500000
+        );
+        this.camera.position.set(4000, 2000, 4000);
+        
+        // Renderer
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.setSize(container.clientWidth, container.clientHeight);
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(this.renderer.domElement);
+        
+        // Setup camera controls
+        this.controls = new CameraControls(this.camera, this.renderer.domElement);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+        this.scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1000, 1000, 1000);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        this.scene.add(directionalLight);
+        
+        // Grid
+        // const gridHelper = new THREE.GridHelper(5000, 50, 0x444444, 0x222222);
+        // this.scene.add(gridHelper);
+        
+        // Axes helper
+        const axesHelper = new THREE.AxesHelper(500);
+        this.scene.add(axesHelper);
+        
+        // Handle window resize
+        window.addEventListener('resize', () => this.onWindowResize());
+        
+        // Add listeners for all mouse interactions on the canvas
+        this.renderer.domElement.addEventListener('mousedown', (e) => this.onMouseDown(e));
+        this.renderer.domElement.addEventListener('mousemove', (e) => this.onMouseMove(e));
+        this.renderer.domElement.addEventListener('mouseup', (e) => this.onMouseUp(e));
+    }
+
+    initializeManagers() {
+        // Initialize all manager classes
+        this.gridManager = new GridManager(this.scene, this.structureData);
+        this.elementManager = new ElementManager(this.scene, this.beamObjects, this.structureData, this, this.gridManager);
+        this.snapManager = new SnapManager(this.scene, this.elementManager, this.gridManager);
+        this.selectionManager = new SelectionManager(this.scene, this.camera, this.renderer, this.elementManager, this.controls, this.snapManager);
+        this.uiManager = new UIManager(this.structureData, this.elementManager, this.selectionManager);
+        this.creationManager = new CreationManager(this.scene, this.elementManager, this.uiManager, this.snapManager);
+        this.importExport = new ImportExport(this.structureData, this.elementManager, this.uiManager);
+        this.gridManager.createGrids();
+        this.operationManager = new OperationManager(this, this.structureData);
+        this.copyManager = new CopyManager(
+            this.elementManager, 
+            this.selectionManager, 
+            this.uiManager, 
+            this.camera, 
+            this.renderer, 
+            this.beamObjects
+        );
+
+        // Set up selection change callback
+        const originalUpdateVisuals = this.selectionManager.updateSelectionVisuals.bind(this.selectionManager);
+        this.selectionManager.updateSelectionVisuals = () => {
+            originalUpdateVisuals();
+            this.uiManager.onSelectionChanged(this.selectionManager.getSelectedElements());
+        };
+    }
+
+    onMouseDown(event) {
+        // Stop any interaction if it's not a left-click (button 0)
+        // The CameraControls will still handle orbit/pan with other buttons.
+        if (event.button !== 0) {
+            return;
+        }
+
+        // Handle creation mode first
+        if (this.creationManager.isActive()) {
+            const rect = this.renderer.domElement.getBoundingClientRect();
+            const mouse = new THREE.Vector2(
+                ((event.clientX - rect.left) / rect.width) * 2 - 1,
+                -((event.clientY - rect.top) / rect.height) * 2 + 1
+            );
+            this.raycaster.setFromCamera(mouse, this.camera);
+
+            // Use the snap manager to get a precise point
+            const snapPoint = this.snapManager.findSnapPoint(this.raycaster, mouse);
+            const clickPoint = snapPoint ? snapPoint : this.getPointOnWorkPlane(mouse);
+            
+            if (clickPoint) {
+                this.creationManager.handleCanvasClick(clickPoint);
+            }
+            return;
+        }
+
+        // Handle copy mode next
+        if (this.copyManager.isCopyModeActive()) {
+            this.copyManager.handleCopyClick(event);
+            return;
+        }
+
+        // Delegate to selection manager
+        this.selectionManager.onMouseDown(event);
+    }
+
+    onMouseMove(event) {
+        // Update mouse coordinates
+        const rect = this.renderer.domElement.getBoundingClientRect();
+        this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+        // Update creation preview
+        if (this.creationManager.isActive()) {
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+            const snapPoint = this.snapManager.findSnapPoint(this.raycaster, this.mouse);
+            const currentPos = snapPoint ? snapPoint : this.getPointOnWorkPlane(this.mouse);
+            if(currentPos) {
+                 this.creationManager.updatePreview(currentPos);
+            }
+        }
+
+        // Delegate to selection manager for selection box
+        this.selectionManager.onMouseMove(event);
+
+        // Handle grid highlighting
+        this.handleGridHighlighting();
+    }
+    
+    onMouseUp(event) {
+        // Delegate to selection manager
+        this.selectionManager.onMouseUp(event);
+    }
+
+    handleGridHighlighting() {
+        if (!this.gridManager) return;
+        
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+        const gridLines = this.gridManager.getGridLines();
+        const intersects = this.raycaster.intersectObjects(gridLines);
+
+        if (intersects.length > 0) {
+            // Find the closest point of intersection
+            const closestIntersect = intersects[0];
+            const point = closestIntersect.point;
+
+            // Find all lines that are very close to this point
+            const highlightedLines = [];
+            gridLines.forEach(line => {
+                const line3 = new THREE.Line3(
+                    new THREE.Vector3().fromBufferAttribute(line.geometry.attributes.position, 0),
+                    new THREE.Vector3().fromBufferAttribute(line.geometry.attributes.position, 1)
+                );
+                line3.applyMatrix4(this.gridManager.gridContainer.matrixWorld); // To world space
+
+                const closestPointOnLine = new THREE.Vector3();
+                line3.closestPointToPoint(point, true, closestPointOnLine);
+                
+                if (point.distanceTo(closestPointOnLine) < 1) { // Threshold for intersection
+                    highlightedLines.push(line);
+                }
+            });
+
+            if (highlightedLines.length > 0) {
+                this.gridManager.highlightLines(highlightedLines);
+            } else {
+                this.gridManager.unhighlightAllLines();
+            }
+        } else {
+            this.gridManager.unhighlightAllLines();
+        }
+    }
+
+    setupGlobalEventListeners() {
+        // Add listener for Escape key to cancel actions
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                if (this.creationManager.isActive()) {
+                    this.creationManager.cancelCreation();
+                } else if (this.copyManager.isCopyModeActive()) {
+                    this.copyManager.cancelCopy();
+                } else {
+                    this.selectionManager.clearSelection();
+                }
+            } else if ((event.key === 'Delete' || event.key === 'Backspace') && this.selectionManager.getSelectedElements().length > 0) {
+                // Prevent browser back navigation on Backspace
+                event.preventDefault();
+                this.deleteElement();
+            }
+        });
+    }
+
+    // Public API methods for UI interaction
+    toggleAddMenu() {
+        this.uiManager.toggleAddMenu();
+    }
+
+    addNewElement() {
+        this.uiManager.addNewElement();
+        this.updateControlsObjects();
+    }
+
+    addNewPlate() {
+        this.uiManager.addNewPlate();
+        this.updateControlsObjects();
+    }
+
+    applyChanges() {
+        this.uiManager.applyChanges();
+    }
+
+    deleteElement() {
+        this.uiManager.deleteSelectedElements();
+    }
+
+    startCopy() {
+        this.copyManager.startCopy();
+    }
+
+    exportStructure() {
+        this.importExport.exportStructure();
+    }
+
+    importStructure(file) {
+        this.importExport.importStructure(file);
+        this.updateControlsObjects();
+        this.fitToView();
+    }
+
+    // Camera control methods
+    focusOnElement(elementId) {
+        const mesh = this.beamObjects.get(elementId);
+        if (!mesh) return;
+        
+        const box = new THREE.Box3().setFromObject(mesh);
+        this.controls.focus(box);
+    }
+
+    fitToView() {
+        if (this.beamObjects.size === 0) {
+            if(this.controls) this.controls.reset();
+            return;
+        }
+        
+        // Calculate bounding box of all elements
+        const box = new THREE.Box3();
+        this.beamObjects.forEach(mesh => {
+            box.expandByObject(mesh);
+        });
+        
+        this.controls.focus(box);
+    }
+
+    focusOnSelected() {
+        const selectedElements = this.selectionManager.getSelectedElements();
+        if (selectedElements.length === 0) {
+            this.fitToView();
+            return;
+        }
+
+        const box = new THREE.Box3();
+        selectedElements.forEach(id => {
+            const mesh = this.beamObjects.get(id);
+            if(mesh) box.expandByObject(mesh);
+        });
+
+        this.controls.focus(box);
+        this.selectionManager.updateSelectionVisuals();
+    }
+
+    resetView() {
+        this.controls.reset();
+        this.fitToView();
+    }
+
+    updateControlsObjects() {
+        if (this.controls) {
+            this.controls.setIntersectableObjects(Array.from(this.beamObjects.values()));
+        }
+    }
+
+    onWindowResize() {
+        const container = document.getElementById('canvas-container');
+        const aspect = container.clientWidth / container.clientHeight;
+        
+        this.camera.left   = this.frustumSize * aspect / -2;
+        this.camera.right  = this.frustumSize * aspect / 2;
+        this.camera.top    = this.frustumSize / 2;
+        this.camera.bottom = this.frustumSize / -2;
+        
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    getPointOnWorkPlane(mouse) {
+        const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+        const intersectionPoint = new THREE.Vector3();
+        this.raycaster.setFromCamera(mouse, this.camera);
+        if (this.raycaster.ray.intersectPlane(plane, intersectionPoint)) {
+            return intersectionPoint;
+        }
+        return null;
+    }
+} 
+==================== C:\Users\t93to\Desktop\tomcad\CameraControls.js ====================
+class CameraControls {
+    constructor(camera, domElement, objectsToIntersect = []) {
+        this.camera = camera;
+        this.domElement = domElement;
+        this.objectsToIntersect = objectsToIntersect;
+
+        // State
+        this.mouse = { x: 0, y: 0 };
+        this.isRotating = false;
+        this.isPanning = false;
+
+        // Camera parameters
+        this.cameraTarget = new THREE.Vector3(0, 0, 0);
+        this.cameraDistance = 4000;
+        this.cameraPosition = new THREE.Vector3(4000, 2000, 4000);
+        this.cameraOrientation = new THREE.Quaternion();
+        this.rotationPivot = new THREE.Vector3(); // Point to orbit around
+
+        this.init();
+    }
+
+    init() {
+        // Initialize orientation based on starting position and target
+        const tempMatrix = new THREE.Matrix4();
+        tempMatrix.lookAt(this.cameraPosition, this.cameraTarget, new THREE.Vector3(0, 1, 0));
+        this.cameraOrientation.setFromRotationMatrix(tempMatrix);
+
+        this.setupEventListeners();
+        this.updateCameraPosition();
+    }
+
+    setupEventListeners() {
+        this.domElement.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        this.domElement.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+            
+            if (e.button === 1) { // Middle mouse button
+                this.isRotating = !e.shiftKey;
+                this.isPanning = e.shiftKey;
+
+                if (this.isRotating) {
+                    // Set the pivot point for the rotation, but do not change camera state yet.
+                    const pivot = this.getPointUnderMouse(e.clientX, e.clientY);
+                    this.rotationPivot.copy(pivot || this.cameraTarget);
+                }
+            }
+        });
+
+        this.domElement.addEventListener('mouseup', () => {
+            this.isRotating = false;
+            this.isPanning = false;
+        });
+
+        this.domElement.addEventListener('mouseleave', () => {
+            this.isRotating = false;
+            this.isPanning = false;
+        });
+
+        this.domElement.addEventListener('mousemove', (e) => {
+            if (!this.isRotating && !this.isPanning) return;
+
+            const deltaX = e.clientX - this.mouse.x;
+            const deltaY = e.clientY - this.mouse.y;
+
+            if (this.isRotating) {
+                this.rotateCamera(deltaX, deltaY);
+            } else if (this.isPanning) {
+                this.panCamera(deltaX, deltaY);
+            }
+
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+        });
+
+        this.domElement.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.ctrlKey) {
+                this.panCamera(0, e.deltaY * 0.5);
+            } else {
+                this.zoomCamera(e.deltaY, e.clientX, e.clientY);
+            }
+        });
+    }
+
+    rotateCamera(deltaX, deltaY) {
+        const rotationSpeed = 0.004;
+
+        // 1. Define rotation axes: world Y for yaw, camera's local X for pitch.
+        const yawAxis = new THREE.Vector3(0, 1, 0);
+        const pitchAxis = new THREE.Vector3(1, 0, 0).applyQuaternion(this.cameraOrientation);
+
+        // 2. Create the rotation for this frame.
+        const yawQuaternion = new THREE.Quaternion().setFromAxisAngle(yawAxis, -deltaX * rotationSpeed);
+        const pitchQuaternion = new THREE.Quaternion().setFromAxisAngle(pitchAxis, -deltaY * rotationSpeed);
+        const frameRotation = new THREE.Quaternion().multiplyQuaternions(yawQuaternion, pitchQuaternion);
+
+        // 3. Rotate camera position and target around the pivot point.
+        const pivot = this.rotationPivot;
+
+        const posVec = this.cameraPosition.clone().sub(pivot);
+        posVec.applyQuaternion(frameRotation);
+        this.cameraPosition.copy(pivot).add(posVec);
+
+        const targetVec = this.cameraTarget.clone().sub(pivot);
+        targetVec.applyQuaternion(frameRotation);
+        this.cameraTarget.copy(pivot).add(targetVec);
+
+        // 4. Apply the same rotation to the camera's orientation.
+        this.cameraOrientation.premultiply(frameRotation);
+        
+        this.updateCameraPosition();
+    }
+
+    panCamera(deltaX, deltaY) {
+        const panSpeed = this.camera.isOrthographicCamera ? ((this.camera.right - this.camera.left) / this.camera.zoom) / this.domElement.clientWidth : this.cameraDistance * 0.001;
+        const right = new THREE.Vector3().setFromMatrixColumn(this.camera.matrix, 0).multiplyScalar(-deltaX * panSpeed);
+        const up = new THREE.Vector3().setFromMatrixColumn(this.camera.matrix, 1).multiplyScalar(deltaY * panSpeed);
+        
+        this.cameraTarget.add(right).add(up);
+        this.cameraPosition.add(right).add(up);
+        
+        this.updateCameraPosition();
+    }
+
+    zoomCamera(delta, clientX, clientY) {
+        if (this.camera.isOrthographicCamera) {
+            const zoomSpeed = 0.02; // Further reduced for smoother zoom
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+            const rect = this.domElement.getBoundingClientRect();
+            mouse.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+            raycaster.setFromCamera(mouse, this.camera);
+            
+            const plane = new THREE.Plane();
+            const targetDirection = new THREE.Vector3();
+            this.camera.getWorldDirection(targetDirection);
+            plane.setFromNormalAndCoplanarPoint(targetDirection, this.cameraTarget);
+
+            const pointBeforeZoom = new THREE.Vector3();
+            if (!raycaster.ray.intersectPlane(plane, pointBeforeZoom)) {
+                // Fallback if ray is parallel to plane
+                const zoomFactorSimple = Math.pow(0.95, delta * 0.02);
+                this.camera.zoom *= zoomFactorSimple;
+                this.camera.updateProjectionMatrix();
+                return;
+            }
+            
+            const zoomFactor = Math.pow(0.95, delta * zoomSpeed);
+            this.camera.zoom *= zoomFactor;
+            this.camera.updateProjectionMatrix();
+            
+            raycaster.setFromCamera(mouse, this.camera);
+            const pointAfterZoom = new THREE.Vector3();
+            raycaster.ray.intersectPlane(plane, pointAfterZoom);
+
+            const correction = new THREE.Vector3().subVectors(pointBeforeZoom, pointAfterZoom);
+            this.cameraPosition.add(correction);
+            this.cameraTarget.add(correction);
+
+            this.updateCameraPosition();
+        } else {
+            const flySpeed = 1.0;
+            const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(this.cameraOrientation);
+            const moveDistance = -delta * flySpeed;
+            const moveVector = direction.normalize().multiplyScalar(moveDistance);
+
+            this.cameraPosition.add(moveVector);
+            this.cameraTarget.add(moveVector);
+            this.cameraDistance = this.cameraPosition.distanceTo(this.cameraTarget);
+
+            this.updateCameraPosition();
+        }
+    }
+
+    updateCameraPosition() {
+        this.camera.position.copy(this.cameraPosition);
+        this.camera.quaternion.copy(this.cameraOrientation);
+    }
+
+    setIntersectableObjects(objects) {
+        this.objectsToIntersect = objects;
+    }
+
+    getPointUnderMouse(clientX, clientY) {
+        const mouse = new THREE.Vector2();
+        const rect = this.domElement.getBoundingClientRect();
+        mouse.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, this.camera);
+
+        const intersects = raycaster.intersectObjects(this.objectsToIntersect, false);
+
+        if (intersects.length > 0) {
+            return intersects[0].point;
+        }
+
+        // Fallback: If no object is hit, find a point on the grid plane (y=0).
+        const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+        const intersectionPoint = new THREE.Vector3();
+        if (raycaster.ray.intersectPlane(plane, intersectionPoint)) {
+            return intersectionPoint;
+        }
+
+        return null; // Should rarely happen
+    }
+
+    // Public methods to be called from BeamViewer
+    focus(box) {
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        
+        this.cameraTarget.copy(center);
+
+        if (this.camera.isOrthographicCamera) {
+            const maxDim = Math.max(size.x, size.y);
+            const aspect = this.domElement.clientWidth / this.domElement.clientHeight;
+
+            this.camera.left = -maxDim * aspect / 2;
+            this.camera.right = maxDim * aspect / 2;
+            this.camera.top = maxDim / 2;
+            this.camera.bottom = -maxDim / 2;
+            
+            this.camera.zoom = 1;
+            
+            const offset = new THREE.Vector3(0, 0, 1).applyQuaternion(this.cameraOrientation).multiplyScalar(size.z*2);
+            this.cameraPosition.copy(this.cameraTarget).add(offset);
+            
+            this.camera.updateProjectionMatrix();
+            this.updateCameraPosition();
+
+        } else {
+            const maxDim = Math.max(size.x, size.y, size.z);
+            this.cameraDistance = maxDim * 2;
+
+            const offset = new THREE.Vector3(0, 0, 1).applyQuaternion(this.cameraOrientation).multiplyScalar(this.cameraDistance);
+            this.cameraPosition.copy(this.cameraTarget).add(offset);
+            
+            this.updateCameraPosition();
+        }
+    }
+
+    reset() {
+        this.cameraTarget.set(0, 0, 0);
+        this.cameraPosition.set(4000, 2000, 4000);
+        this.cameraDistance = this.cameraPosition.distanceTo(this.cameraTarget);
+
+        const tempMatrix = new THREE.Matrix4();
+        tempMatrix.lookAt(this.cameraPosition, this.cameraTarget, new THREE.Vector3(0, 1, 0));
+        this.cameraOrientation.setFromRotationMatrix(tempMatrix);
+
+        this.updateCameraPosition();
+    }
+} 
+==================== C:\Users\t93to\Desktop\tomcad\CopyManager.js ====================
+// Copy functionality
+class CopyManager {
+    constructor(elementManager, selectionManager, uiManager, camera, renderer, beamObjects) {
+        this.elementManager = elementManager;
+        this.selectionManager = selectionManager;
+        this.uiManager = uiManager;
+        this.camera = camera;
+        this.renderer = renderer;
+        this.beamObjects = beamObjects;
+        
+        this.isCopyMode = false;
+        this.copySourcePoint = null;
+        this.numCopiesToCreate = 1;
+    }
+
+    startCopy() {
+        const selectedElements = this.selectionManager.getSelectedElements();
+        if (selectedElements.length === 0) {
+            alert("Please select an element to copy first.");
+            return;
+        }
+        
+        const numCopiesInput = document.getElementById('edit-num-copies');
+        const numCopies = parseInt(numCopiesInput.value, 10);
+
+        if (isNaN(numCopies) || numCopies < 1) {
+            alert("Please enter a valid number of copies (1 or more).");
+            numCopiesInput.value = "1";
+            return;
+        }
+
+        this.isCopyMode = true;
+        this.copySourcePoint = null;
+        this.numCopiesToCreate = numCopies;
+        this.uiManager.updateStatusBar("Pick source point");
+        document.body.style.cursor = 'crosshair';
+    }
+
+    cancelCopy() {
+        this.isCopyMode = false;
+        this.copySourcePoint = null;
+        this.numCopiesToCreate = 1;
+        this.uiManager.updateStatusBar(null);
+        document.body.style.cursor = 'default';
+    }
+
+    handleCopyClick(event) {
+        if (!this.isCopyMode || event.button !== 0) return false;
+
+        const point = GeometryUtils.getPointUnderMouse(event, this.camera, this.renderer, this.beamObjects);
+        if (!point) return true;
+
+        if (!this.copySourcePoint) {
+            // This is the first click: setting the source point
+            this.copySourcePoint = point;
+            this.uiManager.updateStatusBar(`Pick destination point (vector for ${this.numCopiesToCreate} copies)`);
+        } else {
+            // This is the second click: setting the destination and performing the copy
+            const destinationPoint = point;
+            this.performCopy(this.copySourcePoint, destinationPoint);
+            this.cancelCopy(); // Exit copy mode after completion
+        }
+        return true;
+    }
+
+    performCopy(sourcePoint, destinationPoint) {
+        const selectedElements = this.selectionManager.getSelectedElements();
+        if (selectedElements.length === 0) return;
+
+        const copiedElements = this.elementManager.copyElements(
+            selectedElements, 
+            sourcePoint, 
+            destinationPoint, 
+            this.numCopiesToCreate
+        );
+
+        // Update UI for each copied element
+        copiedElements.forEach(element => {
+            this.uiManager.addElementToList(element);
+        });
+
+        // Update element count
+        document.getElementById('element-count').textContent = this.elementManager.getAllElements().length;
+        
+        console.log(`Copied ${selectedElements.length} element(s) ${this.numCopiesToCreate} times`);
+    }
+
+    isCopyModeActive() {
+        return this.isCopyMode;
+    }
+} 
+==================== C:\Users\t93to\Desktop\tomcad\CreationManager.js ====================
+// Creation process management
+class CreationManager {
+    constructor(scene, elementManager, uiManager, snapManager) {
+        this.scene = scene;
+        this.elementManager = elementManager;
+        this.uiManager = uiManager;
+        this.snapManager = snapManager;
+
+        this.isCreating = false;
+        this.creationState = null; // e.g., 'awaiting_first_point', 'awaiting_second_point'
+        this.firstPoint = null;
+        this.tempLine = null;
+        this.handleKeyDown = null;
+    }
+
+    startBeamCreation() {
+        if (this.isCreating) {
+            this.cancelCreation();
+        }
+
+        this.isCreating = true;
+        this.creationState = 'awaiting_first_point';
+        this.uiManager.showCreationPanel('beam');
+        this.uiManager.updateStatusBar('Pick start point for the new beam');
+        document.body.style.cursor = 'crosshair';
+
+        // Add a dedicated listener for the Escape key
+        this.handleKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                this.cancelCreation();
+            }
+        };
+        document.addEventListener('keydown', this.handleKeyDown);
+    }
+
+    startPlateCreation() {
+        // TODO: Implement plate creation UI and logic
+        alert('Plate creation is not yet implemented.');
+    }
+
+    cancelCreation() {
+        if (!this.isCreating) return;
+
+        // Clean up the keydown listener
+        if (this.handleKeyDown) {
+            document.removeEventListener('keydown', this.handleKeyDown);
+            this.handleKeyDown = null;
+        }
+
+        this.isCreating = false;
+        this.creationState = null;
+        this.firstPoint = null;
+        this.uiManager.hideCreationPanel();
+        this.uiManager.updateStatusBar(null);
+        document.body.style.cursor = 'default';
+
+        if (this.tempLine) {
+            this.scene.remove(this.tempLine);
+            this.tempLine.geometry.dispose();
+            this.tempLine.material.dispose();
+            this.tempLine = null;
+        }
+
+        // End axis snapping when creation is cancelled
+        this.snapManager.endAxisSnap();
+    }
+
+    handleCanvasClick(point) {
+        if (!this.isCreating || !point) return;
+
+        if (this.creationState === 'awaiting_first_point') {
+            this.firstPoint = point.clone();
+            this.creationState = 'awaiting_second_point';
+            
+            // Start axis snapping from the first point
+            this.snapManager.startAxisSnap(this.firstPoint);
+
+            // Create a temporary line for visual feedback
+            const material = new THREE.LineDashedMaterial({ color: 0xffaa4a, dashSize: 50, gapSize: 25 });
+            const geometry = new THREE.BufferGeometry().setFromPoints([this.firstPoint, this.firstPoint.clone()]);
+            this.tempLine = new THREE.Line(geometry, material);
+            this.tempLine.computeLineDistances();
+            this.scene.add(this.tempLine);
+
+            this.uiManager.updateStatusBar('Pick end point for the new beam');
+
+        } else if (this.creationState === 'awaiting_second_point') {
+            const endPoint = point.clone();
+            
+            // Check if the beam is long enough
+            if (this.firstPoint.distanceTo(endPoint) < 1.0) {
+                console.warn("Beam is too short, cancelling.");
+                this.cancelCreation();
+                return;
+            }
+
+            // Get parameters from the UI panel
+            const params = this.uiManager.getCreationParams();
+
+            // Create the actual beam
+            this.elementManager.addNewBeam(
+                this.firstPoint,
+                endPoint,
+                params.profile,
+                params.material,
+                params.orientation
+            );
+
+            // End the old snap session and start a new one from the last point
+            this.snapManager.endAxisSnap();
+            this.snapManager.startAxisSnap(endPoint);
+
+            // Reset for the next beam
+            this.firstPoint = endPoint.clone();
+            this.creationState = 'awaiting_second_point';
+            this.updatePreview(endPoint); // Start the new temp line from the last point
+            this.uiManager.updateStatusBar('Pick end point for the new beam (or ESC to cancel)');
+        }
+    }
+
+    updatePreview(currentPoint) {
+        if (this.creationState === 'awaiting_second_point' && this.tempLine) {
+            this.tempLine.geometry.setFromPoints([this.firstPoint, currentPoint]);
+            this.tempLine.computeLineDistances();
+            this.tempLine.geometry.attributes.position.needsUpdate = true;
+        }
+    }
+
+    isActive() {
+        return this.isCreating;
+    }
+} 
+==================== C:\Users\t93to\Desktop\tomcad\debug.html ====================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Beam Viewer</title>
+    <style>
+        body { margin: 0; background: #000; color: white; font-family: Arial; }
+        #info { position: absolute; top: 10px; left: 10px; z-index: 100; }
+        #canvas { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h3>Debug Info</h3>
+        <div id="status">Loading...</div>
+        <div id="data-info"></div>
+    </div>
+    <div id="canvas"></div>
+
+    <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="struktura.js"></script>
+    
+    <script>
+        const status = document.getElementById('status');
+        const dataInfo = document.getElementById('data-info');
+        
+        try {
+            status.textContent = 'Checking Three.js...';
+            console.log('THREE:', typeof THREE);
+            
+            if (typeof THREE === 'undefined') {
+                throw new Error('Three.js not loaded');
+            }
+            
+            status.textContent = 'Checking OrbitControls...';
+            console.log('OrbitControls:', typeof THREE.OrbitControls);
+            
+            if (typeof THREE.OrbitControls === 'undefined') {
+                throw new Error('OrbitControls not loaded');
+            }
+            
+            status.textContent = 'Checking structure data...';
+            console.log('strukturaData:', typeof strukturaData);
+            
+            if (typeof strukturaData === 'undefined') {
+                throw new Error('strukturaData not loaded');
+            }
+            
+            dataInfo.innerHTML = `
+                <p>Elements: ${strukturaData.elements ? strukturaData.elements.length : 'undefined'}</p>
+                <p>Operations: ${strukturaData.operations ? strukturaData.operations.length : 'undefined'}</p>
+                <p>Project: ${strukturaData.meta ? strukturaData.meta.name : 'undefined'}</p>
+            `;
+            
+            // Initialize basic Three.js scene
+            status.textContent = 'Initializing scene...';
+            
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x222222);
+            
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+            camera.position.set(1000, 1000, 1000);
+            
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas').appendChild(renderer.domElement);
+            
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            
+            // Add basic lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1000, 1000, 1000);
+            scene.add(directionalLight);
+            
+            // Add a test cube
+            const geometry = new THREE.BoxGeometry(200, 200, 200);
+            const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+            const cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            
+            // Add grid
+            const gridHelper = new THREE.GridHelper(2000, 20);
+            scene.add(gridHelper);
+            
+            // Add axes
+            const axesHelper = new THREE.AxesHelper(500);
+            scene.add(axesHelper);
+            
+            // Create one test beam from the data
+            if (strukturaData.elements && strukturaData.elements.length > 0) {
+                const beam = strukturaData.elements[0];
+                const beamGeometry = new THREE.BoxGeometry(100, 100, 1000);
+                const beamMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+                const beamMesh = new THREE.Mesh(beamGeometry, beamMaterial);
+                beamMesh.position.set(500, 0, 0);
+                scene.add(beamMesh);
+                
+                dataInfo.innerHTML += `<p>Test beam added: ${beam.id}</p>`;
+            }
+            
+            status.textContent = 'Success! Scene initialized.';
+            
+            // Animate
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+            
+            // Handle resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+        } catch (error) {
+            status.textContent = 'Error: ' + error.message;
+            console.error('Debug error:', error);
+        }
+    </script>
+</body>
+</html> 
+==================== C:\Users\t93to\Desktop\tomcad\documentation.txt ====================
+# TomCAD Application Architecture
+
+This document provides a comprehensive overview of the TomCAD application architecture. It serves as a reference for developers to understand the structure, components, and data flow of the application.
+
+## 1. High-Level Architecture: A JSON-Centric Approach
+
+The fundamental principle of TomCAD's architecture is that **the application is a visual editor for a single, comprehensive JSON object**. This object, defined in `struktura.js`, is the true "model" and the heart of the application. All other code—the JavaScript classes, the three.js rendering engine, the UI—exists solely to **display and manipulate this JSON data**.
+
+The application can be thought of as a `(Model -> View)` system:
+-   **Model**: The `strukturaData` object. This is the single source of truth. It declaratively describes the entire state of the 3D scene.
+-   **View/Controller**: The entire JavaScript application (`BeamViewer` and its managers). Its job is to:
+    1.  **Read** the `strukturaData` model and translate it into a visual representation (the 3D scene and HTML UI).
+    2.  Provide tools for the user to **modify** the `strukturaData` model in an intuitive, graphical way.
+
+The data flow is therefore a loop:
+1.  **Initialization**: `BeamViewer` reads `strukturaData` and builds the initial 3D scene and UI.
+2.  **User Interaction**: The user clicks a button, drags a point, or edits a property in a form.
+3.  **Model Mutation**: A manager class (like `ElementManager` or `UIManager`) translates this interaction into a direct modification of the `strukturaData` object. For example, changing a beam's length updates the `end` array for that element within the `elements` array of `strukturaData`.
+4.  **View Synchronization**: The manager then updates the corresponding three.js `Mesh` object (or DOM element) to visually reflect the new state of the data model.
+
+This JSON-centric approach makes the application's state explicit, portable, and easy to save/load.
+
+## 2. Core Data Structures
+
+### `struktura.js`
+-   **Purpose**: This file contains **the single source of truth for the entire 3D model**. It is not just data; it is the application's core state. All program execution is aimed at interpreting or modifying this object.
+-   **Key Sections**:
+    -   `meta`: Project-level information.
+    -   `operations`: A list of modifications (cuts, holes) that can be applied to elements.
+    -   `boltGroups`: Defines connections between elements.
+    -   `elements`: The primary list of all structural objects (beams, plates). Each element has properties like `id`, `kind`, `profile`, `material`, start/end points, and a list of `operationIds` that apply to it.
+    -   `grids`: Defines the construction grid systems for the model.
+
+### `profiles.js`
+-   **Purpose**: Acts as a database for standard steel profiles (HEA, IPE, RHS, CHS, etc.).
+-   **Key Objects**:
+    -   `SteelProfiles`: A nested object containing the geometric properties (height, width, thickness, etc.) for various profile types and sizes.
+    -   `ProfileGeometry`: An object containing methods (`createIBeamGeometry`, `createRHSGeometry`, etc.) that use the `SteelProfiles` data to generate `THREE.Shape` objects for creating extruded geometries (`THREE.ExtrudeGeometry`).
+-   **Key Functions**:
+    -   `createProfileGeometry(profileName, length)`: A factory function that parses a profile name (e.g., "HEA200"), looks up its data in `SteelProfiles`, and calls the appropriate `ProfileGeometry` method to create a 3D geometry of a specific length.
+
+## 3. Main Application Logic
+
+### `app.js`
+-   **Purpose**: The main entry point for the application.
+-   **Responsibilities**:
+    -   Initializes the `BeamViewer` class once the DOM is fully loaded.
+    -   Handles the loading screen display.
+    -   Exposes global functions (`toggleAddMenu`, `applyChanges`, etc.) that are called directly by `onclick` attributes in `index.html`. These functions simply delegate the calls to the `viewer` instance, acting as a bridge between the static HTML and the application's object-oriented structure.
+
+### `BeamViewer.js`
+-   **Purpose**: The central orchestrator of the entire application.
+-   **Class: `BeamViewer`**
+    -   **Responsibilities**:
+        -   Initializes the three.js scene, camera, renderer, and lighting.
+        -   Instantiates all manager classes (`ElementManager`, `SelectionManager`, `UIManager`, etc.).
+        -   Loads the initial `structureData`.
+        -   Handles the main `animate` loop for rendering frames.
+        -   Captures and delegates mouse events (`onMouseDown`, `onMouseMove`, `onMouseUp`) to the appropriate managers.
+        -   Provides a public API of high-level methods (`addNewElement`, `deleteElement`, `fitToView`, etc.) that are called by the global functions in `app.js`.
+    -   **Key Methods**:
+        -   `init()`: The main setup method that orchestrates the entire application startup sequence.
+        -   `initializeManagers()`: Creates instances of all the helper manager classes.
+        -   `onMouseDown()`, `onMouseMove()`, `onMouseUp()`: Primary mouse event handlers.
+        -   `animate()`: The core render loop, called with `requestAnimationFrame`.
+
+## 4. Manager Modules
+
+### `ElementManager.js`
+-   **Purpose**: Manages the lifecycle and data of all structural elements. It is the primary interface for creating, updating, and deleting elements.
+-   **Class: `ElementManager`**
+    -   **Responsibilities**:
+        -   Reading element data from `structureData` and creating the corresponding three.js `Mesh` objects.
+        -   Adding, removing, and updating elements in both the `structureData` object and the 3D scene.
+        -   Handling the logic for complex operations like copying elements.
+    -   **Key Methods**:
+        -   `createBeams()`: Iterates through `structureData.elements` and calls `createBeam` or `createPlate`.
+        -   `createBeam(beamData)`: Creates a single beam mesh using `ProfileGeometry` and `GeometryUtils`.
+        -   `updateElementPoint(elementId, pointType, newPosition)`: Updates a beam's start or end point during a drag operation.
+        -   `updateElement(elementId, newData)`: Applies changes from the edit panel to an element.
+        -   `deleteElements(elementIds)`: Removes elements from the data and the scene.
+        -   `copyElements(...)`: Creates deep copies of elements with a translation vector.
+
+### `SelectionManager.js`
+-   **Purpose**: Manages all user selection logic, including click-to-select, box selection, and the creation of control points for editing.
+-   **Class: `SelectionManager`**
+    -   **Responsibilities**:
+        -   Detecting which elements are selected by the user.
+        -   Managing the list of selected elements (`selectedElements`).
+        -   Displaying a visual selection box during drag-to-select.
+        -   Creating and managing the draggable control points (the yellow spheres) for modifying selected beams.
+        -   Initializing `DragControls` to handle the dragging of these control points.
+    -   **Key Methods**:
+        -   `onMouseDown()`, `onMouseMove()`, `onMouseUp()`: Handles the logic for both click-selection and drag-selection.
+        -   `updateSelectionVisuals()`: The core method for visually updating the scene based on the current selection. It colors selected elements red and creates control points. This method is crucial and is hooked into by `BeamViewer` to also trigger UI updates.
+        -   `initDragControls()`: Sets up the `THREE.DragControls` instance and attaches listeners (`dragstart`, `drag`, `dragend`) to handle moving the control points. This is where the `SnapManager` is invoked.
+
+### `SnapManager.js`
+-   **Purpose**: Manages all object snapping logic for precise placement of points.
+-   **Class: `SnapManager`**
+    -   **Responsibilities**:
+        -   Implementing the logic for various snap modes (endpoints, grid lines, intersections, axis, etc.).
+        -   Finding the highest-priority snap point near the cursor during a drag operation.
+        -   Displaying a visual indicator (a green sphere) at the snap location.
+        -   Managing the state of the snap toolbar UI.
+        -   Displaying an `AxesHelper` when axis snapping is active.
+    -   **Key Methods**:
+        -   `findSnapPoint(raycaster, mouse, ...)`: The main method called by `SelectionManager` during a drag. It orchestrates the entire snap-finding process.
+        -   `getPointCandidates()`, `getLineCandidates()`, `getIntersectionCandidates()`: These helper methods collect all possible snap-able points and lines from the enabled snap modes.
+        -   `checkAndUpdateSnap(point, priority)`: Evaluates a potential snap point to see if it's better than the current best snap.
+        -   `startAxisSnap(stationaryPoint)`, `endAxisSnap()`: Manages the visibility and position of the axis snap helper.
+
+### `UIManager.js`
+-   **Purpose**: Manages all interactions with the HTML-based user interface, except for the 3D canvas itself.
+-   **Class: `UIManager`**
+    -   **Responsibilities**:
+        -   Populating and updating the element list on the right side of the screen.
+        -   Populating and managing the edit panel with the properties of the selected element.
+        -   Handling the "Apply" and "Delete" button logic within the edit panel.
+        -   Updating the status bar with contextual messages (e.g., "Pick source point").
+    -   **Key Methods**:
+        -   `setupUI()`: Initializes the UI, populating the element list.
+        -   `onSelectionChanged(selectedIds)`: A critical callback method. It opens the edit panel when a single element is selected and closes it otherwise.
+        -   `openEditPanel(elementId)`: Populates the form with the data of the specified element.
+        -   `applyChanges()`: Reads the data from the form and calls `ElementManager.updateElement`.
+
+### `GridManager.js`
+-   **Purpose**: Manages the creation and interaction of construction grids.
+-   **Class: `GridManager`**
+    -   **Responsibilities**:
+        -   Reading grid data from `strukturaData`.
+        -   Creating the three.js `Line` objects to represent the grid in the 3D scene.
+        -   Providing a list of grid lines and intersection points to the `SnapManager`.
+    -   **Key Methods**:
+        -   `createGrids()`: Main method to build the grid geometry.
+        -   `getGridLines()`: Returns all grid line objects for snapping and highlighting.
+        -   `getIntersectionPoints()`: Calculates and returns the points where grid lines cross.
+
+### `CopyManager.js`
+-   **Purpose**: Encapsulates the state and logic for the multi-copy command.
+-   **Class: `CopyManager`**
+    -   **Responsibilities**:
+        -   Managing the state of the copy mode (active/inactive, source point set/not set).
+        -   Guiding the user through the two-click copy process (pick source, pick destination).
+        -   Calling `ElementManager.copyElements` to perform the actual data duplication.
+    -   **Key Methods**:
+        -   `startCopy()`: Enters copy mode.
+        -   `handleCopyClick(event)`: The state machine for the copy process, handling the first and second clicks.
+        -   `performCopy(...)`: Executes the copy operation.
+
+### `ImportExport.js`
+-   **Purpose**: Handles saving the current model to a JSON file and loading a model from a file.
+-   **Class: `ImportExport`**
+    -   **Responsibilities**:
+        -   Serializing the `structureData` object to a JSON string for export.
+        -   Reading an uploaded JSON file and parsing it.
+        -   Orchestrating the replacement of the current structure with the imported one.
+    -   **Key Methods**:
+        -   `exportStructure()`: Creates and triggers the download of the JSON file.
+        -   `importStructure(file)`: Reads the file and calls `loadImportedStructure`.
+
+### `CameraControls.js`
+-   **Purpose**: Provides custom camera controls for orbiting (rotate), panning, and zooming the 3D view. This replaces the default three.js `OrbitControls` to allow for more specific behavior.
+-   **Class: `CameraControls`**
+    -   **Responsibilities**:
+        -   Listening for mouse events (mousedown, mousemove, wheel) on the canvas.
+        -   Implementing the logic for rotate (middle mouse), pan (shift + middle mouse), and zoom (wheel).
+        -   Features "zoom-to-cursor" functionality for a more intuitive experience.
+    -   **Key Methods**:
+        -   `rotateCamera()`, `panCamera()`, `zoomCamera()`: Core methods that modify the camera's position and target based on mouse input.
+        -   `focus(box)`: Moves the camera to focus on a specific bounding box.
+
+## 5. Utility Modules
+
+### `DragControls.js`
+-   **Purpose**: A modified version of the standard `THREE.DragControls` utility.
+-   **Key Modifications**:
+    -   The `drag` event has been modified to include the current normalized mouse coordinates (`mouse: _mouse`). This was a crucial change to allow the `SelectionManager` to perform accurate raycasting from the cursor's position for snapping, rather than from the center of the dragged object.
+
+### `GeometryUtils.js`
+-   **Purpose**: A static utility class containing helper functions related to geometry and materials.
+-   **Class: `GeometryUtils`**
+    -   **Responsibilities**:
+        -   Providing functions to look up profile dimensions and material colors.
+        -   Positioning and orienting beam meshes based on their start and end points (`positionBeam`).
+        -   Calculating a point in 3D space under the mouse cursor (`getPointUnderMouse`).
+    -   **Key Methods**:
+        -   `positionBeam(mesh, start, end, beamData)`: Sets a mesh's position and quaternion to align it between two points.
+        -   `getPointUnderMouse(...)`: A utility for raycasting to find a 3D coordinate.
+
+## 6. Creation Workflow
+
+A dedicated creation workflow system improves user experience when adding new elements. This is managed by the `CreationManager`.
+
+### `CreationManager.js`
+-   **Purpose**: Manages the multi-step process of creating new elements like beams and plates. It acts as a state machine for the current creation task.
+-   **Class: `CreationManager`**
+    -   **Responsibilities**:
+        -   Activating a "creation mode" when the user clicks a creation button (e.g., "Add Beam") in the UI.
+        -   Displaying a temporary, interactive visual representation of the element being created (e.g., a line that follows the cursor for a beam).
+        -   Capturing user clicks on the canvas to define geometry (e.g., start and end points of a beam).
+        -   Using the `SnapManager` to ensure precise point placement for these clicks.
+        -   Calling the `ElementManager` to create the final element in the `structureData` and the scene once all required points have been defined.
+    -   **Key Methods**:
+        -   `startBeamCreation()`: Initiates the process for creating a new beam.
+        -   `handleCanvasClick(point)`: The core state machine that handles clicks for the first point, second point, etc.
+        -   `updatePreview(currentPoint)`: Updates the temporary visual element during creation.
+        -   `cancelCreation()`: Exits the creation mode.
+
+## 7. Document History
+-   2025-06-19: Initial document creation. Described the existing architecture of the TomCAD application.
+-   2025-06-19: Updated the High-Level Architecture section to emphasize the JSON-centric design of the application. The `struktura.js` file is the core model, and the rest of the application is a viewer/editor for this data.
+-   2025-06-19: Added 'Creation Workflow' section describing the new UI and `CreationManager` for a more intuitive element creation process. 
+==================== C:\Users\t93to\Desktop\tomcad\DragControls.js ====================
+/**
+ * @author zz85 / https://github.com/zz85
+ * @author mrdoob / http://mrdoob.com
+ * Running this will allow you to drag three.js objects around with the mouse.
+ */
+
+THREE.DragControls = function ( _objects, _camera, _domElement ) {
+
+	var _plane = new THREE.Plane();
+	var _raycaster = new THREE.Raycaster();
+
+	var _mouse = new THREE.Vector2();
+	var _offset = new THREE.Vector3();
+	var _intersection = new THREE.Vector3();
+	var _worldPosition = new THREE.Vector3();
+	var _inverseMatrix = new THREE.Matrix4();
+	var _intersections = [];
+
+	var _selected = null, _hovered = null;
+
+	//
+
+	var scope = this;
+
+	function activate() {
+
+		_domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
+		_domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+		_domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
+		_domElement.addEventListener( 'mouseout', onDocumentMouseOut, false );
+		_domElement.addEventListener( 'touchstart', onDocumentTouchStart, false );
+		_domElement.addEventListener( 'touchmove', onDocumentTouchMove, false );
+		_domElement.addEventListener( 'touchend', onDocumentTouchEnd, false );
+
+	}
+
+	function deactivate() {
+
+		_domElement.removeEventListener( 'mousemove', onDocumentMouseMove, false );
+		_domElement.removeEventListener( 'mousedown', onDocumentMouseDown, false );
+		_domElement.removeEventListener( 'mouseup', onDocumentMouseUp, false );
+		_domElement.removeEventListener( 'mouseout', onDocumentMouseOut, false );
+		_domElement.removeEventListener( 'touchstart', onDocumentTouchStart, false );
+		_domElement.removeEventListener( 'touchmove', onDocumentTouchMove, false );
+		_domElement.removeEventListener( 'touchend', onDocumentTouchEnd, false );
+
+	}
+
+	function dispose() {
+
+		deactivate();
+
+	}
+
+	function onDocumentMouseMove( event ) {
+
+		event.preventDefault();
+
+		var rect = _domElement.getBoundingClientRect();
+
+		_mouse.x = ( ( event.clientX - rect.left ) / rect.width ) * 2 - 1;
+		_mouse.y = - ( ( event.clientY - rect.top ) / rect.height ) * 2 + 1;
+
+		_raycaster.setFromCamera( _mouse, _camera );
+
+		if ( _selected && scope.enabled ) {
+
+			if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
+
+				_selected.position.copy( _intersection.sub( _offset ).applyMatrix4( _inverseMatrix ) );
+
+			}
+
+			scope.dispatchEvent( { type: 'drag', object: _selected, mouse: _mouse, clientX: event.clientX, clientY: event.clientY } );
+
+			return;
+
+		}
+
+		_intersections.length = 0;
+
+		_raycaster.setFromCamera( _mouse, _camera );
+		_raycaster.intersectObjects( _objects, true, _intersections );
+
+		if ( _intersections.length > 0 ) {
+
+			var object = _intersections[ 0 ].object;
+
+			_plane.setFromNormalAndCoplanarPoint( _camera.getWorldDirection( _plane.normal ), _worldPosition.setFromMatrixPosition( object.matrixWorld ) );
+
+			if ( _hovered !== object ) {
+
+				scope.dispatchEvent( { type: 'hoveron', object: object } );
+
+				_domElement.style.cursor = 'pointer';
+				_hovered = object;
+
+			}
+
+		} else {
+
+			if ( _hovered !== null ) {
+
+				scope.dispatchEvent( { type: 'hoveroff', object: _hovered } );
+
+				_domElement.style.cursor = 'auto';
+				_hovered = null;
+
+			}
+
+		}
+
+	}
+
+	function onDocumentMouseDown( event ) {
+
+		event.preventDefault();
+
+		_intersections.length = 0;
+
+		_raycaster.setFromCamera( _mouse, _camera );
+		_raycaster.intersectObjects( _objects, true, _intersections );
+
+		if ( _intersections.length > 0 ) {
+
+			_selected = ( scope.transformGroup === true ) ? _objects[ 0 ] : _intersections[ 0 ].object;
+
+			if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
+
+				_inverseMatrix.copy( _selected.parent.matrixWorld ).invert();
+				_offset.copy( _intersection ).sub( _worldPosition.setFromMatrixPosition( _selected.matrixWorld ) );
+
+			}
+
+
+
+			_domElement.style.cursor = 'move';
+
+			scope.dispatchEvent( { type: 'dragstart', object: _selected } );
+
+		}
+
+
+	}
+
+	function onDocumentMouseUp( event ) {
+
+		event.preventDefault();
+
+		if ( _selected ) {
+
+			scope.dispatchEvent( { type: 'dragend', object: _selected } );
+
+			_selected = null;
+
+		}
+
+		_domElement.style.cursor = 'auto';
+
+	}
+
+	function onDocumentMouseOut( event ) {
+
+		event.preventDefault();
+
+		if ( _selected ) {
+
+			scope.dispatchEvent( { type: 'dragend', object: _selected } );
+
+			_selected = null;
+
+		}
+
+		_domElement.style.cursor = 'auto';
+
+	}
+
+	function onDocumentTouchStart( event ) {
+
+		event.preventDefault();
+		event = event.changedTouches[ 0 ];
+
+		var rect = _domElement.getBoundingClientRect();
+
+		_mouse.x = ( ( event.clientX - rect.left ) / rect.width ) * 2 - 1;
+		_mouse.y = - ( ( event.clientY - rect.top ) / rect.height ) * 2 + 1;
+
+		_intersections.length = 0;
+
+		_raycaster.setFromCamera( _mouse, _camera );
+		_raycaster.intersectObjects( _objects, true, _intersections );
+
+		if ( _intersections.length > 0 ) {
+
+			_selected = ( scope.transformGroup === true ) ? _objects[ 0 ] : _intersections[ 0 ].object;
+
+			_plane.setFromNormalAndCoplanarPoint( _camera.getWorldDirection( _plane.normal ), _worldPosition.setFromMatrixPosition( _selected.matrixWorld ) );
+
+			if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
+				_inverseMatrix.copy( _selected.parent.matrixWorld ).invert();
+				_offset.copy( _intersection ).sub( _worldPosition.setFromMatrixPosition( _selected.matrixWorld ) );
+
+			}
+
+			_domElement.style.cursor = 'move';
+
+			scope.dispatchEvent( { type: 'dragstart', object: _selected } );
+
+		}
+
+
+	}
+
+	function onDocumentTouchMove( event ) {
+
+		event.preventDefault();
+		event = event.changedTouches[ 0 ];
+
+		var rect = _domElement.getBoundingClientRect();
+
+		_mouse.x = ( ( event.clientX - rect.left ) / rect.width ) * 2 - 1;
+		_mouse.y = - ( ( event.clientY - rect.top ) / rect.height ) * 2 + 1;
+
+		_raycaster.setFromCamera( _mouse, _camera );
+
+		if ( _selected && scope.enabled ) {
+
+			if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
+
+				_selected.position.copy( _intersection.sub( _offset ).applyMatrix4( _inverseMatrix ) );
+
+			}
+
+			scope.dispatchEvent( { type: 'drag', object: _selected, mouse: _mouse, clientX: event.clientX, clientY: event.clientY } );
+
+			return;
+
+		}
+
+	}
+
+	function onDocumentTouchEnd( event ) {
+
+		event.preventDefault();
+
+		if ( _selected ) {
+
+			scope.dispatchEvent( { type: 'dragend', object: _selected } );
+
+			_selected = null;
+
+		}
+
+		_domElement.style.cursor = 'auto';
+
+	}
+
+	activate();
+
+	// API
+
+	this.enabled = true;
+	this.transformGroup = false;
+
+	this.activate = activate;
+	this.deactivate = deactivate;
+	this.dispose = dispose;
+
+	// Backward compatibility
+
+	this.setObjects = function ( objects ) {
+
+		_objects = objects;
+
+	};
+
+	this.on = function ( type, listener ) {
+
+		console.warn( 'THREE.DragControls: .on() has been deprecated. Use .addEventListener() instead.' );
+		scope.addEventListener( type, listener );
+
+	};
+
+	this.off = function ( type, listener ) {
+
+		console.warn( 'THREE.DragControls: .off() has been deprecated. Use .removeEventListener() instead.' );
+		scope.removeEventListener( type, listener );
+
+	};
+
+	this.notify = function ( type ) {
+
+		console.warn( 'THREE.DragControls: .notify() has been deprecated. Use .dispatchEvent() instead.' );
+		scope.dispatchEvent( { type: type } );
+
+	};
+
+};
+
+THREE.DragControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+THREE.DragControls.prototype.constructor = THREE.DragControls; 
+==================== C:\Users\t93to\Desktop\tomcad\ElementManager.js ====================
+// Element management functionality
+class ElementManager {
+    constructor(scene, beamObjects, structureData, viewer, gridManager) {
+        this.scene = scene;
+        this.beamObjects = beamObjects;
+        this.structureData = structureData;
+        this.viewer = viewer;
+        this.gridManager = gridManager;
+        this.nextElementId = 1;
+        this.initializeElementCounter();
+    }
+
+    initializeElementCounter() {
+        // Find the highest element number to avoid conflicts
+        let maxId = 0;
+        this.structureData.elements.forEach(element => {
+            const match = element.id.match(/(\d+)$/);
+            if (match) {
+                maxId = Math.max(maxId, parseInt(match[1]));
+            }
+        });
+        this.nextElementId = maxId + 1;
+    }
+
+    createBeams() {
+        if (!this.structureData || !this.structureData.elements) {
+            console.error('No elements found in structure data');
+            return;
+        }
+
+        this.structureData.elements.forEach(element => {
+            if (element.kind === 'beam') {
+                this.createBeam(element);
+            } else if (element.kind === 'plate') {
+                this.createPlate(element);
+            }
+        });
+    }
+
+    createBeam(beamData) {
+        const start = new THREE.Vector3(...beamData.start);
+        const end = new THREE.Vector3(...beamData.end);
+        
+        let geometry, material;
+        
+        // Determine beam geometry based on profile using real steel profiles
+        const profile = beamData.profile;
+        const length = start.distanceTo(end);
+        
+        // Use the profile geometry function if available
+        if (typeof createProfileGeometry === 'function') {
+            geometry = createProfileGeometry(profile, length);
+        } else {
+            // Fallback to simple geometries
+            if (profile.startsWith('HEA') || profile.startsWith('IPE')) {
+                const height = GeometryUtils.getProfileDimension(profile, 'height');
+                const width = GeometryUtils.getProfileDimension(profile, 'width');
+                geometry = new THREE.BoxGeometry(width, height, length);
+            } else if (profile.startsWith('RHS')) {
+                const dimensions = GeometryUtils.parseRHSProfile(profile);
+                geometry = new THREE.BoxGeometry(dimensions.width, dimensions.height, length);
+            } else if (profile.startsWith('CHS')) {
+                const diameter = GeometryUtils.parseCHSProfile(profile);
+                geometry = new THREE.CylinderGeometry(diameter/2, diameter/2, length, 16);
+            } else {
+                geometry = new THREE.BoxGeometry(100, 100, length);
+            }
+        }
+        
+        // Material based on steel grade
+        const color = GeometryUtils.getMaterialColor(beamData.material);
+        material = new THREE.MeshLambertMaterial({ 
+            color: color,
+            transparent: true,
+            opacity: 0.8
+        });
+        
+        const mesh = new THREE.Mesh(geometry, material);
+        
+        // Position and orient the beam
+        GeometryUtils.positionBeam(mesh, start, end, beamData);
+        
+        // Store reference
+        mesh.userData = {
+            elementId: beamData.id,
+            elementData: beamData,
+            originalMaterial: material.clone(),
+            originalLength: length
+        };
+        
+        this.beamObjects.set(beamData.id, mesh);
+        this.scene.add(mesh);
+    }
+
+    createPlate(plateData) {
+        const geometry = new THREE.BoxGeometry(
+            plateData.width, 
+            plateData.height, 
+            plateData.thickness
+        );
+        
+        const color = GeometryUtils.getMaterialColor(plateData.material);
+        const material = new THREE.MeshLambertMaterial({ 
+            color: color,
+            transparent: true,
+            opacity: 0.7
+        });
+        
+        const mesh = new THREE.Mesh(geometry, material);
+        
+        // Position the plate
+        mesh.position.set(...plateData.origin);
+        
+        // Apply rotation if specified
+        if (plateData.rotation) {
+            const rotation = plateData.rotation;
+            if (rotation.type === 'Euler') {
+                const values = rotation.values;
+                if (rotation.units === 'degrees') {
+                    mesh.rotation.set(
+                        THREE.MathUtils.degToRad(values[0]),
+                        THREE.MathUtils.degToRad(values[1]),
+                        THREE.MathUtils.degToRad(values[2])
+                    );
+                }
+            }
+        }
+        
+        mesh.userData = {
+            elementId: plateData.id,
+            elementData: plateData,
+            originalMaterial: material.clone()
+        };
+        
+        this.beamObjects.set(plateData.id, mesh);
+        this.scene.add(mesh);
+    }
+
+    updateElementPoint(elementId, pointType, newPosition) {
+        const element = this.getElement(elementId);
+        const mesh = this.beamObjects.get(elementId);
+        if (!element || !mesh || element.kind !== 'beam') return;
+
+        // Update the data
+        element[pointType] = [newPosition.x, newPosition.y, newPosition.z];
+
+        // Update the mesh geometry in place
+        const start = new THREE.Vector3(...element.start);
+        const end = new THREE.Vector3(...element.end);
+
+        // Recalculate length and update scale
+        const newLength = start.distanceTo(end);
+        
+        if (mesh.userData.originalLength) {
+            mesh.scale.z = newLength / mesh.userData.originalLength;
+        }
+        
+        GeometryUtils.positionBeam(mesh, start, end, element);
+    }
+
+    addNewBeam(start, end, profile, material, orientation) {
+        const newId = `element-${this.nextElementId++}`;
+
+        const newElement = {
+            id: newId,
+            kind: 'beam',
+            profile: profile,
+            material: material,
+            start: [start.x, start.y, start.z],
+            end: [end.x, end.y, end.z],
+            orientation: orientation,
+            operationIds: []
+        };
+
+        this.structureData.elements.push(newElement);
+        this.createBeam(newElement);
+        this.viewer.uiManager.addElementToList(newElement);
+        
+        console.log('New beam added:', newElement);
+        return newElement;
+    }
+
+    addNewPlate() {
+        const newId = `plate-${this.nextElementId++}`;
+
+        const newElement = {
+            id: newId,
+            kind: 'plate',
+            material: 'S355JR',
+            origin: [0, 0, 0],
+            rotation: { type: "Euler", order: "ZYX", values: [0, 0, 0], units: "degrees" },
+            width: 300,
+            height: 200,
+            thickness: 12,
+            operationIds: []
+        };
+
+        this.structureData.elements.push(newElement);
+        this.createPlate(newElement);
+
+        console.log('New plate added:', newElement);
+        return newElement;
+    }
+
+    updateElement(elementId, newData) {
+        const element = this.structureData.elements.find(el => el.id === elementId);
+        if (!element) return false;
+
+        // Update element data
+        Object.assign(element, newData);
+
+        // Remove old mesh and create new one
+        this.removeElementMesh(elementId);
+        
+        if (element.kind === 'beam') {
+            this.createBeam(element);
+        } else if (element.kind === 'plate') {
+            this.createPlate(element);
+        }
+
+        console.log('Element updated:', element);
+        return element;
+    }
+
+    deleteElements(elementIds) {
+        elementIds.forEach(elementId => {
+            // Remove from 3D scene
+            this.removeElementMesh(elementId);
+
+            // Remove from data
+            const elementIndex = this.structureData.elements.findIndex(el => el.id === elementId);
+            if (elementIndex !== -1) {
+                this.structureData.elements.splice(elementIndex, 1);
+            }
+        });
+
+        console.log(`Deleted ${elementIds.length} elements.`);
+        return elementIds.length;
+    }
+
+    removeElementMesh(elementId) {
+        const mesh = this.beamObjects.get(elementId);
+        if (mesh) {
+            this.scene.remove(mesh);
+            mesh.geometry.dispose();
+            mesh.material.dispose();
+            this.beamObjects.delete(elementId);
+        }
+    }
+
+    changeElementType(elementId, newType) {
+        const element = this.structureData.elements.find(el => el.id === elementId);
+        if (!element || element.kind === newType) return element;
+
+        // Convert element type
+        if (newType === 'plate' && element.kind === 'beam') {
+            // Convert beam to plate
+            element.kind = 'plate';
+            element.origin = [...element.start];
+            element.width = 300;
+            element.height = 200;
+            element.thickness = 12;
+            element.rotation = { type: "Euler", order: "ZYX", values: [0, 0, 0], units: "degrees" };
+            delete element.start;
+            delete element.end;
+            delete element.profile;
+            delete element.orientation;
+            
+        } else if (newType === 'beam' && element.kind === 'plate') {
+            // Convert plate to beam
+            element.kind = 'beam';
+            element.start = [...element.origin];
+            element.end = [element.origin[0] + 1000, element.origin[1], element.origin[2]];
+            element.profile = 'HEA200';
+            element.orientation = 0;
+            delete element.origin;
+            delete element.width;
+            delete element.height;
+            delete element.thickness;
+            delete element.rotation;
+        }
+
+        console.log('Element type changed to:', newType);
+        return element;
+    }
+
+    copyElements(sourceElementIds, sourcePoint, destinationPoint, numCopies) {
+        const copiedElements = [];
+        const translationStep = new THREE.Vector3().subVectors(destinationPoint, sourcePoint);
+
+        sourceElementIds.forEach(sourceId => {
+            const originalElementData = this.structureData.elements.find(el => el.id === sourceId);
+            if (!originalElementData) return;
+
+            // Loop to create the specified number of copies
+            for (let i = 1; i <= numCopies; i++) {
+                // Deep copy the element data for each new element
+                const newElementData = JSON.parse(JSON.stringify(originalElementData));
+                
+                // Generate a new unique ID
+                newElementData.id = `${newElementData.kind}-${this.nextElementId++}`;
+
+                // Calculate the total translation for the current copy
+                const totalTranslation = translationStep.clone().multiplyScalar(i);
+
+                // Apply translation to the new element
+                if (newElementData.kind === 'beam') {
+                    const start = new THREE.Vector3().fromArray(newElementData.start).add(totalTranslation);
+                    const end = new THREE.Vector3().fromArray(newElementData.end).add(totalTranslation);
+                    newElementData.start = start.toArray();
+                    newElementData.end = end.toArray();
+                } else if (newElementData.kind === 'plate') {
+                    const origin = new THREE.Vector3().fromArray(newElementData.origin).add(totalTranslation);
+                    newElementData.origin = origin.toArray();
+                }
+
+                // Add to data store and scene
+                this.structureData.elements.push(newElementData);
+                if (newElementData.kind === 'beam') {
+                    this.createBeam(newElementData);
+                } else {
+                    this.createPlate(newElementData);
+                }
+                
+                copiedElements.push(newElementData);
+                console.log(`Copied ${originalElementData.id} to ${newElementData.id} (Copy ${i}/${numCopies})`);
+            }
+        });
+
+        return copiedElements;
+    }
+
+    getElement(elementId) {
+        return this.structureData.elements.find(el => el.id === elementId);
+    }
+
+    getAllElements() {
+        return this.structureData.elements;
+    }
+
+    getElementMeshById(elementId) {
+        return this.beamObjects.get(elementId);
+    }
+} 
+==================== C:\Users\t93to\Desktop\tomcad\GeometryUtils.js ====================
+// Geometry and material utility functions
+class GeometryUtils {
+    static getProfileDimension(profile, dimension) {
+        // Simplified profile dimensions (in reality, you'd have a lookup table)
+        const profileDimensions = {
+            'HEA200': { height: 190, width: 200 },
+            'IPE160': { height: 160, width: 82 }
+        };
+        
+        return profileDimensions[profile]?.[dimension] || 100;
+    }
+
+    static parseRHSProfile(profile) {
+        // Parse RHS60x4 format
+        const match = profile.match(/RHS(\d+)x([\d.]+)/);
+        if (match) {
+            return { width: parseInt(match[1]), height: parseInt(match[1]) };
+        }
+        return { width: 60, height: 60 };
+    }
+
+    static parseCHSProfile(profile) {
+        // Parse CHS168x6.3 format
+        const match = profile.match(/CHS(\d+)x([\d.]+)/);
+        if (match) {
+            return parseInt(match[1]);
+        }
+        return 100;
+    }
+
+    static getMaterialColor(material) {
+        const materialColors = {
+            'S355JR': 0x4a9eff,  // Blue
+            'S235JR': 0xffaa4a   // Orange
+        };
+        return materialColors[material] || 0x888888;
+    }
+
+    static positionBeam(mesh, start, end, beamData) {
+        // Calculate center position
+        const center = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+        mesh.position.copy(center);
+        
+        // Calculate rotation to align with beam direction
+        const direction = new THREE.Vector3().subVectors(end, start).normalize();
+        
+        // Handle curved beams
+        if (beamData.arc) {
+            // For curved beams, we'll create a simplified representation
+            this.createCurvedBeam(mesh, start, end, beamData.arc);
+            return;
+        }
+        
+        // For straight beams
+        const quaternion = new THREE.Quaternion();
+        const worldUp = new THREE.Vector3(0, 1, 0);
+
+        let beamX, beamY;
+
+        // Handle vertical beams where the direction is parallel to the world up vector
+        if (Math.abs(direction.y) > 0.9999) {
+            // Use world X axis as a stable reference for the beam's "right" vector
+            beamX = new THREE.Vector3(1, 0, 0);
+            beamY = new THREE.Vector3().crossVectors(direction, beamX).normalize();
+        } else {
+            // Standard case:
+            // beamX is perpendicular to the plane formed by worldUp and the beam direction
+            beamX = new THREE.Vector3().crossVectors(worldUp, direction).normalize();
+            // beamY is the beam's "up" vector, perpendicular to both its direction and its "right" vector
+            beamY = new THREE.Vector3().crossVectors(direction, beamX).normalize();
+        }
+
+        const rotationMatrix = new THREE.Matrix4().makeBasis(beamX, beamY, direction);
+        quaternion.setFromRotationMatrix(rotationMatrix);
+        
+        mesh.quaternion.copy(quaternion);
+        
+        // Apply orientation if specified
+        if (beamData.orientation) {
+            mesh.rotateZ(THREE.MathUtils.degToRad(beamData.orientation));
+        }
+    }
+
+    static createCurvedBeam(mesh, start, end, arcData) {
+        // For curved beams, replace with a curved geometry
+        const radius = arcData.radius;
+        const startVec = new THREE.Vector3(start.x, start.y, start.z);
+        const endVec = new THREE.Vector3(end.x, end.y, end.z);
+        
+        // Create a curved path
+        const curve = new THREE.QuadraticBezierCurve3(
+            startVec,
+            new THREE.Vector3(
+                (startVec.x + endVec.x) / 2,
+                (startVec.y + endVec.y) / 2 + radius * 0.1,
+                (startVec.z + endVec.z) / 2
+            ),
+            endVec
+        );
+        
+        const tubeGeometry = new THREE.TubeGeometry(curve, 20, 30, 8, false);
+        mesh.geometry.dispose();
+        mesh.geometry = tubeGeometry;
+    }
+
+    static getPointUnderMouse(event, camera, renderer, beamObjects) {
+        const mouse = new THREE.Vector2();
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, camera);
+        
+        // Prioritize intersecting with existing objects
+        const objectsToIntersect = Array.from(beamObjects.values());
+        const intersects = raycaster.intersectObjects(objectsToIntersect, false);
+        if (intersects.length > 0) {
+            return intersects[0].point;
+        }
+
+        // Fallback: If no object is hit, find a point on the grid plane (y=0).
+        const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+        const intersectionPoint = new THREE.Vector3();
+        if (raycaster.ray.intersectPlane(plane, intersectionPoint)) {
+            return intersectionPoint;
+        }
+
+        return null;
+    }
+} 
+==================== C:\Users\t93to\Desktop\tomcad\GridManager.js ====================
+class GridManager {
+    constructor(scene, structureData) {
+        this.scene = scene;
+        this.structureData = structureData;
+        this.gridContainer = new THREE.Group();
+        this.scene.add(this.gridContainer);
+
+        this.gridLines = []; // To store line objects for raycasting
+        this.highlightMaterial = new THREE.LineBasicMaterial({ color: 0xffff00, linewidth: 2 });
+        this.intersectMaterial = new THREE.LineBasicMaterial({ color: 0xff00ff, linewidth: 2 });
+        this.snapDistance = 100; // World units, but applied in local space
+
+        // Store grid coordinates
+        this.xCoords = [];
+        this.yCoords = [];
+        this.zCoords = [];
+    }
+
+    createGrids() {
+        if (!this.structureData.grids) {
+            return;
+        }
+
+        this.structureData.grids.forEach(gridData => {
+            if (gridData.type === 'rectangular') {
+                this.createRectangularGrid(gridData);
+            }
+        });
+    }
+
+    createRectangularGrid(gridData) {
+        this.gridContainer.clear();
+        this.gridLines = [];
+        this.xCoords = [];
+        this.yCoords = [];
+        this.zCoords = [];
+
+        const origin = new THREE.Vector3(...gridData.origin);
+        this.gridContainer.position.copy(origin);
+        
+        if (gridData.rotation && gridData.rotation.type === 'Euler') {
+            const values = gridData.rotation.values.map(v => THREE.MathUtils.degToRad(v));
+            this.gridContainer.rotation.set(...values, gridData.rotation.order);
+        }
+
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xcccccc, transparent: true, opacity: 0.5 });
+
+        // Calculate and store absolute coordinates for grid lines
+        this.xCoords = [0];
+        gridData.xSpacings.forEach(s => this.xCoords.push(this.xCoords[this.xCoords.length - 1] + s));
+
+        this.yCoords = [0];
+        gridData.ySpacings.forEach(s => this.yCoords.push(this.yCoords[this.yCoords.length - 1] + s));
+
+        this.zCoords = gridData.zLevels || [0];
+
+        // Get extensions or use defaults
+        const xExt = gridData.xExtensions || [0, 0];
+        const yExt = gridData.yExtensions || [0, 0];
+        const zExt = gridData.zExtensions || [0, 0];
+
+        const minX = this.xCoords[0] - xExt[0];
+        const maxX = this.xCoords[this.xCoords.length - 1] + xExt[1];
+        const minY = this.yCoords[0] - yExt[0];
+        const maxY = this.yCoords[this.yCoords.length - 1] + yExt[1];
+        const minZ = Math.min(...this.zCoords) - zExt[0];
+        const maxZ = Math.max(...this.zCoords) + zExt[1];
+
+        const addGridLine = (p1, p2) => {
+            const geometry = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+            const line = new THREE.Line(geometry, lineMaterial.clone());
+            line.userData = { 
+                type: 'gridline',
+                originalMaterial: line.material 
+            };
+            this.gridContainer.add(line);
+            this.gridLines.push(line);
+        };
+
+        // Create grids on each Z-level
+        this.zCoords.forEach(z => {
+            // Create lines parallel to X-axis (Y-lines)
+            this.yCoords.forEach(y => {
+                addGridLine(new THREE.Vector3(minX, y, z), new THREE.Vector3(maxX, y, z));
+            });
+
+            // Create lines parallel to Y-axis (X-lines)
+            this.xCoords.forEach(x => {
+                addGridLine(new THREE.Vector3(x, minY, z), new THREE.Vector3(x, maxY, z));
+            });
+        });
+
+        // Create vertical grid lines (parallel to Z-axis)
+        this.xCoords.forEach(x => {
+            this.yCoords.forEach(y => {
+                addGridLine(new THREE.Vector3(x, y, minZ), new THREE.Vector3(x, y, maxZ));
+            });
+        });
+        
+        // Note: Labels are not yet implemented.
+    }
+
+    getGridLines() {
+        return this.gridLines;
+    }
+
+    getIntersectionPoints() {
+        const intersectionPoints = [];
+        const lines = this.gridLines.map(line => {
+            const line3 = new THREE.Line3(
+                new THREE.Vector3().fromBufferAttribute(line.geometry.attributes.position, 0),
+                new THREE.Vector3().fromBufferAttribute(line.geometry.attributes.position, 1)
+            );
+            line3.applyMatrix4(this.gridContainer.matrixWorld);
+            return line3;
+        });
+
+        for (let i = 0; i < lines.length; i++) {
+            for (let j = i + 1; j < lines.length; j++) {
+                const line1 = lines[i];
+                const line2 = lines[j];
+
+                // Simple check for axis-aligned lines in the same plane
+                const dir1 = new THREE.Vector3().subVectors(line1.end, line1.start).normalize();
+                const dir2 = new THREE.Vector3().subVectors(line2.end, line2.start).normalize();
+                
+                // If lines are parallel, they don't intersect
+                if (Math.abs(dir1.dot(dir2)) > 0.999) continue;
+
+                // A simplified approach for axis-aligned grids
+                // Find intersection of two line segments
+                const start1 = line1.start;
+                const end1 = line1.end;
+                const start2 = line2.start;
+                const end2 = line2.end;
+                
+                // This logic is complex. For now, let's assume a simple case
+                // where grids are on the same plane and axis aligned.
+                // A full 3D line-line intersection is more involved.
+                // Let's find the intersection based on coordinates.
+                if (Math.abs(dir1.x) > 0.9 && Math.abs(dir2.z) > 0.9) { // X-line and Z-line
+                    intersectionPoints.push(new THREE.Vector3(start2.x, start1.y, start1.z));
+                } else if (Math.abs(dir1.z) > 0.9 && Math.abs(dir2.x) > 0.9) { // Z-line and X-line
+                    intersectionPoints.push(new THREE.Vector3(start1.x, start2.y, start2.z));
+                }
+            }
+        }
+        return intersectionPoints;
+    }
+
+    unhighlightAllLines() {
+        this.gridLines.forEach(line => {
+            line.material = line.userData.originalMaterial;
+        });
+    }
+
+    highlightLines(linesToHighlight) {
+        this.unhighlightAllLines();
+        linesToHighlight.forEach(line => {
+            line.material = this.highlightMaterial;
+        });
+    }
+    
+    getClosestSnapPoint(point) {
+        // Convert the world-space point to the grid's local space
+        const localPoint = this.gridContainer.worldToLocal(point.clone());
+        const snappedPointLocal = localPoint.clone();
+        let didSnap = false;
+
+        // Helper function to find the closest coordinate on an axis
+        const snapAxis = (targetCoord, gridCoords) => {
+            let bestSnap = targetCoord;
+            let minDistance = this.snapDistance;
+            let snapped = false;
+
+            for (const gridVal of gridCoords) {
+                const distance = Math.abs(targetCoord - gridVal);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    bestSnap = gridVal;
+                    snapped = true;
+                }
+            }
+            return { pos: bestSnap, snapped: snapped };
+        };
+
+        // Snap each axis independently
+        const snapX = snapAxis(localPoint.x, this.xCoords);
+        if (snapX.snapped) {
+            snappedPointLocal.x = snapX.pos;
+            didSnap = true;
+        }
+
+        const snapY = snapAxis(localPoint.y, this.yCoords);
+        if (snapY.snapped) {
+            snappedPointLocal.y = snapY.pos;
+            didSnap = true;
+        }
+
+        const snapZ = snapAxis(localPoint.z, this.zCoords);
+        if (snapZ.snapped) {
+            snappedPointLocal.z = snapZ.pos;
+            didSnap = true;
+        }
+
+        // If any axis was snapped, convert the new local point back to world space
+        if (didSnap) {
+            return this.gridContainer.localToWorld(snappedPointLocal);
+        }
+
+        return null; // No snap occurred
+    }
+} 
+==================== C:\Users\t93to\Desktop\tomcad\ImportExport.js ====================
+// Import/Export functionality
+class ImportExport {
+    constructor(structureData, elementManager, uiManager) {
+        this.structureData = structureData;
+        this.elementManager = elementManager;
+        this.uiManager = uiManager;
+    }
+
+    exportStructure() {
+        const dataStr = JSON.stringify(this.structureData, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'modified_structure.json';
+        link.click();
+        URL.revokeObjectURL(url);
+        
+        console.log('Structure exported successfully');
+    }
+
+    importStructure(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                this.loadImportedStructure(importedData);
+            } catch (error) {
+                alert('Error importing file: ' + error.message);
+                console.error('Import error:', error);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    loadImportedStructure(data) {
+        // Clear existing structure
+        const currentElements = this.elementManager.getAllElements();
+        const idsToRemove = currentElements.map(el => el.id);
+        this.elementManager.deleteElements(idsToRemove);
+
+        // Update structure data reference
+        Object.assign(this.structureData, data);
+        
+        // Recreate all elements
+        this.elementManager.createBeams();
+        
+        // Update UI
+        this.uiManager.setupUI();
+        this.uiManager.closeEditPanel();
+
+        console.log('Structure imported successfully');
+    }
+} 
+==================== C:\Users\t93to\Desktop\tomcad\index.html ====================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beam Structure Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #top-toolbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            z-index: 101;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #top-toolbar .btn {
+            flex: 0 1 auto; /* Prevent buttons from growing */
+            padding: 6px 15px;
+        }
+
+        #info-panel {
+            position: absolute;
+            top: 70px; /* Adjusted for top toolbar */
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 350px;
+            z-index: 100;
+        }
+
+        #info-panel h2 {
+            color: #4a9eff;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        #info-panel p {
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        #controls h3 {
+            color: #4a9eff;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        #controls p {
+            font-size: 0.8em;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        #beam-list {
+            position: absolute;
+            top: 70px; /* Adjusted for top toolbar */
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 300px;
+            max-height: 70vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        #creation-panel, #edit-panel {
+            position: absolute;
+            top: 70px; /* Adjusted for top toolbar */
+            right: 340px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 320px;
+            z-index: 100;
+            display: none;
+        }
+
+        #creation-panel h3, #edit-panel h3 {
+            color: #4a9eff;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .edit-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .edit-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .edit-section h4 {
+            color: #ffaa4a;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #cccccc;
+            font-size: 0.8em;
+            margin-bottom: 3px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 5px 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            color: #ffffff;
+            font-size: 0.8em;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #4a9eff;
+            background: rgba(74, 158, 255, 0.1);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-row .input-group {
+            flex: 1;
+        }
+
+        .edit-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            background: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+            flex: 1;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #3a8eef;
+        }
+
+        .btn-danger {
+            background: #ff4444;
+        }
+
+        .btn-danger:hover {
+            background: #ee3333;
+        }
+
+        .btn-copy {
+            background: #ffaa4a;
+        }
+
+        .btn-copy:hover {
+            background: #f09a3a;
+        }
+
+        .btn-success {
+            background: #44ff44;
+        }
+
+        .btn-success:hover {
+            background: #33ee33;
+        }
+
+        .add-element-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #44ff44;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(68, 255, 68, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .add-element-btn:hover {
+            background: #33ee33;
+            transform: scale(1.1);
+        }
+
+        .add-element-menu {
+            position: absolute;
+            bottom: 90px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 10px;
+            padding: 10px;
+            display: none;
+            z-index: 101;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .add-element-menu button {
+            display: block;
+            width: 120px;
+            margin-bottom: 5px;
+            padding: 8px 12px;
+            background: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .add-element-menu button:last-child {
+            margin-bottom: 0;
+        }
+
+        .add-element-menu button:hover {
+            background: #3a8eef;
+        }
+
+        #beam-list h3 {
+            color: #4a9eff;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .beam-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .beam-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #4a9eff;
+        }
+
+        .beam-item.selected {
+            background: rgba(74, 158, 255, 0.2);
+            border-left-color: #4a9eff;
+        }
+
+        .beam-id {
+            font-weight: bold;
+            color: #4a9eff;
+            font-size: 0.9em;
+        }
+
+        .beam-profile {
+            color: #ffaa4a;
+            font-size: 0.8em;
+        }
+
+        .beam-material {
+            color: #aaaaaa;
+            font-size: 0.8em;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #4a9eff;
+            font-size: 1.2em;
+            z-index: 200;
+        }
+
+        #selection-box {
+            position: absolute;
+            background: rgba(74, 158, 255, 0.2);
+            border: 1px solid #4a9eff;
+            pointer-events: none; /* Allows clicks to pass through */
+            z-index: 999;
+        }
+
+        #snap-toolbar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(40, 40, 40, 0.9);
+            padding: 5px;
+            border-radius: 5px;
+            display: flex;
+            gap: 5px;
+            z-index: 100;
+        }
+
+        .snap-button {
+            background-color: #333;
+            color: #eee;
+            border: 1px solid #555;
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .snap-button:hover {
+            background-color: #444;
+        }
+
+        .snap-button.active {
+            background-color: #4a9eff;
+            color: white;
+            border-color: #4a9eff;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #4a9eff;
+            font-size: 1.2em;
+            z-index: 200;
+        }
+
+        #snap-tooltip {
+            position: absolute;
+            display: none;
+            background: rgba(20, 20, 20, 0.85);
+            color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.8em;
+            z-index: 10001; /* High z-index */
+            pointer-events: none; /* Prevent tooltip from capturing mouse events */
+            backdrop-filter: blur(5px);
+        }
+
+        .bottom-toolbar {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .add-element-btn-container {
+            position: relative;
+        }
+
+        .add-element-btn {
+            background-color: #4a9eff;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            line-height: 50px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .add-element-btn:hover {
+            background-color: #3a8eef;
+            transform: scale(1.1);
+        }
+
+        .add-element-menu {
+            display: none;
+            position: absolute;
+            bottom: 60px; /* Position above the button */
+            left: 0;
+            background: rgba(40, 40, 40, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 5px;
+            backdrop-filter: blur(5px);
+            z-index: 200;
+        }
+
+        .add-element-menu button {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .add-element-menu button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="canvas-container"></div>
+        <div id="selection-box" style="display: none;"></div>
+        
+        <div id="status-bar" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 5px; z-index: 200; color: #ffaa4a; font-weight: bold; display: none; pointer-events: none;"></div>
+
+        <div id="top-toolbar">
+            <button class="btn" onclick="startBeamCreation()">Add Beam</button>
+            <button class="btn" onclick="startPlateCreation()">Add Plate</button>
+        </div>
+
+        <div id="info-panel">
+            <h2>Schody – magazyn A</h2>
+            <p><strong>Project ID:</strong> 72db0cb1-d8d7-4f93-a1f6-db21f3d9fd2e</p>
+            <p><strong>Order ID:</strong> PO-2025-001</p>
+            <p><strong>Phase:</strong> 1</p>
+            <p><strong>Units:</strong> mm</p>
+            <p><strong>Elements:</strong> <span id="element-count">0</span></p>
+            <p><strong>Operations:</strong> <span id="operation-count">0</span></p>
+            <p>Press SHIFT for panning</p>
+        </div>
+
+        <div id="controls">
+            <h3>Controls</h3>
+            <p><strong>Middle Mouse + Drag:</strong> Rotate View</p>
+            <p><strong>Shift + Middle Mouse:</strong> Pan View</p>
+            <p><strong>Mouse Wheel:</strong> Zoom In/Out</p>
+            <p><strong>Ctrl + Mouse Wheel:</strong> Pan Up/Down</p>
+            <p><strong>Click Element:</strong> Select/Edit</p>
+            <p><strong>+ Button:</strong> Add New Element</p>
+            <div style="margin-top: 15px;">
+                <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                    <button class="btn" onclick="viewer.fitToView()" style="flex: 1;">Fit All</button>
+                    <button class="btn" onclick="viewer.focusOnSelected()" style="flex: 1;">Focus</button>
+                    <button class="btn" onclick="viewer.resetView()" style="flex: 1;">Reset</button>
+                </div>
+                <button class="btn" onclick="viewer.exportStructure()" style="margin-bottom: 5px; width: 100%;">Export Structure</button>
+                <input type="file" id="import-file" accept=".json" style="display: none;" onchange="window.importStructure(event)">
+                <button class="btn" onclick="document.getElementById('import-file').click()" style="width: 100%;">Import Structure</button>
+            </div>
+        </div>
+
+        <div id="beam-list">
+            <h3>Structural Elements</h3>
+            <div id="beam-items"></div>
+        </div>
+
+        <div id="creation-panel" style="display: none;">
+            <h3>Create Beam</h3>
+            <div class="edit-section">
+                <div class="input-group">
+                    <label for="create-profile">Profile</label>
+                    <select id="create-profile">
+                        <optgroup label="HEA">
+                            <option>HEA100</option>
+                            <option>HEA120</option>
+                            <option>HEA140</option>
+                            <option>HEA160</option>
+                            <option>HEA180</option>
+                            <option selected>HEA200</option>
+                            <option>HEA220</option>
+                            <option>HEA240</option>
+                        </optgroup>
+                        <optgroup label="IPE">
+                            <option>IPE160</option>
+                            <option>IPE180</option>
+                            <option>IPE200</option>
+                        </optgroup>
+                         <optgroup label="RHS">
+                            <option>RHS60x4</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="create-material">Material</label>
+                    <select id="create-material">
+                        <option>S235JR</option>
+                        <option selected>S355JR</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="create-orientation">Orientation (°)</label>
+                    <input type="number" id="create-orientation" value="0" step="15">
+                </div>
+            </div>
+            <div class="edit-buttons">
+                <button class="btn btn-danger" onclick="cancelCreation()">Cancel</button>
+            </div>
+        </div>
+        
+        <div id="edit-panel">
+            <h3>Edit Element: <span id="edit-element-id"></span></h3>
+            <div class="edit-section">
+                <h4>Position & Dimensions</h4>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Start X</label>
+                        <input type="number" id="edit-start-x" step="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Start Y</label>
+                        <input type="number" id="edit-start-y" step="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Start Z</label>
+                        <input type="number" id="edit-start-z" step="10">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>End X</label>
+                        <input type="number" id="edit-end-x" step="10">
+                    </div>
+                    <div class="input-group">
+                        <label>End Y</label>
+                        <input type="number" id="edit-end-y" step="10">
+                    </div>
+                    <div class="input-group">
+                        <label>End Z</label>
+                        <input type="number" id="edit-end-z" step="10">
+                    </div>
+                </div>
+                <div class="input-group" id="plate-dimensions" style="display: none;">
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>Width</label>
+                            <input type="number" id="edit-width" step="10">
+                        </div>
+                        <div class="input-group">
+                            <label>Height</label>
+                            <input type="number" id="edit-height" step="10">
+                        </div>
+                        <div class="input-group">
+                            <label>Thickness</label>
+                            <input type="number" id="edit-thickness" step="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="edit-section">
+                <h4>Profile & Material</h4>
+                <div class="input-group">
+                    <label>Element Type</label>
+                    <select id="edit-element-type" onchange="viewer.changeElementType()">
+                        <option value="beam">Beam</option>
+                        <option value="plate">Plate</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Profile</label>
+                    <select id="edit-profile">
+                        <option value="HEA100">HEA100</option>
+                        <option value="HEA120">HEA120</option>
+                        <option value="HEA140">HEA140</option>
+                        <option value="HEA160">HEA160</option>
+                        <option value="HEA180">HEA180</option>
+                        <option value="HEA200">HEA200</option>
+                        <option value="HEA220">HEA220</option>
+                        <option value="IPE80">IPE80</option>
+                        <option value="IPE100">IPE100</option>
+                        <option value="IPE120">IPE120</option>
+                        <option value="IPE140">IPE140</option>
+                        <option value="IPE160">IPE160</option>
+                        <option value="IPE180">IPE180</option>
+                        <option value="IPE200">IPE200</option>
+                        <option value="RHS40x20x2">RHS40x20x2</option>
+                        <option value="RHS50x30x3">RHS50x30x3</option>
+                        <option value="RHS60x4">RHS60x4</option>
+                        <option value="RHS80x40x4">RHS80x40x4</option>
+                        <option value="CHS76x3.2">CHS76x3.2</option>
+                        <option value="CHS168x6.3">CHS168x6.3</option>
+                        <option value="UPN80">UPN80</option>
+                        <option value="UPN100">UPN100</option>
+                        <option value="UPN120">UPN120</option>
+                        <option value="L40x40x4">L40x40x4</option>
+                        <option value="L50x50x5">L50x50x5</option>
+                        <option value="L60x60x6">L60x60x6</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Material</label>
+                    <select id="edit-material">
+                        <option value="S355JR">S355JR</option>
+                        <option value="S235JR">S235JR</option>
+                        <option value="S275JR">S275JR</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Orientation (degrees)</label>
+                    <input type="number" id="edit-orientation" step="1" value="0">
+                </div>
+            </div>
+
+            <div class="edit-section">
+                <h4>Actions</h4>
+                <div class="input-group">
+                    <label>Number of Copies</label>
+                    <input type="number" id="edit-num-copies" step="1" value="1" min="1">
+                </div>
+                <div class="edit-buttons">
+                    <button class="btn btn-success" onclick="viewer.applyChanges()">Apply</button>
+                    <button class="btn btn-copy" onclick="viewer.startCopy()">Copy</button>
+                    <button class="btn btn-danger" onclick="viewer.deleteElement()">Delete</button>
+                    <button class="btn" onclick="viewer.closeEditPanel()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="snap-toolbar">
+            <button id="snap-grid-lines" class="snap-button active" title="Snap to grid lines">L</button>
+            <button id="snap-grid-intersections" class="snap-button" title="Snap to grid intersections">I</button>
+            <button id="snap-endpoints" class="snap-button active" title="Snap to beam endpoints">E</button>
+            <button id="snap-edges" class="snap-button" title="Snap to edges">D</button>
+            <button id="snap-corners" class="snap-button" title="Snap to corners">C</button>
+            <button id="snap-axis" class="snap-button" title="Snap to axis">A</button>
+        </div>
+
+        <div id="snap-tooltip"></div>
+    </div>
+
+    <!-- Data -->
+    <script src="profiles.js"></script>
+    <script src="data/struktura.js"></script>
+
+    <!-- THREE.js Addons -->
+    <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+    
+    <!-- App source -->
+    <script src="GeometryUtils.js"></script>
+    <script src="DragControls.js"></script>
+    <script src="CameraControls.js"></script>
+    <script src="GridManager.js"></script>
+    <script src="SnapManager.js"></script>
+    <script src="SelectionManager.js"></script>
+    <script src="ElementManager.js"></script>
+    <script src="OperationManager.js"></script>
+    <script src="ImportExport.js"></script>
+    <script src="UIManager.js"></script>
+    <script src="CreationManager.js"></script>
+    <script src="CopyManager.js"></script>
+    
+    <!-- Operation Definitions -->
+    <script src="operations/HoleOperation.js"></script>
+    <script src="operations/SlotOperation.js"></script>
+    <script src="operations/RectCutOperation.js"></script>
+
+    <!-- Main Application Logic -->
+    <script src="app.js"></script>
+    <script src="BeamViewer.js"></script>
+</body>
+</html> 
+==================== C:\Users\t93to\Desktop\tomcad\OperationManager.js ====================
+class OperationManager {
+    constructor(viewer, structureData) {
+        this.viewer = viewer;
+        this.scene = viewer.scene;
+        this.structureData = structureData;
+        this.operationHelpers = new THREE.Group();
+        this.scene.add(this.operationHelpers);
+        this.operationClasses = {
+            'rectCut': RectCutOperation,
+            'hole': HoleOperation,
+            'slot': SlotOperation,
+        };
+        this.operationObjects = [];
+    }
+
+    init() {
+        this.createOperationVisuals();
+    }
+
+    async createOperationVisuals() {
+        this.clearVisuals();
+        const operations = this.structureData.operations || [];
+        for (const opData of operations) {
+            const OperationClass = this.operationClasses[opData.type];
+            if (!OperationClass) {
+                console.warn(`Unsupported operation type: ${opData.type}`);
+                continue;
+            }
+            const operation = new OperationClass(opData);
+            const visual = await operation.createVisualization();
+            if (visual) {
+                this.operationHelpers.add(visual);
+                this.operationObjects.push({ opData, operation, visual });
+            }
+        }
+    }
+
+    clearVisuals() {
+        while (this.operationHelpers.children.length > 0) {
+            const child = this.operationHelpers.children[0];
+            this.operationHelpers.remove(child);
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+        }
+        this.operationObjects = [];
+    }
+
+    update() {}
+
+}
+
+// export default OperationManager; // Removed to make it a global class
+==================== C:\Users\t93to\Desktop\tomcad\profiles.js ====================
+// Definicje profili stalowych z rzeczywistymi wymiarami
+const SteelProfiles = {
+    
+    // Profile HEA (European wide flange beams)
+    HEA: {
+        'HEA100': { h: 96, b: 100, tw: 5, tf: 8, r: 12 },
+        'HEA120': { h: 114, b: 120, tw: 5, tf: 8, r: 12 },
+        'HEA140': { h: 133, b: 140, tw: 5.5, tf: 8.5, r: 12 },
+        'HEA160': { h: 152, b: 160, tw: 6, tf: 9, r: 15 },
+        'HEA180': { h: 171, b: 180, tw: 6, tf: 9.5, r: 15 },
+        'HEA200': { h: 190, b: 200, tw: 6.5, tf: 10, r: 18 },
+        'HEA220': { h: 210, b: 220, tw: 7, tf: 11, r: 18 },
+        'HEA240': { h: 230, b: 240, tw: 7.5, tf: 12, r: 21 },
+        'HEA260': { h: 250, b: 260, tw: 7.5, tf: 12.5, r: 24 },
+        'HEA280': { h: 270, b: 280, tw: 8, tf: 13, r: 24 },
+        'HEA300': { h: 290, b: 300, tw: 8.5, tf: 14, r: 27 },
+    },
+
+    // Profile IPE (European I-beams)
+    IPE: {
+        'IPE80': { h: 80, b: 46, tw: 3.8, tf: 5.2, r: 5 },
+        'IPE100': { h: 100, b: 55, tw: 4.1, tf: 5.7, r: 7 },
+        'IPE120': { h: 120, b: 64, tw: 4.4, tf: 6.3, r: 7 },
+        'IPE140': { h: 140, b: 73, tw: 4.7, tf: 6.9, r: 7 },
+        'IPE160': { h: 160, b: 82, tw: 5, tf: 7.4, r: 9 },
+        'IPE180': { h: 180, b: 91, tw: 5.3, tf: 8, r: 9 },
+        'IPE200': { h: 200, b: 100, tw: 5.6, tf: 8.5, r: 12 },
+        'IPE220': { h: 220, b: 110, tw: 5.9, tf: 9.2, r: 12 },
+        'IPE240': { h: 240, b: 120, tw: 6.2, tf: 9.8, r: 15 },
+        'IPE270': { h: 270, b: 135, tw: 6.6, tf: 10.2, r: 15 },
+        'IPE300': { h: 300, b: 150, tw: 7.1, tf: 10.7, r: 15 },
+    },
+
+    // Profile RHS (Rectangular Hollow Sections)
+    RHS: {
+        'RHS40x20x2': { h: 40, b: 20, t: 2, r: 3 },
+        'RHS50x30x3': { h: 50, b: 30, t: 3, r: 4.5 },
+        'RHS60x40x3': { h: 60, b: 40, t: 3, r: 4.5 },
+        'RHS60x4': { h: 60, b: 60, t: 4, r: 6 },
+        'RHS80x40x4': { h: 80, b: 40, t: 4, r: 6 },
+        'RHS100x50x4': { h: 100, b: 50, t: 4, r: 6 },
+        'RHS120x80x5': { h: 120, b: 80, t: 5, r: 7.5 },
+        'RHS140x80x5': { h: 140, b: 80, t: 5, r: 7.5 },
+        'RHS160x80x5': { h: 160, b: 80, t: 5, r: 7.5 },
+        'RHS200x100x6': { h: 200, b: 100, t: 6, r: 9 },
+    },
+
+    // Profile CHS (Circular Hollow Sections)
+    CHS: {
+        'CHS21.3x2.3': { d: 21.3, t: 2.3 },
+        'CHS26.9x2.3': { d: 26.9, t: 2.3 },
+        'CHS33.7x2.6': { d: 33.7, t: 2.6 },
+        'CHS42.4x2.6': { d: 42.4, t: 2.6 },
+        'CHS48.3x3.2': { d: 48.3, t: 3.2 },
+        'CHS60.3x3.6': { d: 60.3, t: 3.6 },
+        'CHS76.1x3.6': { d: 76.1, t: 3.6 },
+        'CHS76x3.2': { d: 76, t: 3.2 },
+        'CHS88.9x4': { d: 88.9, t: 4 },
+        'CHS114.3x4': { d: 114.3, t: 4 },
+        'CHS139.7x5': { d: 139.7, t: 5 },
+        'CHS168x6.3': { d: 168, t: 6.3 },
+        'CHS168.3x7.1': { d: 168.3, t: 7.1 },
+        'CHS219.1x8': { d: 219.1, t: 8 },
+    },
+
+    // Profile UPN (U-channels)
+    UPN: {
+        'UPN80': { h: 80, b: 45, tw: 6, tf: 8, r: 8.5 },
+        'UPN100': { h: 100, b: 50, tw: 6, tf: 8.5, r: 8.5 },
+        'UPN120': { h: 120, b: 55, tw: 7, tf: 9, r: 9 },
+        'UPN140': { h: 140, b: 60, tw: 7, tf: 10, r: 10 },
+        'UPN160': { h: 160, b: 65, tw: 7.5, tf: 10.5, r: 10.5 },
+        'UPN180': { h: 180, b: 70, tf: 11, tw: 8, r: 11 },
+        'UPN200': { h: 200, b: 75, tw: 8.5, tf: 11.5, r: 11.5 },
+    },
+
+    // Profile L (Angles)
+    L: {
+        'L40x40x4': { a: 40, b: 40, t: 4, r: 6 },
+        'L50x50x5': { a: 50, b: 50, t: 5, r: 7 },
+        'L60x60x6': { a: 60, b: 60, t: 6, r: 8 },
+        'L80x80x8': { a: 80, b: 80, t: 8, r: 10 },
+        'L100x100x10': { a: 100, b: 100, t: 10, r: 12 },
+        'L120x120x12': { a: 120, b: 120, t: 12, r: 14 },
+    }
+};
+
+// Generator geometrii dla różnych typów profili
+const ProfileGeometry = {
+    
+    /**
+     * Tworzy geometrię profilu I (HEA, IPE)
+     */
+    createIBeamGeometry(profile, length) {
+        const { h, b, tw, tf, r } = profile;
+        
+        // Tworzenie kształtu przekroju I-beam
+        const shape = new THREE.Shape();
+        
+        // Dolna półka
+        shape.moveTo(-b/2, -h/2);
+        shape.lineTo(b/2, -h/2);
+        shape.lineTo(b/2, -h/2 + tf);
+        
+        // Przejście do środnika z zaokrągleniem
+        shape.lineTo(tw/2 + r, -h/2 + tf);
+        shape.quadraticCurveTo(tw/2, -h/2 + tf, tw/2, -h/2 + tf + r);
+        
+        // Środnik prawy
+        shape.lineTo(tw/2, h/2 - tf - r);
+        
+        // Przejście do górnej półki z zaokrągleniem
+        shape.quadraticCurveTo(tw/2, h/2 - tf, tw/2 + r, h/2 - tf);
+        
+        // Górna półka
+        shape.lineTo(b/2, h/2 - tf);
+        shape.lineTo(b/2, h/2);
+        shape.lineTo(-b/2, h/2);
+        shape.lineTo(-b/2, h/2 - tf);
+        
+        // Przejście do środnika z zaokrągleniem (lewa strona)
+        shape.lineTo(-tw/2 - r, h/2 - tf);
+        shape.quadraticCurveTo(-tw/2, h/2 - tf, -tw/2, h/2 - tf - r);
+        
+        // Środnik lewy
+        shape.lineTo(-tw/2, -h/2 + tf + r);
+        
+        // Przejście do dolnej półki z zaokrągleniem
+        shape.quadraticCurveTo(-tw/2, -h/2 + tf, -tw/2 - r, -h/2 + tf);
+        
+        // Zamknięcie kształtu
+        shape.lineTo(-b/2, -h/2 + tf);
+        shape.lineTo(-b/2, -h/2);
+        
+        const extrudeSettings = {
+            depth: length,
+            bevelEnabled: false
+        };
+        
+        const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        geometry.translate(0, 0, -length / 2);
+        return geometry;
+    },
+
+    /**
+     * Tworzy geometrię profilu RHS (prostokątny pusty)
+     */
+    createRHSGeometry(profile, length) {
+        const { h, b, t, r } = profile;
+        
+        // Zewnętrzny kształt
+        const outerShape = new THREE.Shape();
+        outerShape.moveTo(-b/2 + r, -h/2);
+        outerShape.lineTo(b/2 - r, -h/2);
+        outerShape.quadraticCurveTo(b/2, -h/2, b/2, -h/2 + r);
+        outerShape.lineTo(b/2, h/2 - r);
+        outerShape.quadraticCurveTo(b/2, h/2, b/2 - r, h/2);
+        outerShape.lineTo(-b/2 + r, h/2);
+        outerShape.quadraticCurveTo(-b/2, h/2, -b/2, h/2 - r);
+        outerShape.lineTo(-b/2, -h/2 + r);
+        outerShape.quadraticCurveTo(-b/2, -h/2, -b/2 + r, -h/2);
+        
+        // Wewnętrzny otwór
+        const innerShape = new THREE.Path();
+        const ib = b - 2*t;
+        const ih = h - 2*t;
+        const ir = Math.max(0, r - t);
+        
+        innerShape.moveTo(-ib/2 + ir, -ih/2);
+        innerShape.lineTo(ib/2 - ir, -ih/2);
+        if (ir > 0) innerShape.quadraticCurveTo(ib/2, -ih/2, ib/2, -ih/2 + ir);
+        else innerShape.lineTo(ib/2, -ih/2 + ir);
+        innerShape.lineTo(ib/2, ih/2 - ir);
+        if (ir > 0) innerShape.quadraticCurveTo(ib/2, ih/2, ib/2 - ir, ih/2);
+        else innerShape.lineTo(ib/2 - ir, ih/2);
+        innerShape.lineTo(-ib/2 + ir, ih/2);
+        if (ir > 0) innerShape.quadraticCurveTo(-ib/2, ih/2, -ib/2, ih/2 - ir);
+        else innerShape.lineTo(-ib/2, ih/2 - ir);
+        innerShape.lineTo(-ib/2, -ih/2 + ir);
+        if (ir > 0) innerShape.quadraticCurveTo(-ib/2, -ih/2, -ib/2 + ir, -ih/2);
+        else innerShape.lineTo(-ib/2 + ir, -ih/2);
+        
+        outerShape.holes.push(innerShape);
+        
+        const extrudeSettings = {
+            depth: length,
+            bevelEnabled: false
+        };
+        
+        const geometry = new THREE.ExtrudeGeometry(outerShape, extrudeSettings);
+        geometry.translate(0, 0, -length / 2);
+        return geometry;
+    },
+
+    /**
+     * Tworzy geometrię profilu CHS (okrągły pusty)
+     */
+    createCHSGeometry(profile, length) {
+        const { d, t } = profile;
+        const outerRadius = d / 2;
+        const innerRadius = outerRadius - t;
+        
+        // Tworzenie kształtu okrągłego z otworem
+        const outerShape = new THREE.Shape();
+        outerShape.absarc(0, 0, outerRadius, 0, Math.PI * 2, false);
+        
+        // Wewnętrzny otwór
+        const innerShape = new THREE.Path();
+        innerShape.absarc(0, 0, innerRadius, 0, Math.PI * 2, true);
+        outerShape.holes.push(innerShape);
+        
+        const extrudeSettings = {
+            depth: length,
+            bevelEnabled: false
+        };
+        
+        const geometry = new THREE.ExtrudeGeometry(outerShape, extrudeSettings);
+        geometry.translate(0, 0, -length / 2);
+        return geometry;
+    },
+
+    /**
+     * Tworzy geometrię profilu UPN (ceownik)
+     */
+    createUPNGeometry(profile, length) {
+        const { h, b, tw, tf, r } = profile;
+        
+        const shape = new THREE.Shape();
+        
+        // Podstawa ceownika
+        shape.moveTo(0, -h/2);
+        shape.lineTo(b, -h/2);
+        shape.lineTo(b, -h/2 + tf);
+        
+        // Przejście do środnika z zaokrągleniem
+        shape.lineTo(tw + r, -h/2 + tf);
+        shape.quadraticCurveTo(tw, -h/2 + tf, tw, -h/2 + tf + r);
+        
+        // Środnik
+        shape.lineTo(tw, h/2 - tf - r);
+        
+        // Przejście do górnej półki
+        shape.quadraticCurveTo(tw, h/2 - tf, tw + r, h/2 - tf);
+        shape.lineTo(b, h/2 - tf);
+        shape.lineTo(b, h/2);
+        shape.lineTo(0, h/2);
+        shape.lineTo(0, -h/2);
+        
+        const extrudeSettings = {
+            depth: length,
+            bevelEnabled: false
+        };
+        
+        const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        geometry.translate(0, 0, -length / 2);
+        return geometry;
+    },
+
+    /**
+     * Tworzy geometrię kątownika
+     */
+    createAngleGeometry(profile, length) {
+        const { a, b, t, r } = profile;
+        
+        const shape = new THREE.Shape();
+        
+        // Kształt L
+        shape.moveTo(0, 0);
+        shape.lineTo(a, 0);
+        shape.lineTo(a, t);
+        shape.lineTo(t + r, t);
+        shape.quadraticCurveTo(t, t, t, t + r);
+        shape.lineTo(t, b);
+        shape.lineTo(0, b);
+        shape.lineTo(0, 0);
+        
+        const extrudeSettings = {
+            depth: length,
+            bevelEnabled: false
+        };
+        
+        const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        geometry.translate(0, 0, -length / 2);
+        return geometry;
+    }
+};
+
+// Funkcja pomocnicza do parsowania nazwy profilu
+function parseProfileName(profileName) {
+    if (profileName.startsWith('HEA')) {
+        return { type: 'HEA', name: profileName };
+    } else if (profileName.startsWith('IPE')) {
+        return { type: 'IPE', name: profileName };
+    } else if (profileName.startsWith('RHS')) {
+        return { type: 'RHS', name: profileName };
+    } else if (profileName.startsWith('CHS')) {
+        return { type: 'CHS', name: profileName };
+    } else if (profileName.startsWith('UPN')) {
+        return { type: 'UPN', name: profileName };
+    } else if (profileName.startsWith('L')) {
+        return { type: 'L', name: profileName };
+    }
+    return { type: 'unknown', name: profileName };
+}
+
+// Główna funkcja do tworzenia geometrii profilu
+function createProfileGeometry(profileName, length) {
+    const parsed = parseProfileName(profileName);
+    const profileData = SteelProfiles[parsed.type]?.[parsed.name];
+    
+    if (!profileData) {
+        console.warn(`Profile ${profileName} not found, using default box geometry`);
+        const geometry = new THREE.BoxGeometry(100, 100, length);
+        return geometry;
+    }
+    
+    let geometry;
+    switch (parsed.type) {
+        case 'HEA':
+        case 'IPE':
+            geometry = ProfileGeometry.createIBeamGeometry(profileData, length);
+            break;
+        case 'RHS':
+            geometry = ProfileGeometry.createRHSGeometry(profileData, length);
+            break;
+        case 'CHS':
+            geometry = ProfileGeometry.createCHSGeometry(profileData, length);
+            break;
+        case 'UPN':
+            geometry = ProfileGeometry.createUPNGeometry(profileData, length);
+            break;
+        case 'L':
+            geometry = ProfileGeometry.createAngleGeometry(profileData, length);
+            break;
+        default:
+            geometry = new THREE.BoxGeometry(100, 100, length);
+            break;
+    }
+    return geometry;
+} 
+==================== C:\Users\t93to\Desktop\tomcad\readme.md ====================
+==================== C:\Users\t93to\Desktop\tomcad\refaktoryzacja.txt ====================
+Kompleksowy Plan Rozwoju i Refaktoryzacji Aplikacji TomCAD
+Twoim celem jest stworzenie skalowalnej aplikacji do modelowania konstrukcji, która będzie stanowiła prostszą i bardziej dostępną alternatywę dla istniejących systemów. Posiadasz już bardzo solidne fundamenty, a Twoje podejście, w którym dane w formacie JSON są "pojedynczym źródłem prawdy", jest kluczowym atutem.
+
+
+
+
+Poniższy plan ma na celu ewolucję Twojej obecnej architektury, aby była jeszcze bardziej elastyczna i gotowa na przyszłe wyzwania, takie jak "Smart Components", generowanie rysunków 2D i list materiałowych.
+
+Część 1: Analiza i Filozofia Nowej Architektury
+1.1. Ocena Obecnego Stanu
+Mocne Strony:
+
+Architektura "JSON-centric": Utrzymanie całego stanu modelu w strukturaData to fundament pod spójność danych, łatwość zapisu i wczytywania.
+
+
+Podział na Managery: Separacja logiki na klasy takie jak ElementManager, SelectionManager czy UIManager jest zgodna z dobrymi praktykami i ułatwia zarządzanie kodem.
+
+
+Modularne Operacje: Posiadanie osobnych klas dla operacji (HoleOperation, RectCutOperation, SlotOperation) ułatwia dodawanie nowych typów obróbek w przyszłości.
+
+Obszary do Rozwoju (Potencjalne Źródła Problemów w Przyszłości):
+
+Silne Powiązania (Tight Coupling): Managery są od siebie zależne i przekazywane w konstruktorach (np. CopyManager przyjmuje 6 zależności). W miarę dodawania nowych modułów, sieć zależności stanie się bardzo skomplikowana.
+
+
+Manualna Synchronizacja Widoku i Modelu: Manager po zmianie danych w strukturaData musi pamiętać o ręcznej aktualizacji obiektu THREE.Mesh. To stwarza ryzyko błędów i rozsynchronizowania się widoku z modelem.
+
+
+Płaska Struktura Danych: Tablica elements jest listą pojedynczych obiektów. Utrudnia to modelowanie złożonych, parametrycznych zespołów (np. schodów) jako jednej, logicznej całości.
+
+
+1.2. Proponowana Filozofia: "Wszystko jest Komponentem" w Architekturze Reaktywnej
+Zamiast myśleć o "elementach" i "operacjach" jako oddzielnych bytach, unifikujemy model danych. Wszystko w scenie jest "Komponentem".
+
+Pojedyncza belka to prosty komponent typu SingleBeam.
+Blacha to komponent typu SinglePlate.
+Schody to złożony komponent typu Staircase.
+Komponenty nie komunikują się ze sobą bezpośrednio. Zamiast tego, aplikacja staje się reaktywna:
+
+Użytkownik wykonuje akcję w UI.
+Moduł UI lub edycji prosi centralny Model o zmianę parametrów komponentu.
+Model aktualizuje swoje dane i publikuje globalne zdarzenie (np. komponent:zaktualizowany).
+Wszystkie inne części aplikacji (manager sceny 3D, manager UI) nasłuchują na to zdarzenie i odpowiednio aktualizują WIDOK.
+To eliminuje silne powiązania i problem manualnej synchronizacji.
+
+Część 2: Szczegółowy, Fazowy Plan Rozwoju
+Oto kroki, które możesz podjąć, aby wdrożyć nową architekturę.
+
+Faza 0: Przygotowanie Środowiska Pracy
+System Kontroli Wersji (Git):
+
+Jeśli jeszcze go nie używasz, zainicjuj repozytorium Git.
+Zatwierdź (commit) obecną, działającą wersję aplikacji.
+Stwórz nową gałąź (branch) dla refaktoryzacji, np. refactor-architecture. To kluczowe, aby nie zepsuć działającej wersji.
+Stworzenie Nowej Struktury Folderów:
+
+Fizycznie stwórz w projekcie poniższą strukturę i przenieś do niej istniejące pliki, zmieniając ich nazwy zgodnie z sugestią.
+<!-- end list -->
+
+/ (root)
+├── index.html
+├── data/
+│   ├── struktura.js
+│   └── profiles.js
+└── src/
+    ├── core/
+    │   ├── App.js             # Dawny BeamViewer.js
+    │   ├── EventBus.js        # NOWY
+    │
+    ├── model/
+    │   ├── StructureModel.js  # NOWY
+    │
+    ├── scene/
+    │   ├── SceneManager.js    # Dawny ElementManager.js
+    │   ├── CameraManager.js   # Dawny CameraControls.js
+    │   └── GridManager.js
+    │
+    ├── modules/
+    │   ├── SelectionModule.js # Dawny SelectionManager.js
+    │   ├── CreationModule.js  # Dawny CreationManager.js
+    │   ├── CopyModule.js      # Dawny CopyManager.js
+    │   ├── SnapModule.js      # Dawny SnapManager.js
+    │   └── IOModule.js        # Dawny ImportExport.js
+    │
+    ├── ui/
+    │   └── UIManager.js
+    │
+    ├── operations/
+    │   ├── HoleOperation.js
+    │   ├── RectCutOperation.js
+    │   └── SlotOperation.js
+    │
+    ├── components/            # NOWY - na klasy komponentów
+    │
+    └── utils/
+        ├── GeometryUtils.js
+        └── DragControls.js
+Zaktualizuj wszystkie ścieżki <script> w index.html.
+Faza 1: Implementacja Fundamentów Architektury Reaktywnej
+Stwórz Magistralę Zdarzeń (EventBus):
+W src/core/EventBus.js umieść prostą klasę do publikowania i subskrybowania zdarzeń. <!-- end list -->
+    // src/core/EventBus.js
+class EventBus {
+constructor() { this.events = {}; }
+subscribe(eventName, callback) {
+if (!this.events[eventName]) this.events[eventName] = [];
+this.events[eventName].push(callback);
+}
+publish(eventName, data) {
+if (this.events[eventName]) {
+this.events[eventName].forEach(callback => callback(data));
+}
+}
+}
+```
+2.  Stwórz nową klasę Aplikacji i Modelu:
+* Przerób src/core/App.js tak, aby inicjował kluczowe systemy i tworzył jedną, globalną instancję EventBus.
+* Stwórz szkielet klasy src/model/StructureModel.js, która będzie przyjmować w konstruktorze initialData i eventBus. Będzie ona jedynym "strażnikiem" danych.
+
+Faza 2: Unifikacja Modelu Danych: "Wszystko jest Komponentem"
+To serce zmian. Przebudowujemy struktura.js i cały kod, który z niego korzysta.
+
+Zaprojektuj i Zmigruj struktura.js:
+
+Zamiast tablic elements i operations, stwórz jedną tablicę components.
+
+
+Każdy obiekt w tablicy components będzie miał spójną strukturę: id, type (nazwa klasy komponentu, np. "SingleBeam"), parameters.
+Operacje (cięcia, otwory) stają się częścią obiektu parameters danego komponentu.
+Przykład (data/struktura.js):
+
+JSON
+
+{
+    "meta": { ... },
+    "components": [
+        {
+            "id": "B-1",
+            "type": "SingleBeam",
+            "parameters": {
+                "profile": "HEA200",
+                "material": "S355JR",
+                "start": [0, 0, 0],
+                "end": [0, 0, 3000],
+                "orientation": 0,
+                "operations": [
+                    { "type": "Hole", "diameter": 18, "start": [0,50,2900], "end": [0,150,2900] }
+                ]
+            }
+        },
+        {
+            "id": "P-1",
+            "type": "SinglePlate",
+            "parameters": {
+                "thickness": 12,
+                "material": "S355JR",
+                "origin": [100, 2650, 3000],
+                "width": 300,
+                "height": 200,
+                "operations": []
+            }
+        }
+    ],
+    "grids": [ ... ]
+}
+Stwórz Klasy Komponentów:
+
+Stwórz bazową, abstrakcyjną klasę w src/components/AbstractComponent.js, która będzie definiować wspólny interfejs (constructor, generateMeshes(), update(), getControlPoints()).
+Stwórz pierwsze implementacje: src/components/SingleBeamComponent.js i src/components/SinglePlateComponent.js, dziedziczące po AbstractComponent. Metoda generateMeshes() dla belki stworzy jeden obiekt THREE.Mesh belki, a dla blachy - jeden obiekt blachy.
+Przebuduj SceneManager.js:
+
+Usuń stare metody createBeam, createPlate.
+Stwórz jedną metodę, np. renderComponent(componentData). Będzie ona, na podstawie componentData.type, tworzyć instancję odpowiedniej klasy komponentu (new SingleBeamComponent(...)), wywoływać jej metodę generateMeshes() i dodawać wynik do sceny 3D.
+SceneManager będzie subskrybował zdarzenia z EventBus, np. model:componentAdded, model:componentUpdated, model:componentRemoved, aby automatycznie aktualizować scenę.
+Przebuduj StructureModel.js i resztę modułów:
+
+Zaimplementuj w StructureModel metody addComponent, updateComponentParameters, removeComponent. Każda z tych metod po modyfikacji danych musi publikować odpowiednie zdarzenie na EventBus.
+Przepisz logikę w modułach (CreationModule, CopyModule itd.), aby zamiast bezpośrednio manipulować danymi, wywoływały metody z StructureModel.
+Faza 3: Implementacja Nowych Funkcjonalności
+Teraz, gdy masz solidną i elastyczną architekturę, dodawanie nowych funkcji staje się proste.
+
+"Smart Component": Schody
+
+Stwórz nową klasę src/components/StaircaseComponent.js.
+Zdefiniuj dla niej unikalny zestaw parameters w struktura.js (np. startPoint, endPoint, width, stringerProfile).
+W metodzie generateMeshes() tej klasy napisz logikę, która na podstawie parametrów programistycznie wygeneruje wszystkie potrzebne obiekty THREE.Mesh (dwie belki policzkowe, N blach stopni).
+Dodaj "Staircase" jako nową opcję w CreationModule.
+Generator List Materiałowych (BOM)
+
+Stwórz src/modules/BomModule.js.
+W klasie AbstractComponent dodaj metodę getPartList(). Każda klasa komponentu (belka, blacha, schody) będzie implementować tę metodę, zwracając listę swoich części składowych.
+BomModule będzie pobierał wszystkie komponenty z modelu, wywoływał na nich getPartList(), agregował wyniki i prezentował je w UI.
+Generator Rysunków 2D
+
+Stwórz src/modules/DrawingModule.js.
+Moduł ten będzie działał wyłącznie na danych z StructureModel, bez udziału sceny 3D.
+Będzie posiadał logikę do matematycznego rzutowania geometrii 3D na płaszczyznę 2D.
+W AbstractComponent możesz dodać metodę get2dProjection(viewType), która zwróci zestaw linii i łuków 2D dla danego widoku (góra, przód, bok). Generator złoży te dane i wyeksportuje je do SVG/DXF.
+Faza 4: Udoskonalenie Interfejsu Użytkownika (UI)
+Dynamiczny Panel Właściwości:
+Zamiast statycznych pól w index.html , UIManager powinien po wybraniu komponentu dynamicznie generować pola edycyjne na podstawie kluczy i wartości z obiektu component.parameters.
+Biblioteka Komponentów:
+Zamiast przycisków "Add Beam", "Add Plate", stwórz jeden przycisk "Add Component", który otworzy panel z listą wszystkich dostępnych typów komponentów do dodania (SingleBeam, SinglePlate, Staircase itd.).
+Podsumowanie Korzyści
+Przejście przez ten proces da Ci architekturę, która jest:
+
+Elastyczna i Skalowalna: Dodanie nowego, skomplikowanego komponentu sprowadza się do stworzenia jednej nowej klasy i dodania jej do listy, bez modyfikacji istniejącego kodu.
+Odporna na Błędy: Automatyczny, reaktywny przepływ danych eliminuje błędy wynikające z manualnej synchronizacji stanu.
+Przejrzysta: Luźne powiązania między modułami i jasny podział odpowiedzialności sprawiają, że kod jest łatwiejszy do zrozumienia i utrzymania.
+To solidna podstawa, która pozwoli Ci zrealizować wizję TomCAD jako potężnego, ale jednocześnie prostego i dostępnego narzędzia dla branży konstrukcji stalowyc
+==================== C:\Users\t93to\Desktop\tomcad\SelectionManager.js ====================
+// Selection management functionality
+class SelectionManager {
+    constructor(scene, camera, renderer, elementManager, cameraControls, snapManager) {
+        this.scene = scene;
+        this.camera = camera;
+        this.renderer = renderer;
+        this.elementManager = elementManager;
+        this.cameraControls = cameraControls;
+        this.snapManager = snapManager;
+        this.beamObjects = elementManager.beamObjects; // Get reference from elementManager
+        this.selectedElements = [];
+        
+        // Selection box state
+        this.isSelecting = false;
+        this.selectionBox = document.getElementById('selection-box');
+        this.startPoint = { x: 0, y: 0 };
+        this.endPoint = { x: 0, y: 0 };
+
+        // Control points for editing
+        this.controlPoints = [];
+        this.dragControls = null;
+        this.isDraggingControlPoint = false;
+    }
+
+    isDragging() {
+        return this.isDraggingControlPoint;
+    }
+
+    onMouseDown(event) {
+        // We start tracking on left-click for either a click or a drag-select.
+        if (event.button !== 0) return;
+
+        // If clicking on a control point, let dragControls handle it
+        if (this.dragControls) {
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / this.renderer.domElement.clientWidth) * 2 - 1;
+            mouse.y = -(event.clientY / this.renderer.domElement.clientHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, this.camera);
+            
+            const intersects = raycaster.intersectObjects(this.controlPoints);
+            if (intersects.length > 0) {
+                return; // Let dragControls take over
+            }
+        }
+
+        this.isSelecting = true;
+        this.startPoint.x = event.clientX;
+        this.startPoint.y = event.clientY;
+    }
+
+    onMouseMove(event) {
+        if (!this.isSelecting) return;
+
+        // If mouse moves more than a few pixels, it's a drag, so draw the box.
+        const distance = Math.sqrt(
+            Math.pow(event.clientX - this.startPoint.x, 2) +
+            Math.pow(event.clientY - this.startPoint.y, 2)
+        );
+
+        if (distance > 5) { // Threshold to differentiate click from drag
+            this.endPoint.x = event.clientX;
+            this.endPoint.y = event.clientY;
+
+            const x = Math.min(this.startPoint.x, this.endPoint.x);
+            const y = Math.min(this.startPoint.y, this.endPoint.y);
+            const width = Math.abs(this.startPoint.x - this.endPoint.x);
+            const height = Math.abs(this.startPoint.y - this.endPoint.y);
+
+            this.selectionBox.style.left = `${x}px`;
+            this.selectionBox.style.top = `${y}px`;
+            this.selectionBox.style.width = `${width}px`;
+            this.selectionBox.style.height = `${height}px`;
+            this.selectionBox.style.display = 'block';
+        }
+    }
+    
+    onMouseUp(event) {
+        if (!this.isSelecting) return;
+        this.isSelecting = false;
+
+        const endPoint = { x: event.clientX, y: event.clientY };
+        const distance = Math.sqrt(
+            Math.pow(endPoint.x - this.startPoint.x, 2) +
+            Math.pow(endPoint.y - this.startPoint.y, 2)
+        );
+
+        // It's a drag selection
+        if (distance > 5 && this.selectionBox.style.display === 'block') {
+            const selectedIds = [];
+            const selectionRect = this.selectionBox.getBoundingClientRect();
+            const rendererBounds = this.renderer.domElement.getBoundingClientRect();
+
+            // Convert selection box from screen pixels to NDC
+            const selectionBoxNDC = new THREE.Box2();
+            selectionBoxNDC.min.x = ((selectionRect.left - rendererBounds.left) / rendererBounds.width) * 2 - 1;
+            selectionBoxNDC.max.x = ((selectionRect.right - rendererBounds.left) / rendererBounds.width) * 2 - 1;
+            selectionBoxNDC.min.y = 1 - ((selectionRect.bottom - rendererBounds.top) / rendererBounds.height) * 2;
+            selectionBoxNDC.max.y = 1 - ((selectionRect.top - rendererBounds.top) / rendererBounds.height) * 2;
+
+            this.beamObjects.forEach((mesh, id) => {
+                const objectBox = new THREE.Box3().setFromObject(mesh);
+                if (this.isObjectInSelectionBox(objectBox, selectionBoxNDC)) {
+                    selectedIds.push(id);
+                }
+            });
+
+            if (selectedIds.length > 0) {
+                if (event.ctrlKey) {
+                    this.addSelection(selectedIds);
+                } else {
+                    this.setSelection(selectedIds);
+                }
+            }
+            
+            this.selectionBox.style.display = 'none';
+        // It's a simple click
+        } else {
+            this.selectionBox.style.display = 'none';
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / this.renderer.domElement.clientWidth) * 2 - 1;
+            mouse.y = -(event.clientY / this.renderer.domElement.clientHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, this.camera);
+            
+            const intersects = raycaster.intersectObjects(Array.from(this.beamObjects.values()));
+            
+            if (intersects.length > 0) {
+                const elementId = intersects[0].object.userData.elementId;
+                if (event.ctrlKey) {
+                    this.toggleSelection(elementId);
+                } else {
+                    this.setSelection([elementId]);
+                }
+            } else {
+                this.clearSelection();
+            }
+        }
+
+        return this.selectedElements;
+    }
+
+    isObjectInSelectionBox(objectBox, selectionBoxNDC) {
+        // This is a robust check to see if an object's screen-projected
+        // bounding box intersects with the selection rectangle.
+        const objectProjectedBox = new THREE.Box2();
+
+        // Get the 8 corners of the world-space bounding box manually for r128 compatibility
+        const min = objectBox.min;
+        const max = objectBox.max;
+        const corners = [
+            new THREE.Vector3(min.x, min.y, min.z),
+            new THREE.Vector3(min.x, min.y, max.z),
+            new THREE.Vector3(min.x, max.y, min.z),
+            new THREE.Vector3(min.x, max.y, max.z),
+            new THREE.Vector3(max.x, min.y, min.z),
+            new THREE.Vector3(max.x, min.y, max.z),
+            new THREE.Vector3(max.x, max.y, min.z),
+            new THREE.Vector3(max.x, max.y, max.z)
+        ];
+
+        let inFrustum = false;
+        for (const corner of corners) {
+            // Project the corner into screen space (NDC)
+            corner.project(this.camera);
+            // Check if at least one corner is in the camera's view frustum.
+            if (corner.z > -1 && corner.z < 1) {
+                inFrustum = true;
+                // Expand the projected box with this screen-space point
+                objectProjectedBox.expandByPoint(corner);
+            }
+        }
+
+        // If no part of the object is in the frustum, it can't be selected.
+        if (!inFrustum) {
+            return false;
+        }
+
+        // Check for intersection between the object's projected box and the selection box
+        return selectionBoxNDC.intersectsBox(objectProjectedBox);
+    }
+    
+    setSelection(elementIds) {
+        this.clearSelection(false); // Clear silently
+        this.selectedElements = [...elementIds];
+        this.updateSelectionVisuals();
+        return this.selectedElements;
+    }
+
+    addSelection(elementIds) {
+        elementIds.forEach(id => {
+            if (!this.selectedElements.includes(id)) {
+                this.selectedElements.push(id);
+            }
+        });
+        this.updateSelectionVisuals();
+        return this.selectedElements;
+    }
+
+    toggleSelection(elementId) {
+        const index = this.selectedElements.indexOf(elementId);
+        if (index > -1) {
+            this.selectedElements.splice(index, 1);
+        } else {
+            this.selectedElements.push(elementId);
+        }
+        this.updateSelectionVisuals();
+        return this.selectedElements;
+    }
+
+    clearSelection(update = true) {
+        this.selectedElements = [];
+        this.clearControlPoints();
+        if(update) this.updateSelectionVisuals();
+        return this.selectedElements;
+    }
+
+    updateSelectionVisuals() {
+        // Clear existing control points before redrawing anything
+        this.clearControlPoints();
+
+        // Update 3D objects
+        this.beamObjects.forEach((mesh, id) => {
+            const isSelected = this.selectedElements.includes(id);
+            if (isSelected) {
+                mesh.material.color.setHex(0xff4444);
+                mesh.material.opacity = 1.0;
+                
+                // Create control points for selected elements
+                const elementData = this.elementManager.getElement(id);
+                if (elementData && elementData.kind === 'beam') {
+                    this.createControlPoint(elementData, 'start');
+                    this.createControlPoint(elementData, 'end');
+                }
+            } else {
+                if (mesh.userData.originalMaterial) {
+                    mesh.material.copy(mesh.userData.originalMaterial);
+                }
+            }
+        });
+        
+        // After creating all points, initialize drag controls
+        this.initDragControls();
+
+        // Update UI list
+        document.querySelectorAll('.beam-item').forEach(item => {
+            const isSelected = this.selectedElements.includes(item.dataset.elementId);
+            item.classList.toggle('selected', isSelected);
+        });
+    }
+
+    createControlPoint(elementData, pointType) {
+        const pointCoords = elementData[pointType];
+        if (!pointCoords) return;
+
+        const handleSize = 50; // Adjust size based on zoom
+        const geometry = new THREE.SphereGeometry(handleSize, 16, 16);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const controlPoint = new THREE.Mesh(geometry, material);
+        
+        controlPoint.position.set(...pointCoords);
+        controlPoint.userData = {
+            elementId: elementData.id,
+            pointType: pointType,
+            isControlPoint: true
+        };
+
+        this.scene.add(controlPoint);
+        this.controlPoints.push(controlPoint);
+    }
+    
+    clearControlPoints() {
+        if (this.dragControls) {
+            this.dragControls.dispose();
+            this.dragControls = null;
+        }
+        this.controlPoints.forEach(point => this.scene.remove(point));
+        this.controlPoints = [];
+    }
+    
+    initDragControls() {
+        if (this.controlPoints.length > 0) {
+            this.dragControls = new THREE.DragControls(this.controlPoints, this.camera, this.renderer.domElement);
+            this.dragControls.addEventListener('dragstart', (event) => {
+                this.cameraControls.enabled = false;
+                event.object.material.color.setHex(0x00ff00);
+                this.isDraggingControlPoint = true;
+
+                // Axis snap
+                const element = this.elementManager.getElement(event.object.userData.elementId);
+                if (element) {
+                    const stationaryPointType = event.object.userData.pointType === 'start' ? 'end' : 'start';
+                    const stationaryPoint = new THREE.Vector3(...element[stationaryPointType]);
+                    this.snapManager.startAxisSnap(stationaryPoint);
+                }
+            });
+
+            this.dragControls.addEventListener('drag', (event) => {
+                const draggedPoint = event.object;
+                const elementId = draggedPoint.userData.elementId;
+                const pointType = draggedPoint.userData.pointType;
+                const mouse = event.mouse;
+            
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(mouse, this.camera);
+            
+                const snapPoint = this.snapManager.findSnapPoint(raycaster, mouse, elementId);
+
+                if (snapPoint) {
+                    draggedPoint.position.copy(snapPoint);
+                }
+            
+                // Update the actual beam element
+                this.elementManager.updateElementPoint(elementId, pointType, draggedPoint.position);
+
+                // Update tooltip position
+                const snapTooltip = this.snapManager.snapTooltip; // Access from snapManager
+                if (snapTooltip && snapTooltip.style.display === 'block') {
+                    snapTooltip.style.left = `${event.clientX + 15}px`;
+                    snapTooltip.style.top = `${event.clientY + 15}px`;
+                }
+            });
+
+            this.dragControls.addEventListener('dragend', (event) => {
+                this.cameraControls.enabled = true;
+                event.object.material.color.setHex(0xffff00);
+                this.isDraggingControlPoint = false;
+                
+                // End axis snap
+                this.snapManager.endAxisSnap();
+                this.snapManager.snapIndicator.visible = false;
+            });
+        }
+    }
+
+    getSelectedElements() {
+        return this.selectedElements;
+    }
+} 
+==================== C:\Users\t93to\Desktop\tomcad\SnapManager.js ====================
+// Manages all snapping logic
+class SnapManager {
+    constructor(scene, elementManager, gridManager) {
+        this.scene = scene;
+        this.elementManager = elementManager;
+        this.gridManager = gridManager;
+
+        this.snapModes = {
+            gridLines: true,
+            gridIntersections: false,
+            endpoints: true,
+            edges: false,
+            corners: false,
+            axis: false
+        };
+
+        this.snapTolerance = 100; // World units
+        this.snapIndicator = this.createSnapIndicator();
+        this.scene.add(this.snapIndicator);
+
+        // Snap tooltip UI element
+        this.snapTooltip = document.getElementById('snap-tooltip');
+
+        // Axis snapping helper
+        this.axisHelper = new THREE.AxesHelper(10000); // A large size
+        this.axisHelper.visible = false;
+        this.scene.add(this.axisHelper);
+        this.axisSnapOrigin = null;
+
+        this.setupSnapToolbar();
+    }
+
+    createSnapIndicator() {
+        const geometry = new THREE.SphereGeometry(25, 16, 16); // Size of indicator
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.7 });
+        const indicator = new THREE.Mesh(geometry, material);
+        indicator.visible = false;
+        return indicator;
+    }
+
+    setupSnapToolbar() {
+        const toolbar = document.getElementById('snap-toolbar');
+        if (!toolbar) return;
+
+        toolbar.addEventListener('click', (event) => {
+            const button = event.target.closest('.snap-button');
+            if (!button) return;
+
+            button.classList.toggle('active');
+
+            switch (button.id) {
+                case 'snap-grid-lines':
+                    this.snapModes.gridLines = button.classList.contains('active');
+                    break;
+                case 'snap-grid-intersections':
+                    this.snapModes.gridIntersections = button.classList.contains('active');
+                    break;
+                case 'snap-endpoints':
+                    this.snapModes.endpoints = button.classList.contains('active');
+                    break;
+                case 'snap-edges':
+                    this.snapModes.edges = button.classList.contains('active');
+                    break;
+                case 'snap-corners':
+                    this.snapModes.corners = button.classList.contains('active');
+                    break;
+                case 'snap-axis':
+                    this.snapModes.axis = button.classList.contains('active');
+                    break;
+            }
+            console.log('Snap modes updated:', this.snapModes);
+        });
+    }
+
+    startAxisSnap(stationaryPoint) {
+        if (!this.snapModes.axis) return;
+        this.axisSnapOrigin = stationaryPoint.clone();
+        this.axisHelper.position.copy(this.axisSnapOrigin);
+        this.axisHelper.visible = true;
+    }
+
+    endAxisSnap() {
+        this.axisSnapOrigin = null;
+        this.axisHelper.visible = false;
+    }
+
+    findSnapPoint(raycaster, mouse, draggedElementId = null) {
+        let bestSnap = { point: null, distance: Infinity, priority: 4, description: '' };
+        const screenTolerance = 0.2; // Screen-space tolerance for snapping
+
+        // --- Helper Function ---
+        const checkAndUpdateSnap = (point, priority, description) => {
+            if (!point) return;
+            if (priority > bestSnap.priority) return;
+
+            // Check if the point is within a reasonable distance from the mouse ray
+            const distanceToRay = raycaster.ray.distanceToPoint(point);
+            if (distanceToRay > this.snapTolerance * 2) return; // A wider tolerance for initial check
+
+            // Project to screen and check proximity to mouse cursor
+            const projectedPoint = point.clone().project(raycaster.camera);
+            const screenDist = new THREE.Vector2(projectedPoint.x, projectedPoint.y).distanceTo(mouse);
+            if (screenDist > screenTolerance) return;
+            
+            // Update best snap if this one is better
+            if (priority < bestSnap.priority || (priority === bestSnap.priority && screenDist < bestSnap.distance)) {
+                bestSnap = { point: point.clone(), distance: screenDist, priority: priority, description: description };
+            }
+        };
+
+        // --- Main Logic ---
+
+        // Get all potential snap candidates first
+        const pointCandidates = this.getPointCandidates(draggedElementId);
+        const lineCandidates = this.getLineCandidates(draggedElementId);
+        const intersectionCandidates = this.getIntersectionCandidates(lineCandidates);
+
+        // --- Original Behavior (Find best geometric snap point) ---
+        pointCandidates.forEach(p => checkAndUpdateSnap(p.point, p.priority, p.description));
+        intersectionCandidates.forEach(p => checkAndUpdateSnap(p.point, p.priority, p.description));
+        lineCandidates.forEach(l => {
+            const snapPoint = new THREE.Vector3();
+            raycaster.ray.distanceSqToSegment(l.line.start, l.line.end, null, snapPoint);
+            checkAndUpdateSnap(snapPoint, l.priority, l.description);
+        });
+
+        // --- Axis Constraint Logic (Applied after finding the best snap) ---
+        if (this.snapModes.axis && this.axisSnapOrigin) {
+            const axisLines = [
+                { name: 'X', line: new THREE.Line3(this.axisSnapOrigin.clone().add(new THREE.Vector3(-10000, 0, 0)), this.axisSnapOrigin.clone().add(new THREE.Vector3(10000, 0, 0))) },
+                { name: 'Y', line: new THREE.Line3(this.axisSnapOrigin.clone().add(new THREE.Vector3(0, -10000, 0)), this.axisSnapOrigin.clone().add(new THREE.Vector3(0, 10000, 0))) },
+                { name: 'Z', line: new THREE.Line3(this.axisSnapOrigin.clone().add(new THREE.Vector3(0, 0, -10000)), this.axisSnapOrigin.clone().add(new THREE.Vector3(0, 0, 10000))) }
+            ];
+
+            // 1. Find which of the three axes is closest to the mouse ray to determine user's intent
+            let closestAxis = null;
+            let minAxisDistSq = Infinity;
+            axisLines.forEach(axis => {
+                const distSq = raycaster.ray.distanceSqToSegment(axis.line.start, axis.line.end);
+                if (distSq < minAxisDistSq) {
+                    minAxisDistSq = distSq;
+                    closestAxis = axis;
+                }
+            });
+
+            if (bestSnap.point) {
+                // 2a. A geometric snap was found, so constrain it to the chosen axis.
+                const constrainedPoint = bestSnap.point.clone();
+                const origin = this.axisSnapOrigin;
+
+                switch (closestAxis.name) {
+                    case 'X':
+                        constrainedPoint.y = origin.y;
+                        constrainedPoint.z = origin.z;
+                        break;
+                    case 'Y':
+                        constrainedPoint.x = origin.x;
+                        constrainedPoint.z = origin.z;
+                        break;
+                    case 'Z':
+                        constrainedPoint.x = origin.x;
+                        constrainedPoint.y = origin.y;
+                        break;
+                }
+                bestSnap.point = constrainedPoint;
+                bestSnap.description += ` (On ${closestAxis.name} Axis)`;
+                bestSnap.priority = 0; // Axis constraint is highest priority
+            } else {
+                // 2b. No geometric snap found, so snap directly to the axis line.
+                const axisPoint = new THREE.Vector3();
+                raycaster.ray.distanceSqToSegment(closestAxis.line.start, closestAxis.line.end, null, axisPoint);
+                checkAndUpdateSnap(axisPoint, 2, `Axis ${closestAxis.name}`);
+            }
+        }
+
+        if (bestSnap.point) {
+            this.snapIndicator.position.copy(bestSnap.point);
+            this.snapIndicator.visible = true;
+            if (this.snapTooltip) {
+                this.snapTooltip.textContent = bestSnap.description;
+                this.snapTooltip.style.display = 'block';
+            }
+            return bestSnap.point;
+        } else {
+            this.snapIndicator.visible = false;
+            if (this.snapTooltip) {
+                this.snapTooltip.style.display = 'none';
+            }
+            return null;
+        }
+    }
+
+    getPointCandidates(draggedElementId) {
+        const candidates = [];
+        // Endpoint Snapping
+        if (this.snapModes.endpoints) {
+            this.elementManager.getAllElements().forEach(element => {
+                if (element.id === draggedElementId || element.kind !== 'beam') return;
+                candidates.push({ point: new THREE.Vector3(...element.start), priority: 1, description: 'Endpoint' });
+                candidates.push({ point: new THREE.Vector3(...element.end), priority: 1, description: 'Endpoint' });
+            });
+        }
+        // Corner Snapping
+        if (this.snapModes.corners) {
+            this.elementManager.getAllElements().forEach(element => {
+                if (element.id === draggedElementId) return;
+                const mesh = this.elementManager.beamObjects.get(element.id);
+                if (!mesh) return;
+                const position = mesh.geometry.attributes.position;
+                mesh.updateWorldMatrix(true, false);
+                for (let i = 0; i < position.count; i++) {
+                    candidates.push({ point: new THREE.Vector3().fromBufferAttribute(position, i).applyMatrix4(mesh.matrixWorld), priority: 1, description: 'Corner' });
+                }
+            });
+        }
+        // Grid Intersection Snapping
+        if (this.snapModes.gridIntersections) {
+            this.gridManager.getIntersectionPoints().forEach(point => {
+                candidates.push({ point: point, priority: 2, description: 'Grid Intersection' });
+            });
+        }
+        return candidates;
+    }
+
+    getLineCandidates(draggedElementId) {
+        const candidates = [];
+        // Grid Line Snapping
+        if (this.snapModes.gridLines) {
+            this.gridManager.getGridLines().forEach(lineObj => {
+                const line = new THREE.Line3(
+                    new THREE.Vector3().fromBufferAttribute(lineObj.geometry.attributes.position, 0),
+                    new THREE.Vector3().fromBufferAttribute(lineObj.geometry.attributes.position, 1)
+                );
+                line.applyMatrix4(lineObj.parent.matrixWorld);
+                candidates.push({ line: line, priority: 3, source: 'grid', description: 'Grid Line' });
+            });
+        }
+        // Edge Snapping
+        if (this.snapModes.edges) {
+            this.elementManager.getAllElements().forEach(element => {
+                if (element.id === draggedElementId) return;
+                const mesh = this.elementManager.beamObjects.get(element.id);
+                if (!mesh) return;
+                const pos = mesh.geometry.attributes.position;
+                const idx = mesh.geometry.index;
+                mesh.updateWorldMatrix(true, false);
+                if (idx) {
+                    for (let i = 0; i < idx.count; i += 3) {
+                        const a = new THREE.Vector3().fromBufferAttribute(pos, idx.getX(i)).applyMatrix4(mesh.matrixWorld);
+                        const b = new THREE.Vector3().fromBufferAttribute(pos, idx.getX(i + 1)).applyMatrix4(mesh.matrixWorld);
+                        const c = new THREE.Vector3().fromBufferAttribute(pos, idx.getX(i + 2)).applyMatrix4(mesh.matrixWorld);
+                        candidates.push({ line: new THREE.Line3(a, b), priority: 3, source: 'edge', description: 'Edge' });
+                        candidates.push({ line: new THREE.Line3(b, c), priority: 3, source: 'edge', description: 'Edge' });
+                        candidates.push({ line: new THREE.Line3(c, a), priority: 3, source: 'edge', description: 'Edge' });
+                    }
+                }
+            });
+        }
+        return candidates;
+    }
+
+    getIntersectionCandidates(lineCandidates) {
+        const intersections = [];
+        for (let i = 0; i < lineCandidates.length; i++) {
+            for (let j = i + 1; j < lineCandidates.length; j++) {
+                const L1 = lineCandidates[i];
+                const L2 = lineCandidates[j];
+
+                // Don't intersect lines from the same source (e.g. two grid lines might be parallel)
+                if (L1.source === L2.source) continue;
+                
+                const intersectionPoint = this.getLineLineIntersection(L1.line, L2.line);
+                if (intersectionPoint) {
+                    // Intersection of two lines is a high-priority snap.
+                    const description = `Intersection: ${L1.description} / ${L2.description}`;
+                    intersections.push({ point: intersectionPoint, priority: 0, description: description });
+                }
+            }
+        }
+        return intersections;
+    }
+
+    getLineLineIntersection(line1, line2) {
+        // Using the same math as ray-line, but for two lines.
+        // http://geomalgorithms.com/a07-_distance.html
+        const p1 = line1.start;
+        const v1 = new THREE.Vector3().subVectors(line1.end, line1.start).normalize();
+        const p2 = line2.start;
+        const v2 = new THREE.Vector3().subVectors(line2.end, line2.start).normalize();
+
+        const v12 = new THREE.Vector3().crossVectors(v1, v2);
+        // If lines are parallel, the cross product length will be close to zero.
+        if (v12.lengthSq() < 1e-6) {
+            return null;
+        }
+
+        // Check for coplanarity. If they aren't coplanar, they don't intersect.
+        const w0 = new THREE.Vector3().subVectors(p1, p2);
+        if (Math.abs(w0.dot(v12)) > 0.1) { // Allow some tolerance
+            return null;
+        }
+
+        // Solve for intersection parameter on line1
+        const w0xv2 = new THREE.Vector3().crossVectors(w0, v2);
+        const s = w0xv2.dot(v12) / v12.lengthSq();
+        
+        const intersectionPoint = p1.clone().addScaledVector(v1, s);
+        
+        // Optional: Check if the intersection point lies on the segments (if they are segments)
+        // For now, we treat them as infinite lines.
+
+        return intersectionPoint;
+    }
+}
+
+// The helper functions below are no longer needed with the new logic.
+// THREE.Ray.prototype.closestPointToSegment = function(p1, p2) {
+//     const direction = new THREE.Vector3().subVectors(p2, p1);
+//     const lengthSq = direction.lengthSq();
+//     if (lengthSq === 0) {
+//         return this.closestPointToPoint(p1);
+//     }
+//     const t = Math.max(0, Math.min(1, new THREE.Vector3().subVectors(this.origin, p1).dot(direction) / lengthSq));
+//     const projection = p1.clone().addScaledVector(direction, t);
+//     return this.closestPointToPoint(projection);
+// }; 
+
+// THREE.Ray.prototype.closestPointToLine = function(p1, p2) {
+//     const direction = new THREE.Vector3().subVectors(p2, p1);
+//     const lengthSq = direction.lengthSq();
+//     if (lengthSq === 0) {
+//         return this.closestPointToPoint(p1);
+//     }
+//     const t = new THREE.Vector3().subVectors(this.origin, p1).dot(direction) / lengthSq;
+//     const projection = p1.clone().addScaledVector(direction, t);
+//     return this.closestPointToPoint(projection);
+// } 
+==================== C:\Users\t93to\Desktop\tomcad\UIManager.js ====================
+// UI management functionality
+class UIManager {
+    constructor(structureData, elementManager, selectionManager) {
+        this.structureData = structureData;
+        this.elementManager = elementManager;
+        this.selectionManager = selectionManager;
+        this.editMode = false;
+        this.statusBar = document.getElementById('status-bar');
+        this.creationPanel = document.getElementById('creation-panel');
+    }
+
+    setupUI() {
+        // Update project info
+        const meta = this.structureData.meta;
+        document.getElementById('element-count').textContent = this.structureData.elements.length;
+        document.getElementById('operation-count').textContent = this.structureData.operations.length;
+        
+        // Populate beam list
+        this.populateElementList();
+        this.statusBar.style.display = 'block';
+    }
+
+    populateElementList() {
+        const beamItems = document.getElementById('beam-items');
+        beamItems.innerHTML = ''; // Clear existing items
+        
+        this.structureData.elements.forEach(element => {
+            this.addElementToList(element);
+        });
+    }
+
+    addElementToList(element) {
+        const beamItems = document.getElementById('beam-items');
+        const item = document.createElement('div');
+        item.className = 'beam-item';
+        item.dataset.elementId = element.id;
+        
+        item.innerHTML = `
+            <div class="beam-id">${element.id}</div>
+            <div class="beam-profile">${element.profile || 'Plate'}</div>
+            <div class="beam-material">${element.material}</div>
+        `;
+        
+        item.addEventListener('click', (event) => {
+            if (event.ctrlKey) {
+                this.selectionManager.toggleSelection(element.id);
+            } else {
+                this.selectionManager.setSelection([element.id]);
+            }
+        });
+        beamItems.appendChild(item);
+    }
+
+    updateElementInList(element) {
+        const listItem = document.querySelector(`[data-element-id="${element.id}"]`);
+        if (listItem) {
+            listItem.innerHTML = `
+                <div class="beam-id">${element.id}</div>
+                <div class="beam-profile">${element.profile || 'Plate'}</div>
+                <div class="beam-material">${element.material}</div>
+            `;
+        }
+    }
+
+    removeElementFromList(elementId) {
+        const listItem = document.querySelector(`[data-element-id="${elementId}"]`);
+        if (listItem) {
+            listItem.remove();
+        }
+    }
+
+    openEditPanel(elementId) {
+        const element = this.elementManager.getElement(elementId);
+        if (!element) return;
+
+        // Show edit panel
+        document.getElementById('edit-panel').style.display = 'block';
+        document.getElementById('edit-element-id').textContent = elementId;
+
+        // Show/hide form sections based on element type
+        const endRow = document.getElementById('edit-end-x').parentElement.parentElement;
+        const plateDimensions = document.getElementById('plate-dimensions');
+        const profileGroup = document.getElementById('edit-profile').parentElement;
+        const orientationGroup = document.getElementById('edit-orientation').parentElement;
+
+        // Set element type selector
+        document.getElementById('edit-element-type').value = element.kind;
+
+        // Populate form fields
+        if (element.kind === 'beam') {
+            document.getElementById('edit-start-x').value = element.start[0];
+            document.getElementById('edit-start-y').value = element.start[1];
+            document.getElementById('edit-start-z').value = element.start[2];
+            document.getElementById('edit-end-x').value = element.end[0];
+            document.getElementById('edit-end-y').value = element.end[1];
+            document.getElementById('edit-end-z').value = element.end[2];
+            document.getElementById('edit-profile').value = element.profile;
+            document.getElementById('edit-orientation').value = element.orientation || 0;
+            
+            endRow.style.display = 'flex';
+            plateDimensions.style.display = 'none';
+            profileGroup.style.display = 'block';
+            orientationGroup.style.display = 'block';
+            
+        } else if (element.kind === 'plate') {
+            document.getElementById('edit-start-x').value = element.origin[0];
+            document.getElementById('edit-start-y').value = element.origin[1];
+            document.getElementById('edit-start-z').value = element.origin[2];
+            document.getElementById('edit-width').value = element.width;
+            document.getElementById('edit-height').value = element.height;
+            document.getElementById('edit-thickness').value = element.thickness;
+            
+            endRow.style.display = 'none';
+            plateDimensions.style.display = 'block';
+            profileGroup.style.display = 'none';
+            orientationGroup.style.display = 'none';
+        }
+
+        document.getElementById('edit-material').value = element.material;
+        this.editMode = true;
+    }
+
+    closeEditPanel() {
+        document.getElementById('edit-panel').style.display = 'none';
+        this.editMode = false;
+    }
+
+    applyChanges() {
+        const selectedElements = this.selectionManager.getSelectedElements();
+        if (selectedElements.length !== 1) return;
+        
+        const elementId = selectedElements[0];
+        const originalElement = this.elementManager.getElement(elementId);
+        if (!originalElement) return;
+
+        // Get current element type from form
+        const currentType = document.getElementById('edit-element-type').value;
+        
+        // Handle element type conversion first if needed
+        if (originalElement.kind !== currentType) {
+            this.elementManager.changeElementType(elementId, currentType);
+        }
+
+        const element = this.elementManager.getElement(elementId);
+
+        // Get values from form
+        const startX = parseFloat(document.getElementById('edit-start-x').value);
+        const startY = parseFloat(document.getElementById('edit-start-y').value);
+        const startZ = parseFloat(document.getElementById('edit-start-z').value);
+        const material = document.getElementById('edit-material').value;
+
+        const newData = { material };
+
+        if (currentType === 'beam') {
+            const endX = parseFloat(document.getElementById('edit-end-x').value);
+            const endY = parseFloat(document.getElementById('edit-end-y').value);
+            const endZ = parseFloat(document.getElementById('edit-end-z').value);
+            const profile = document.getElementById('edit-profile').value;
+            const orientation = parseFloat(document.getElementById('edit-orientation').value);
+            
+            const newStart = new THREE.Vector3(startX, startY, startZ);
+            let newEnd = new THREE.Vector3(endX, endY, endZ);
+
+            // If start point has changed, adjust the end point to maintain length and direction
+            if (originalElement.kind === 'beam') {
+                const oldStart = new THREE.Vector3(...originalElement.start);
+                if (!oldStart.equals(newStart)) {
+                    const oldEnd = new THREE.Vector3(...originalElement.end);
+                    const direction = new THREE.Vector3().subVectors(oldEnd, oldStart);
+                    newEnd.copy(newStart).add(direction);
+                }
+            }
+
+            Object.assign(newData, {
+                start: [newStart.x, newStart.y, newStart.z],
+                end: [newEnd.x, newEnd.y, newEnd.z],
+                profile: profile,
+                orientation: orientation
+            });
+
+        } else if (currentType === 'plate') {
+            const width = parseFloat(document.getElementById('edit-width').value);
+            const height = parseFloat(document.getElementById('edit-height').value);
+            const thickness = parseFloat(document.getElementById('edit-thickness').value);
+
+            Object.assign(newData, {
+                origin: [startX, startY, startZ],
+                width: width,
+                height: height,
+                thickness: thickness
+            });
+        }
+
+        // Update element
+        this.elementManager.updateElement(elementId, newData);
+
+        // Update UI list
+        this.updateElementInList(this.elementManager.getElement(elementId));
+
+        console.log('Element updated via UI');
+    }
+
+    deleteSelectedElements() {
+        const selectedElements = this.selectionManager.getSelectedElements();
+        if (selectedElements.length === 0) return;
+
+        // Delete elements
+        this.elementManager.deleteElements(selectedElements);
+
+        // Remove from UI list
+        selectedElements.forEach(elementId => {
+            this.removeElementFromList(elementId);
+        });
+
+        // Update element count
+        document.getElementById('element-count').textContent = this.structureData.elements.length;
+
+        // Close edit panel and clear selection
+        this.closeEditPanel();
+        this.selectionManager.clearSelection();
+        
+        console.log(`Deleted ${selectedElements.length} elements via UI.`);
+    }
+
+    addNewElement() {
+        const newElement = this.elementManager.addNewElement();
+        this.addElementToList(newElement);
+        document.getElementById('element-count').textContent = this.structureData.elements.length;
+        this.selectionManager.setSelection([newElement.id]);
+    }
+
+    addNewPlate() {
+        const newElement = this.elementManager.addNewPlate();
+        this.addElementToList(newElement);
+        document.getElementById('element-count').textContent = this.structureData.elements.length;
+        this.selectionManager.setSelection([newElement.id]);
+    }
+
+    updateStatusBar(message) {
+        if (message) {
+            this.statusBar.textContent = message;
+            this.statusBar.style.display = 'block';
+        } else {
+            this.statusBar.style.display = 'none';
+        }
+    }
+
+    showCreationPanel(type) {
+        // For now, only beam creation is supported
+        if (type === 'beam') {
+            this.creationPanel.querySelector('h3').textContent = 'Create Beam';
+            this.creationPanel.style.display = 'block';
+            this.closeEditPanel(); // Close edit panel if it's open
+        }
+    }
+
+    hideCreationPanel() {
+        this.creationPanel.style.display = 'none';
+    }
+
+    getCreationParams() {
+        const profile = document.getElementById('create-profile').value;
+        const material = document.getElementById('create-material').value;
+        const orientation = parseFloat(document.getElementById('create-orientation').value) || 0;
+        return { profile, material, orientation };
+    }
+
+    onSelectionChanged(selectedElements) {
+        // Update panels based on selection
+        if (selectedElements.length === 1) {
+            this.openEditPanel(selectedElements[0]);
+            this.updateStatusBar(null);
+        } else {
+            this.closeEditPanel();
+            if (selectedElements.length > 1) {
+                this.updateStatusBar(`${selectedElements.length} elements selected`);
+            } else {
+                this.updateStatusBar(null);
+            }
+        }
+    }
+} 

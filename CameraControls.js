@@ -44,7 +44,11 @@ class CameraControls {
                 if (this.isRotating) {
                     // Set the pivot point for the rotation, but do not change camera state yet.
                     const pivot = this.getPointUnderMouse(e.clientX, e.clientY);
-                    this.rotationPivot.copy(pivot || this.cameraTarget);
+                    if (pivot) {
+                        this.rotationPivot.copy(pivot);
+                    } else {
+                        this.rotationPivot.set(0, 0, 0);
+                    }
                 }
             }
         });
@@ -200,14 +204,7 @@ class CameraControls {
             return intersects[0].point;
         }
 
-        // Fallback: If no object is hit, find a point on the grid plane (y=0).
-        const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-        const intersectionPoint = new THREE.Vector3();
-        if (raycaster.ray.intersectPlane(plane, intersectionPoint)) {
-            return intersectionPoint;
-        }
-
-        return null; // Should rarely happen
+        return null;
     }
 
     // Public methods to be called from BeamViewer

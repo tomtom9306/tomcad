@@ -1,0 +1,41 @@
+﻿Line, Function, and Class Count Report for *.js, *.html
+Generated on: 06/26/2025 00:47:45
+-----------------------------------------------------------------------------------
+File                                               |      Lines |  Functions |    Classes
+-----------------------------------------------------------------------------------
+creators\BeamCreator.js                            |         82 |          4 |          1
+creators\BoxFrameCreator.js                        |        100 |          4 |          1
+creators\ColumnCreator.js                          |         38 |          4 |          1
+creators\GoalPostCreator.js                        |         94 |          4 |          1
+creators\TestCreator.js                            |         88 |          4 |          1
+data\struktura.js                                  |        139 |          0 |          0
+element\ElementFactory.js                          |        104 |          4 |          1
+element\ElementModifier.js                         |        354 |          9 |          1
+element\Manager.js                                 |        106 |         15 |          1
+element\MeshBuilder.js                             |         98 |          0 |          1
+operations\HoleOperation.js                        |         35 |          2 |          1
+operations\RectCutOperation.js                     |         32 |          2 |          1
+operations\SlotOperation.js                        |         40 |          2 |          1
+ui\CreationPanel.js                                |        123 |          8 |          1
+ui\EditPanel.js                                    |        218 |          9 |          1
+ui\ElementListPanel.js                             |        117 |          7 |          1
+app.js                                             |         56 |          1 |          0
+BeamViewer.js                                      |        378 |         25 |          1
+CameraControls.js                                  |        259 |         10 |          1
+CopyManager.js                                     |        100 |          5 |          1
+core.js                                            |          2 |          0 |          0
+CreationManager.js                                 |        157 |         18 |          1
+debug.html                                         |        129 |          0 |          0
+DragControls.js                                    |        301 |         10 |          0
+EventBus.js                                        |         20 |          2 |          1
+GeometryUtils.js                                   |        131 |          0 |          1
+GridManager.js                                     |        257 |         10 |          1
+ImportExport.js                                    |         54 |          4 |          1
+index.html                                         |         60 |          0 |          0
+OperationManager.js                                |         52 |          4 |          1
+profiles.js                                        |        340 |          7 |          0
+SelectionManager.js                                |        394 |         14 |          1
+SnapManager.js                                     |        361 |         13 |          1
+UIManager.js                                       |        235 |         14 |          1
+-----------------------------------------------------------------------------------
+TOTAL                                              |       5054 |        215 |         27

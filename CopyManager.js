@@ -1,16 +1,26 @@
 // Copy functionality
 class CopyManager {
-    constructor(elementManager, selectionManager, uiManager, camera, renderer, beamObjects) {
+    constructor(elementManager, selectionManager, uiManager, camera, renderer, beamObjects, eventBus) {
         this.elementManager = elementManager;
         this.selectionManager = selectionManager;
         this.uiManager = uiManager;
         this.camera = camera;
         this.renderer = renderer;
         this.beamObjects = beamObjects;
+        this.eventBus = eventBus;
         
         this.isCopyMode = false;
         this.copySourcePoint = null;
         this.numCopiesToCreate = 1;
+
+        if (this.eventBus) {
+            this.eventBus.subscribe('copy:mouseDown', (data) => this.handleCopyClick(data.event, data.point));
+            this.eventBus.subscribe('viewer:escapePressed', () => {
+                if (this.isCopyMode) {
+                    this.cancelCopy();
+                }
+            });
+        }
     }
 
     startCopy() {
@@ -32,7 +42,7 @@ class CopyManager {
         this.isCopyMode = true;
         this.copySourcePoint = null;
         this.numCopiesToCreate = numCopies;
-        this.uiManager.updateStatusBar("Pick source point");
+        this.eventBus.publish('ui:updateStatus', "Pick source point");
         document.body.style.cursor = 'crosshair';
     }
 
@@ -40,20 +50,19 @@ class CopyManager {
         this.isCopyMode = false;
         this.copySourcePoint = null;
         this.numCopiesToCreate = 1;
-        this.uiManager.updateStatusBar(null);
+        this.eventBus.publish('ui:updateStatus', null);
         document.body.style.cursor = 'default';
     }
 
-    handleCopyClick(event) {
+    handleCopyClick(event, point) {
         if (!this.isCopyMode || event.button !== 0) return false;
 
-        const point = GeometryUtils.getPointUnderMouse(event, this.camera, this.renderer, this.beamObjects);
         if (!point) return true;
 
         if (!this.copySourcePoint) {
             // This is the first click: setting the source point
             this.copySourcePoint = point;
-            this.uiManager.updateStatusBar(`Pick destination point (vector for ${this.numCopiesToCreate} copies)`);
+            this.eventBus.publish('ui:updateStatus', `Pick destination point (vector for ${this.numCopiesToCreate} copies)`);
         } else {
             // This is the second click: setting the destination and performing the copy
             const destinationPoint = point;

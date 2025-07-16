@@ -1,299 +1,228 @@
 // UI management functionality
 class UIManager {
-    constructor(structureData, elementManager, selectionManager) {
-        this.structureData = structureData;
-        this.elementManager = elementManager;
+    constructor(viewer, eventBus) {
+        this.viewer = viewer;
+        this.structureData = viewer.structureData;
+        this.elementManager = viewer.elementManager;
+        this.selectionManager = null; // Will be set later
+        this.eventBus = eventBus;
+        
+        // References to UI elements
+        this.statusBar = null;
+        this.selectionBox = null;
+        this.snapTooltip = null;
+
+        // References to panel managers
+        this.elementListPanel = new ElementListPanel(this.viewer);
+        this.editPanel = new EditPanel(this.viewer);
+        this.creationPanel = new CreationPanel(this.viewer);
+        this.gridEditPanel = new GridEditPanel(this.viewer);
+
+        this._createBaseUI();
+
+        // Subscribe to application-wide events
+        if (this.eventBus) {
+            this.eventBus.subscribe('selection:changed', (data) => {
+                // Handle new selection format with type
+                if (data && typeof data === 'object' && data.selectedElements !== undefined) {
+                    this.onSelectionChanged(data.selectedElements, data.selectionType);
+                } else {
+                    // Backward compatibility with old format
+                    this.onSelectionChanged(data, 'element');
+                }
+            });
+
+            this.eventBus.subscribe('ui:deleteSelected', () => {
+                this.deleteSelectedElements();
+            });
+
+            this.eventBus.subscribe('ui:updateStatus', (message) => {
+                this.updateStatusBar(message);
+            });
+
+            this.eventBus.subscribe('element:updated', (data) => {
+                // If the updated element is currently selected, refresh the edit panel
+                const selected = this.selectionManager.getSelectedElements();
+                if (selected.length === 1 && selected[0] === data.elementId) {
+                    const freshElementData = this.elementManager.getElement(data.elementId);
+                    if (freshElementData) {
+                        let uiConfig = null;
+                        if (freshElementData.kind === 'group' && freshElementData.type) {
+                            const CreatorClass = this.viewer.creationManager.getCreatorClass(freshElementData.type);
+                            if (CreatorClass && typeof CreatorClass.getEditUI === 'function') {
+                                uiConfig = CreatorClass.getEditUI(freshElementData);
+                            }
+                        }
+                        this.editPanel.show(freshElementData, uiConfig);
+                    }
+                }
+                // Always update the list panel, which can handle both updates and additions
+                this.elementListPanel.update(data.elementData);
+            });
+        }
+    }
+
+    setSelectionManager(selectionManager) {
         this.selectionManager = selectionManager;
-        this.editMode = false;
-        this.statusBar = document.getElementById('status-bar');
-        this.creationPanel = document.getElementById('creation-panel');
-        this.creationType = null;
+        this.elementListPanel.selectionManager = selectionManager;
+        this.editPanel.selectionManager = selectionManager;
+    }
+
+    _createBaseUI() {
+        const container = document.getElementById('container');
+
+        // Overlays
+        this.selectionBox = document.createElement('div');
+        this.selectionBox.id = 'selection-box';
+        this.selectionBox.style.display = 'none';
+
+        this.snapTooltip = document.createElement('div');
+        this.snapTooltip.id = 'snap-tooltip';
+        
+        // Status Bar
+        this.statusBar = document.createElement('div');
+        this.statusBar.id = 'status-bar';
+
+        // Static Panels and Toolbars
+        const topToolbar = this._createTopToolbar();
+        const infoPanel = this._createInfoPanel();
+        const controlsPanel = this._createControlsPanel();
+        const snapToolbar = this._createSnapToolbar();
+        
+        // Assemble UI
+        const rightColumn = document.createElement('div');
+        rightColumn.className = 'right-column';
+        rightColumn.appendChild(this.elementListPanel.panel);
+        rightColumn.appendChild(this.editPanel.panel);
+        rightColumn.appendChild(this.creationPanel.panel);
+        rightColumn.appendChild(this.gridEditPanel.panel);
+
+        container.appendChild(this.statusBar);
+        container.appendChild(topToolbar);
+        container.appendChild(infoPanel);
+        container.appendChild(controlsPanel);
+        container.appendChild(snapToolbar);
+        container.appendChild(rightColumn);
+        container.appendChild(this.selectionBox);
+        container.appendChild(this.snapTooltip);
+    }
+
+    _createTopToolbar() {
+        const topToolbar = document.createElement('div');
+        topToolbar.id = 'top-toolbar';
+
+        // Dynamically create buttons from the creator registry
+        const creators = window.componentRegistry.getAllCreators();
+        creators.forEach(CreatorClass => {
+            const meta = CreatorClass.meta;
+            if (!meta) return;
+
+            const btn = document.createElement('button');
+            btn.id = `add-${meta.type}-btn`;
+            btn.textContent = meta.name;
+            btn.className = 'btn';
+            btn.addEventListener('click', () => this.viewer.creationManager.startCreation(meta.type));
+            topToolbar.appendChild(btn);
+        });
+
+        // Add other static buttons
+        const deleteBtn = document.createElement('button');
+        deleteBtn.id = 'delete-btn';
+        deleteBtn.textContent = 'Delete Selected';
+        deleteBtn.className = 'btn btn-danger';
+        deleteBtn.addEventListener('click', () => this.deleteSelectedElements());
+        topToolbar.appendChild(deleteBtn);
+
+        const editGridBtn = document.createElement('button');
+        editGridBtn.id = 'edit-grid-btn';
+        editGridBtn.textContent = 'Edit Grid';
+        editGridBtn.className = 'btn';
+        editGridBtn.addEventListener('click', () => this.gridEditPanel.show());
+        topToolbar.appendChild(editGridBtn);
+
+        return topToolbar;
+    }
+
+    _createInfoPanel() {
+        const infoPanel = document.createElement('div');
+        infoPanel.id = 'info-panel';
+        infoPanel.innerHTML = `
+            <h2>${this.structureData.meta.name}</h2>
+            <p><strong>Project ID:</strong> ${this.structureData.meta.projectId}</p>
+            <p><strong>Elements:</strong> <span id="element-count">0</span></p>
+            <p>Press SHIFT for panning</p>`;
+        return infoPanel;
+    }
+    
+    _createControlsPanel() {
+        const controlsPanel = document.createElement('div');
+        controlsPanel.id = 'controls';
+        
+        controlsPanel.innerHTML = `
+            <h3>Controls</h3>
+            <p><strong>Middle Mouse + Drag:</strong> Rotate</p>
+            <p><strong>Shift + Middle Mouse:</strong> Pan</p>
+            <p><strong>Mouse Wheel:</strong> Zoom</p>
+            <div id="controls-buttons" style="margin-top: 10px; display: flex; flex-direction: column; gap: 5px;">
+                <div style="display: flex; gap: 5px;">
+                    <button id="btn-fit-all" class="btn">Fit All</button>
+                    <button id="btn-focus" class="btn">Focus</button>
+                    <button id="btn-reset" class="btn">Reset</button>
+                </div>
+                <button id="btn-export" class="btn">Export Structure</button>
+                <button id="btn-export-ifc" class="btn">Export to IFC</button>
+                <button id="btn-import" class="btn">Import Structure</button>
+                <input type="file" id="import-file" accept=".json" style="display: none;">
+            </div>
+        `;
+
+        controlsPanel.querySelector('#btn-fit-all').addEventListener('click', () => this.viewer.fitToView());
+        controlsPanel.querySelector('#btn-focus').addEventListener('click', () => this.viewer.focusOnSelected());
+        controlsPanel.querySelector('#btn-reset').addEventListener('click', () => this.viewer.resetView());
+        controlsPanel.querySelector('#btn-export').addEventListener('click', () => this.viewer.exportStructure());
+        controlsPanel.querySelector('#btn-export-ifc').addEventListener('click', () => this.viewer.exportToIFC());
+
+        return controlsPanel;
+    }
+
+    _createSnapToolbar() {
+        const snapToolbar = document.createElement('div');
+        snapToolbar.id = 'snap-toolbar';
+        snapToolbar.innerHTML = `
+            <button id="snap-grid-lines" class="snap-button active" title="Snap to grid lines">L</button>
+            <button id="snap-grid-intersections" class="snap-button" title="Snap to grid intersections">I</button>
+            <button id="snap-endpoints" class="snap-button active" title="Snap to beam endpoints">E</button>
+            <button id="snap-edges" class="snap-button" title="Snap to edges">D</button>
+            <button id="snap-corners" class="snap-button" title="Snap to corners">C</button>
+            <button id="snap-axis" class="snap-button" title="Snap to axis">A</button>`;
+        return snapToolbar;
     }
 
     setupUI() {
-        // Update project info
-        const meta = this.structureData.meta;
-        document.getElementById('element-count').textContent = this.structureData.elements.length;
-        document.getElementById('operation-count').textContent = this.structureData.operations.length;
-        
-        // Populate beam list
-        this.populateElementList();
-        this.statusBar.style.display = 'block';
+        document.getElementById('element-count').textContent = this.elementManager.getAllElements().length;
+        this.elementListPanel.populate();
+        this.populateAllProfileDropdowns();
     }
+    
+    populateAllProfileDropdowns() {
+        const allProfiles = this.viewer.profiles.getProfileNames();
 
-    populateElementList() {
-        const beamItems = document.getElementById('beam-items');
-        beamItems.innerHTML = ''; // Clear existing items
-        
-        const elements = this.structureData.elements;
-        const processedElements = new Set();
-
-        elements.forEach(element => {
-            if (!element.parentId) {
-                this.addElementToList(element);
-                if (element.kind === 'group' && element.children) {
-                    element.children.forEach(childId => {
-                        const childElement = this.elementManager.getElement(childId);
-                        if (childElement) {
-                            this.addElementToList(childElement, true);
-                            processedElements.add(childId);
-                        }
-                    });
-                }
-                processedElements.add(element.id);
-            }
-        });
-
-        // Add any remaining elements that might not have been processed (e.g. children of non-existent groups)
-        elements.forEach(element => {
-            if (!processedElements.has(element.id)) {
-                this.addElementToList(element);
-            }
-        });
+        this.creationPanel.populateProfileDropdowns(allProfiles);
+        // this.editPanel.populateProfileDropdowns(allProfiles); // Now handled by EditPanel itself
     }
-
-    addElementToList(element, isChild = false) {
-        const beamItems = document.getElementById('beam-items');
-        const item = document.createElement('div');
-        item.className = 'beam-item';
-        item.dataset.elementId = element.id;
-
-        if (isChild) {
-            item.style.marginLeft = '20px';
-        }
-        
-        let content;
-        if (element.kind === 'group') {
-            content = `
-                <div class="beam-id">${element.id} (Goalpost)</div>
-                <div class="beam-profile">Contains ${element.children.length} elements</div>
-            `;
-        } else {
-            content = `
-                <div class="beam-id">${element.id}</div>
-                <div class="beam-profile">${element.profile || 'Plate'}</div>
-                <div class="beam-material">${element.material}</div>
-            `;
-        }
-        item.innerHTML = content;
-        
-        item.addEventListener('click', (event) => {
-            if (event.ctrlKey) {
-                this.selectionManager.toggleSelection(element.id);
-            } else {
-                this.selectionManager.setSelection([element.id]);
-            }
-        });
-        beamItems.appendChild(item);
-    }
-
-    updateElementInList(element) {
-        const listItem = document.querySelector(`[data-element-id="${element.id}"]`);
-        if (listItem) {
-            listItem.innerHTML = `
-                <div class="beam-id">${element.id}</div>
-                <div class="beam-profile">${element.profile || 'Plate'}</div>
-                <div class="beam-material">${element.material}</div>
-            `;
-        }
-    }
-
-    removeElementFromList(elementId) {
-        const listItem = document.querySelector(`[data-element-id="${elementId}"]`);
-        if (listItem) {
-            listItem.remove();
-        }
-    }
-
-    openEditPanel(elementId) {
-        const element = this.elementManager.getElement(elementId);
-        if (!element) return;
-
-        // Show edit panel
-        document.getElementById('edit-panel').style.display = 'block';
-        document.getElementById('edit-element-id').textContent = elementId;
-
-        // Show/hide form sections based on element type
-        const endRow = document.getElementById('edit-end-x').parentElement.parentElement;
-        const plateDimensions = document.getElementById('plate-dimensions');
-        const profileGroup = document.getElementById('edit-profile').parentElement;
-        const orientationGroup = document.getElementById('edit-orientation').parentElement;
-        const goalpostGroup = document.getElementById('goalpost-edit-inputs');
-
-        // Hide all optional sections by default
-        endRow.style.display = 'none';
-        plateDimensions.style.display = 'none';
-        profileGroup.style.display = 'none';
-        orientationGroup.style.display = 'none';
-        goalpostGroup.style.display = 'none';
-
-        // Set element type selector
-        document.getElementById('edit-element-type').value = element.kind;
-        document.getElementById('edit-element-type').disabled = true; // Don't allow changing type for now
-
-        // Populate form fields
-        if (element.kind === 'beam') {
-            document.getElementById('edit-start-x').value = element.start[0];
-            document.getElementById('edit-start-y').value = element.start[1];
-            document.getElementById('edit-start-z').value = element.start[2];
-            document.getElementById('edit-end-x').value = element.end[0];
-            document.getElementById('edit-end-y').value = element.end[1];
-            document.getElementById('edit-end-z').value = element.end[2];
-            document.getElementById('edit-profile').value = element.profile;
-            document.getElementById('edit-orientation').value = element.orientation || 0;
-            
-            endRow.style.display = 'flex';
-            plateDimensions.style.display = 'none';
-            profileGroup.style.display = 'block';
-            orientationGroup.style.display = 'block';
-            
-        } else if (element.kind === 'plate') {
-            document.getElementById('edit-start-x').value = element.origin[0];
-            document.getElementById('edit-start-y').value = element.origin[1];
-            document.getElementById('edit-start-z').value = element.origin[2];
-            document.getElementById('edit-width').value = element.width;
-            document.getElementById('edit-height').value = element.height;
-            document.getElementById('edit-thickness').value = element.thickness;
-            
-            endRow.style.display = 'none';
-            plateDimensions.style.display = 'block';
-            profileGroup.style.display = 'none';
-            orientationGroup.style.display = 'none';
-        } else if (element.kind === 'group' && element.type === 'goalpost') {
-            goalpostGroup.style.display = 'block';
-            document.getElementById('edit-goalpost-height').value = element.height;
-            document.getElementById('edit-goalpost-column-profile').value = element.columnProfile;
-            document.getElementById('edit-goalpost-beam-profile').value = element.beamProfile;
-        }
-
-        document.getElementById('edit-material').value = element.material;
-        this.editMode = true;
-    }
-
-    closeEditPanel() {
-        document.getElementById('edit-panel').style.display = 'none';
-        this.editMode = false;
-    }
-
-    applyChanges() {
-        const selectedElements = this.selectionManager.getSelectedElements();
-        if (selectedElements.length !== 1) return;
-        
-        const elementId = selectedElements[0];
-        const originalElement = this.elementManager.getElement(elementId);
-        if (!originalElement) return;
-
-        // Get current element type from form
-        const currentType = document.getElementById('edit-element-type').value;
-        
-        // Handle element type conversion first if needed
-        if (originalElement.kind !== currentType) {
-            this.elementManager.changeElementType(elementId, currentType);
-        }
-
-        const element = this.elementManager.getElement(elementId);
-
-        // Get values from form
-        const startX = parseFloat(document.getElementById('edit-start-x').value);
-        const startY = parseFloat(document.getElementById('edit-start-y').value);
-        const startZ = parseFloat(document.getElementById('edit-start-z').value);
-        const material = document.getElementById('edit-material').value;
-
-        const newData = { material };
-
-        if (currentType === 'beam') {
-            const endX = parseFloat(document.getElementById('edit-end-x').value);
-            const endY = parseFloat(document.getElementById('edit-end-y').value);
-            const endZ = parseFloat(document.getElementById('edit-end-z').value);
-            const profile = document.getElementById('edit-profile').value;
-            const orientation = parseFloat(document.getElementById('edit-orientation').value);
-            
-            const newStart = new THREE.Vector3(startX, startY, startZ);
-            let newEnd = new THREE.Vector3(endX, endY, endZ);
-
-            // If start point has changed, adjust the end point to maintain length and direction
-            if (originalElement.kind === 'beam') {
-                const oldStart = new THREE.Vector3(...originalElement.start);
-                if (!oldStart.equals(newStart)) {
-                    const oldEnd = new THREE.Vector3(...originalElement.end);
-                    const direction = new THREE.Vector3().subVectors(oldEnd, oldStart);
-                    newEnd.copy(newStart).add(direction);
-                }
-            }
-
-            Object.assign(newData, {
-                start: [newStart.x, newStart.y, newStart.z],
-                end: [newEnd.x, newEnd.y, newEnd.z],
-                profile: profile,
-                orientation: orientation
-            });
-
-        } else if (currentType === 'plate') {
-            const width = parseFloat(document.getElementById('edit-width').value);
-            const height = parseFloat(document.getElementById('edit-height').value);
-            const thickness = parseFloat(document.getElementById('edit-thickness').value);
-
-            Object.assign(newData, {
-                origin: [startX, startY, startZ],
-                width: width,
-                height: height,
-                thickness: thickness
-            });
-        } else if (currentType === 'group' && element.type === 'goalpost') {
-            const height = parseFloat(document.getElementById('edit-goalpost-height').value);
-            const columnProfile = document.getElementById('edit-goalpost-column-profile').value;
-            const beamProfile = document.getElementById('edit-goalpost-beam-profile').value;
-
-            Object.assign(newData, {
-                height,
-                columnProfile,
-                beamProfile
-            });
-        }
-
-        // Update element
-        this.elementManager.updateElement(elementId, newData);
-
-        // Update UI list
-        this.updateElementInList(this.elementManager.getElement(elementId));
-
-        console.log('Element updated via UI');
-    }
+    
+    // --- Delegated Methods ---
 
     deleteSelectedElements() {
-        const selectedElements = this.selectionManager.getSelectedElements();
-        if (selectedElements.length === 0) return;
+        const selectedIds = this.selectionManager.getSelectedElements();
+        if (selectedIds.length === 0) return;
 
-        // Delete elements
-        this.elementManager.deleteElements(selectedElements);
+        this.elementManager.deleteElements(selectedIds);
+        selectedIds.forEach(id => this.elementListPanel.remove(id));
 
-        // Remove from UI list
-        selectedElements.forEach(elementId => {
-            this.removeElementFromList(elementId);
-        });
-
-        // Update element count
-        document.getElementById('element-count').textContent = this.structureData.elements.length;
-
-        // Close edit panel and clear selection
-        this.closeEditPanel();
+        document.getElementById('element-count').textContent = this.elementManager.getAllElements().length;
         this.selectionManager.clearSelection();
-        
-        console.log(`Deleted ${selectedElements.length} elements via UI.`);
-    }
-
-    addNewElement() {
-        const newElement = this.elementManager.addNewElement();
-        this.addElementToList(newElement);
-        document.getElementById('element-count').textContent = this.structureData.elements.length;
-        this.selectionManager.setSelection([newElement.id]);
-    }
-
-    addNewPlate() {
-        const newElement = this.elementManager.addNewPlate();
-        this.addElementToList(newElement);
-        document.getElementById('element-count').textContent = this.structureData.elements.length;
-        this.selectionManager.setSelection([newElement.id]);
+        this.editPanel.hide();
     }
 
     updateStatusBar(message) {
@@ -305,70 +234,97 @@ class UIManager {
         }
     }
 
-    showCreationPanel(type) {
-        this.creationType = type;
-        const beamInputs = document.getElementById('beam-creation-inputs');
-        const columnInputs = document.getElementById('column-creation-inputs');
-        const goalpostInputs = document.getElementById('goalpost-creation-inputs');
+    onSelectionChanged(selectedElements, selectionType = 'element') {
+        this.elementListPanel.updateSelection(selectedElements);
 
-        beamInputs.style.display = 'none';
-        columnInputs.style.display = 'none';
-        goalpostInputs.style.display = 'none';
-
-        if (type === 'beam') {
-            beamInputs.style.display = 'block';
-        } else if (type === 'column') {
-            columnInputs.style.display = 'block';
-        } else if (type === 'goalpost') {
-            goalpostInputs.style.display = 'block';
-        }
-        
-        if (type) {
-            this.creationPanel.style.display = 'block';
-        }
-    }
-
-    hideCreationPanel() {
-        this.creationPanel.style.display = 'none';
-        this.creationType = null;
-    }
-
-    getCreationParams() {
-        if (this.creationType === 'beam') {
-            return {
-                profile: document.getElementById('create-profile').value,
-                material: document.getElementById('create-material').value,
-                orientation: parseFloat(document.getElementById('create-orientation').value)
-            };
-        } else if (this.creationType === 'column') {
-            return {
-                height: parseFloat(document.getElementById('create-column-height').value),
-                profile: document.getElementById('create-column-profile').value,
-                material: document.getElementById('create-column-material').value
-            };
-        } else if (this.creationType === 'goalpost') {
-            return {
-                height: parseFloat(document.getElementById('create-goalpost-height').value),
-                columnProfile: document.getElementById('create-goalpost-column-profile').value,
-                beamProfile: document.getElementById('create-goalpost-beam-profile').value,
-                material: document.getElementById('create-goalpost-material').value
-            };
-        }
-        return {};
-    }
-
-    onSelectionChanged(selectedElements) {
-        // Update panels based on selection
         if (selectedElements.length === 1) {
-            this.openEditPanel(selectedElements[0]);
-            this.updateStatusBar(null);
+            if (selectionType === 'gridline') {
+                // Handle grid line selection
+                const gridLineId = selectedElements[0];
+                const gridLineData = this.getGridLineData(gridLineId);
+                if (gridLineData) {
+                    this.editPanel.show(gridLineData, null);
+                }
+                this.updateStatusBar(`Grid line selected: ${gridLineId}`);
+            } else {
+                // Handle element selection
+                const element = this.elementManager.getElement(selectedElements[0]);
+                if (element) {
+                    let uiConfig = null;
+                    // Check if it's a "smart" group created by a Creator
+                    if (element.kind === 'group' && element.type) {
+                        const CreatorClass = this.viewer.creationManager.getCreatorClass(element.type);
+                        if (CreatorClass && typeof CreatorClass.getEditUI === 'function') {
+                            uiConfig = CreatorClass.getEditUI(element);
+                        }
+                    }
+
+                    this.editPanel.show(element, uiConfig);
+                }
+                this.updateStatusBar(null);
+            }
         } else {
-            this.closeEditPanel();
+            this.editPanel.hide();
             if (selectedElements.length > 1) {
-                this.updateStatusBar(`${selectedElements.length} elements selected`);
+                if (selectionType === 'gridline') {
+                    this.updateStatusBar(`${selectedElements.length} grid lines selected`);
+                } else {
+                    this.updateStatusBar(`${selectedElements.length} elements selected`);
+                }
             } else {
                 this.updateStatusBar(null);
             }
         }
+    }
+    
+    // Bridge methods for CreationManager
+    showCreationPanel(creatorClass) {
+        this.creationPanel.show(creatorClass);
+    }
+
+    hideCreationPanel() {
+        this.creationPanel.hide();
+    }
+
+    getCreationParams() {
+        return this.creationPanel.getParams();
+    }
+
+    getGridLineData(gridLineId) {
+        // Parse grid line ID: "gridId-axis-label"
+        const parts = gridLineId.split('-');
+        if (parts.length < 3) return null;
+        
+        const gridId = parts[0];
+        const axis = parts[1];
+        const label = parts.slice(2).join('-'); // Handle labels with dashes
+
+        // Find the grid data
+        const gridData = this.viewer.structureData.grids.find(g => g.id === gridId);
+        if (!gridData) return null;
+
+        // Get the coordinate value
+        const labelsKey = `${axis.toLowerCase()}Labels`;
+        const lineIndex = gridData[labelsKey].indexOf(label);
+        if (lineIndex === -1) return null;
+
+        let value = 0;
+        if (axis === 'X' && this.viewer.gridManager.xCoords) {
+            value = this.viewer.gridManager.xCoords[lineIndex];
+        } else if (axis === 'Y' && this.viewer.gridManager.yCoords) {
+            value = this.viewer.gridManager.yCoords[lineIndex];
+        } else if (axis === 'Z' && this.viewer.gridManager.zCoords) {
+            value = this.viewer.gridManager.zCoords[lineIndex];
+        }
+
+        return {
+            isGridLine: true,
+            gridLineId: gridLineId,
+            gridId: gridId,
+            axis: axis,
+            label: label,
+            value: value,
+            lineIndex: lineIndex
+        };
     }
 } 

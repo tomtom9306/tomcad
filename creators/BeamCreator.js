@@ -1,87 +1,46 @@
-class BeamCreator {
-    constructor(creationManager, scene, elementManager, uiManager, snapManager) {
-        this.creationManager = creationManager;
-        this.scene = scene;
-        this.elementManager = elementManager;
-        this.uiManager = uiManager;
-        this.snapManager = snapManager;
+class BeamCreator extends BaseCreator {
+    // --- Metadane ---
+    static meta = {
+        type: 'beam',
+        name: 'Add Beam',
+        steps: 2
+    };
 
-        this.state = null;
-        this.firstPoint = null;
-        this.tempLine = null;
+    static getUI() {
+        return [
+            { id: 'profile', type: 'profile', label: 'Profile', value: 'IPE200' },
+            { id: 'material', type: 'material', label: 'Material', value: 'S355JR' },
+            { id: 'orientation', type: 'number', label: 'Orientation', value: 0 }
+        ];
     }
 
-    start() {
-        this.state = 'awaiting_first_point';
-        this.uiManager.showCreationPanel('beam');
-        this.uiManager.updateStatusBar('Pick start point for the new beam');
-        document.body.style.cursor = 'crosshair';
-    }
+    // --- Implementacja metod abstrakcyjnych ---
 
-    handleCanvasClick(point) {
-        if (this.state === 'awaiting_first_point') {
-            this.firstPoint = point.clone();
-            this.state = 'awaiting_second_point';
-            
-            this.snapManager.startAxisSnap(this.firstPoint);
+    execute() {
+        const startPoint = this.points[0];
+        const endPoint = this.points[1];
 
-            const material = new THREE.LineDashedMaterial({ color: 0xffaa4a, dashSize: 50, gapSize: 25 });
-            const geometry = new THREE.BufferGeometry().setFromPoints([this.firstPoint, this.firstPoint.clone()]);
-            this.tempLine = new THREE.Line(geometry, material);
-            this.tempLine.computeLineDistances();
-            this.scene.add(this.tempLine);
-
-            this.uiManager.updateStatusBar('Pick end point for the new beam');
-
-        } else if (this.state === 'awaiting_second_point') {
-            const endPoint = point.clone();
-            
-            if (this.firstPoint.distanceTo(endPoint) < 1.0) {
-                console.warn("Beam is too short, cancelling.");
-                this.creationManager.cancelCreation();
-                return;
-            }
-
-            const params = this.uiManager.getCreationParams();
-            this.elementManager.addNewBeam(
-                this.firstPoint,
-                endPoint,
-                params.profile,
-                params.material,
-                params.orientation
-            );
-
-            this.snapManager.endAxisSnap();
-            this.snapManager.startAxisSnap(endPoint);
-
-            this.firstPoint = endPoint.clone();
-            this.state = 'awaiting_second_point';
-            this.updatePreview(endPoint);
-            this.uiManager.updateStatusBar('Pick end point for the new beam (or ESC to cancel)');
+        if (startPoint.distanceTo(endPoint) < 1.0) {
+            console.warn("Beam is too short, cancelling subsequent creation.");
+            // Nie restartuj, jeśli belka jest za krótka
+            this.points = []; // Wyczyść punkty, żeby shouldRestart zadziałało poprawnie
+            return;
         }
+
+        const params = this.creationManager.getParams();
+        this.creationManager.createElement(
+            'beam',
+            startPoint,
+            endPoint,
+            params.profile,
+            params.material,
+            params.orientation
+        );
     }
 
-    updatePreview(currentPoint) {
-        if (this.state === 'awaiting_second_point' && this.tempLine) {
-            this.tempLine.geometry.setFromPoints([this.firstPoint, currentPoint]);
-            this.tempLine.computeLineDistances();
-            this.tempLine.geometry.attributes.position.needsUpdate = true;
-        }
-    }
-
-    cancel() {
-        if (this.tempLine) {
-            this.scene.remove(this.tempLine);
-            this.tempLine.geometry.dispose();
-            this.tempLine.material.dispose();
-            this.tempLine = null;
-        }
-        this.snapManager.endAxisSnap();
-        this.state = null;
-        this.firstPoint = null;
-    }
-
-    get isCreating() {
-        return this.state !== null;
+    shouldRestart() {
+        // Kontynuuj tworzenie belek, aż użytkownik anuluje (ESC)
+        // Restart jest możliwy tylko jeśli mamy punkt startowy dla kolejnej belki
+        return this.points.length > 0;
     }
 } 

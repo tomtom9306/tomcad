@@ -1,9 +1,10 @@
 // Manages all snapping logic
 class SnapManager {
-    constructor(scene, elementManager, gridManager) {
+    constructor(scene, elementManager, gridManager, snapTooltip) {
         this.scene = scene;
         this.elementManager = elementManager;
         this.gridManager = gridManager;
+        this.isActive = false;
 
         this.snapModes = {
             gridLines: true,
@@ -19,7 +20,7 @@ class SnapManager {
         this.scene.add(this.snapIndicator);
 
         // Snap tooltip UI element
-        this.snapTooltip = document.getElementById('snap-tooltip');
+        this.snapTooltip = snapTooltip;
 
         // Axis snapping helper
         this.axisHelper = new THREE.AxesHelper(10000); // A large size
@@ -28,6 +29,22 @@ class SnapManager {
         this.axisSnapOrigin = null;
 
         this.setupSnapToolbar();
+    }
+
+    activate() {
+        this.isActive = true;
+    }
+
+    deactivate() {
+        this.isActive = false;
+        this.hideIndicator();
+    }
+
+    hideIndicator() {
+        this.snapIndicator.visible = false;
+        if (this.snapTooltip) {
+            this.snapTooltip.style.display = 'none';
+        }
     }
 
     createSnapIndicator() {
@@ -84,7 +101,12 @@ class SnapManager {
         this.axisHelper.visible = false;
     }
 
-    findSnapPoint(raycaster, mouse, draggedElementId = null) {
+    findSnapPoint(raycaster, mouse, event, draggedElementId = null) {
+        if (!this.isActive) {
+            this.hideIndicator();
+            return null;
+        }
+
         let bestSnap = { point: null, distance: Infinity, priority: 4, description: '' };
         const screenTolerance = 0.2; // Screen-space tolerance for snapping
 
@@ -179,13 +201,15 @@ class SnapManager {
             if (this.snapTooltip) {
                 this.snapTooltip.textContent = bestSnap.description;
                 this.snapTooltip.style.display = 'block';
+                // Position the tooltip near the cursor
+                if (event && event.clientX) {
+                    this.snapTooltip.style.left = `${event.clientX + 15}px`;
+                    this.snapTooltip.style.top = `${event.clientY + 15}px`;
+                }
             }
             return bestSnap.point;
         } else {
-            this.snapIndicator.visible = false;
-            if (this.snapTooltip) {
-                this.snapTooltip.style.display = 'none';
-            }
+            this.hideIndicator();
             return null;
         }
     }

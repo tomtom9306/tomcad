@@ -1,7 +1,11 @@
 class GridManager {
-    constructor(scene, structureData) {
+    constructor(scene, structureData, eventBus, camera, raycaster) {
         this.scene = scene;
         this.structureData = structureData;
+        this.eventBus = eventBus;
+        this.camera = camera;
+        this.raycaster = raycaster;
+
         this.gridContainer = new THREE.Group();
         this.scene.add(this.gridContainer);
 
@@ -14,6 +18,10 @@ class GridManager {
         this.xCoords = [];
         this.yCoords = [];
         this.zCoords = [];
+
+        if (this.eventBus) {
+            this.eventBus.subscribe('viewer:mouseMove', (data) => this._handleHighlighting(data));
+        }
     }
 
     createGrids() {
@@ -45,32 +53,47 @@ class GridManager {
 
         const lineMaterial = new THREE.LineBasicMaterial({ color: 0xcccccc, transparent: true, opacity: 0.5 });
 
-        // Calculate and store absolute coordinates for grid lines
-        this.xCoords = [0];
-        gridData.xSpacings.forEach(s => this.xCoords.push(this.xCoords[this.xCoords.length - 1] + s));
+        // Calculate and store absolute coordinates for grid lines based on spacings.
+        // The first spacing is relative to the origin, subsequent are relative to the previous line.
+        this.xCoords = [];
+        let accumulatedX = 0;
+        gridData.xSpacings.forEach(s => {
+            accumulatedX += s;
+            this.xCoords.push(accumulatedX);
+        });
 
-        this.yCoords = [0];
-        gridData.ySpacings.forEach(s => this.yCoords.push(this.yCoords[this.yCoords.length - 1] + s));
+        this.yCoords = [];
+        let accumulatedY = 0;
+        gridData.ySpacings.forEach(s => {
+            accumulatedY += s;
+            this.yCoords.push(accumulatedY);
+        });
 
-        this.zCoords = gridData.zLevels || [0];
+        this.zCoords = gridData.zLevels || []; // Z levels are absolute coordinates
 
         // Get extensions or use defaults
         const xExt = gridData.xExtensions || [0, 0];
         const yExt = gridData.yExtensions || [0, 0];
         const zExt = gridData.zExtensions || [0, 0];
 
-        const minX = this.xCoords[0] - xExt[0];
-        const maxX = this.xCoords[this.xCoords.length - 1] + xExt[1];
-        const minY = this.yCoords[0] - yExt[0];
-        const maxY = this.yCoords[this.yCoords.length - 1] + yExt[1];
-        const minZ = Math.min(...this.zCoords) - zExt[0];
-        const maxZ = Math.max(...this.zCoords) + zExt[1];
+        // Determine grid boundaries, handling cases where no lines exist on an axis.
+        const minX = (this.xCoords.length > 0 ? Math.min(...this.xCoords) : 0) - xExt[0];
+        const maxX = (this.xCoords.length > 0 ? Math.max(...this.xCoords) : 0) + xExt[1];
+        const minY = (this.yCoords.length > 0 ? Math.min(...this.yCoords) : 0) - yExt[0];
+        const maxY = (this.yCoords.length > 0 ? Math.max(...this.yCoords) : 0) + yExt[1];
+        const minZ = (this.zCoords.length > 0 ? Math.min(...this.zCoords) : 0) - zExt[0];
+        const maxZ = (this.zCoords.length > 0 ? Math.max(...this.zCoords) : 0) + zExt[1];
 
-        const addGridLine = (p1, p2) => {
+        const addGridLine = (p1, p2, axis, value, label) => {
             const geometry = new THREE.BufferGeometry().setFromPoints([p1, p2]);
             const line = new THREE.Line(geometry, lineMaterial.clone());
             line.userData = { 
                 type: 'gridline',
+                isGridLine: true,
+                gridId: gridData.id,
+                axis: axis,
+                value: value,
+                label: label,
                 originalMaterial: line.material 
             };
             this.gridContainer.add(line);
@@ -78,22 +101,35 @@ class GridManager {
         };
 
         // Create grids on each Z-level
-        this.zCoords.forEach(z => {
+        this.zCoords.forEach((z, zIndex) => {
             // Create lines parallel to X-axis (Y-lines)
-            this.yCoords.forEach(y => {
-                addGridLine(new THREE.Vector3(minX, y, z), new THREE.Vector3(maxX, y, z));
+            this.yCoords.forEach((y, yIndex) => {
+                addGridLine(
+                    new THREE.Vector3(minX, y, z), 
+                    new THREE.Vector3(maxX, y, z),
+                    'Y', y, gridData.yLabels[yIndex]
+                );
             });
 
             // Create lines parallel to Y-axis (X-lines)
-            this.xCoords.forEach(x => {
-                addGridLine(new THREE.Vector3(x, minY, z), new THREE.Vector3(x, maxY, z));
+            this.xCoords.forEach((x, xIndex) => {
+                addGridLine(
+                    new THREE.Vector3(x, minY, z), 
+                    new THREE.Vector3(x, maxY, z),
+                    'X', x, gridData.xLabels[xIndex]
+                );
             });
         });
 
         // Create vertical grid lines (parallel to Z-axis)
-        this.xCoords.forEach(x => {
-            this.yCoords.forEach(y => {
-                addGridLine(new THREE.Vector3(x, y, minZ), new THREE.Vector3(x, y, maxZ));
+        this.xCoords.forEach((x, xIndex) => {
+            this.yCoords.forEach((y, yIndex) => {
+                // Only create vertical lines at main intersection points
+                addGridLine(
+                    new THREE.Vector3(x, y, minZ), 
+                    new THREE.Vector3(x, y, maxZ),
+                    'Z', 0, `${gridData.xLabels[xIndex]}-${gridData.yLabels[yIndex]}`
+                );
             });
         });
         
@@ -154,6 +190,42 @@ class GridManager {
         });
     }
 
+    _handleHighlighting(eventData) {
+        if (!eventData || !eventData.rawMouse) return;
+
+        this.raycaster.setFromCamera(eventData.rawMouse, this.camera);
+        const intersects = this.raycaster.intersectObjects(this.gridLines);
+
+        if (intersects.length > 0) {
+            const closestIntersect = intersects[0];
+            const point = closestIntersect.point;
+
+            const highlightedLines = [];
+            this.gridLines.forEach(line => {
+                const line3 = new THREE.Line3(
+                    new THREE.Vector3().fromBufferAttribute(line.geometry.attributes.position, 0),
+                    new THREE.Vector3().fromBufferAttribute(line.geometry.attributes.position, 1)
+                );
+                line3.applyMatrix4(this.gridContainer.matrixWorld);
+
+                const closestPointOnLine = new THREE.Vector3();
+                line3.closestPointToPoint(point, true, closestPointOnLine);
+                
+                if (point.distanceTo(closestPointOnLine) < 1) {
+                    highlightedLines.push(line);
+                }
+            });
+
+            if (highlightedLines.length > 0) {
+                this.highlightLines(highlightedLines);
+            } else {
+                this.unhighlightAllLines();
+            }
+        } else {
+            this.unhighlightAllLines();
+        }
+    }
+
     highlightLines(linesToHighlight) {
         this.unhighlightAllLines();
         linesToHighlight.forEach(line => {
@@ -181,33 +253,65 @@ class GridManager {
                     snapped = true;
                 }
             }
-            return { pos: bestSnap, snapped: snapped };
+            return { coord: bestSnap, snapped: snapped };
         };
 
-        // Snap each axis independently
+        // Snap each axis
         const snapX = snapAxis(localPoint.x, this.xCoords);
         if (snapX.snapped) {
-            snappedPointLocal.x = snapX.pos;
+            snappedPointLocal.x = snapX.coord;
             didSnap = true;
         }
 
         const snapY = snapAxis(localPoint.y, this.yCoords);
         if (snapY.snapped) {
-            snappedPointLocal.y = snapY.pos;
+            snappedPointLocal.y = snapY.coord;
             didSnap = true;
         }
 
         const snapZ = snapAxis(localPoint.z, this.zCoords);
         if (snapZ.snapped) {
-            snappedPointLocal.z = snapZ.pos;
+            snappedPointLocal.z = snapZ.coord;
             didSnap = true;
         }
+        
+        // Convert the snapped point back to world space
+        const snappedPointWorld = this.gridContainer.localToWorld(snappedPointLocal.clone());
 
-        // If any axis was snapped, convert the new local point back to world space
+        // We only return a point if a snap actually occurred on at least one axis.
+        // The calling function can decide what to do if no snap happens.
         if (didSnap) {
-            return this.gridContainer.localToWorld(snappedPointLocal);
+            return snappedPointWorld;
+        } else {
+            return null; // No snap occurred
         }
+    }
 
-        return null; // No snap occurred
+    getBoundingBox() {
+        if (this.gridContainer.children.length === 0) {
+            // Return an empty or default box if no grid exists
+            return new THREE.Box3(new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0));
+        }
+        const box = new THREE.Box3();
+        box.setFromObject(this.gridContainer);
+        return box;
+    }
+
+    getAbsoluteCoords(gridId) {
+        const gridData = this.structureData.grids.find(g => g.id === gridId);
+        if (!gridData) return null;
+
+        const origin = new THREE.Vector3(...gridData.origin);
+        const rotation = new THREE.Euler(
+            ...gridData.rotation.values.map(v => THREE.MathUtils.degToRad(v)),
+            gridData.rotation.order
+        );
+
+        return { origin, rotation };
+    }
+    
+    rebuildGrid(gridData) {
+        // Find the specific grid container if necessary, or just rebuild all
+        this.createRectangularGrid(gridData);
     }
 } 

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Without Sidebar</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    
+    <script src="src/rendering/DragControls.js"></script>
+    
+    <style>
+        /* Override LeftSidebar styles */
+        .left-sidebar { display: none !important; }
+        #canvas-container { 
+            margin-left: 0 !important; 
+            width: 100vw !important; 
+            border: 3px solid blue !important; 
+        }
+        #debug-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 2000;
+            max-width: 400px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="debug-panel">
+        <h4>Debug Log (No Sidebar)</h4>
+        <div id="debug-log"></div>
+    </div>
+
+    <div id="container">
+        <div id="canvas-container">
+            <div id="viewcube-container"></div>
+        </div>
+    </div>
+
+    <!-- Data -->
+    <script src="src/data/profiles.js"></script>
+    <script src="src/data/project-current.js"></script>
+    <script src="src/data/compatibility.js"></script>
+
+    <!-- Core -->
+    <script src="src/core/EventBus.js"></script>
+    <script src="src/core/ThreeJSSetup.js"></script>
+    <script src="src/core/EventCoordinator.js"></script>
+    
+    <!-- Essential components -->
+    <script src="src/components/creators/BaseCreator.js"></script>
+    <script src="src/core/core.js"></script>
+    <script src="src/utils/GeometryUtils.js"></script>
+    <script src="src/managers/ProfileManager.js"></script>
+    <script src="src/managers/GridManager.js"></script>
+    <script src="src/components/elements/ElementFactory.js"></script>
+    <script src="src/components/elements/ElementModifier.js"></script>
+    <script src="src/components/elements/Manager.js"></script>
+    <script src="src/components/elements/MeshBuilder.js"></script>
+    
+    <!-- Selection system -->
+    <script src="src/managers/SelectionMouseHandler.js"></script>
+    <script src="src/managers/BoxSelection.js"></script>
+    <script src="src/managers/ControlPointManager.js"></script>
+    <script src="src/managers/GridSelectionHandler.js"></script>
+    <script src="src/managers/SelectionManager.js"></script>
+    
+    <!-- Minimal UI -->
+    <script src="src/ui/panels/ElementListPanel.js"></script>
+    <script src="src/ui/panels/EditPanel.js"></script>
+    <script src="src/ui/panels/CreationPanel.js"></script>
+    <script src="src/ui/panels/GridEditPanel.js"></script>
+    <script src="src/managers/UIManager.js"></script>
+    
+    <!-- Other managers -->
+    <script src="src/managers/SnapManager.js"></script>
+    <script src="src/managers/CreationManager.js"></script>
+    <script src="src/rendering/CameraControls.js"></script>
+    <script src="src/rendering/ViewCube.js"></script>
+    <script src="src/core/BeamViewer.js"></script>
+
+    <script>
+        // Override console.log to show in debug panel
+        const originalLog = console.log;
+        const debugLog = document.getElementById('debug-log');
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.join(' ');
+            if (message.includes('🔥')) {
+                const div = document.createElement('div');
+                div.textContent = new Date().toLocaleTimeString() + ': ' + message;
+                debugLog.appendChild(div);
+                debugLog.scrollTop = debugLog.scrollHeight;
+                
+                // Keep only last 30 lines
+                while (debugLog.children.length > 30) {
+                    debugLog.removeChild(debugLog.firstChild);
+                }
+            }
+        };
+
+        // Initialize WITHOUT LeftSidebar
+        window.viewer = new BeamViewer();
+        window.viewer.init();
+        
+        console.log('🔥 Test: Application initialized WITHOUT LeftSidebar');
+        console.log('🔥 Test: Canvas should have blue border');
+        console.log('🔥 Test: Click on beams to test selection');
+    </script>
+</body>
+</html>

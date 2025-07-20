@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minimal Selection Test</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #debug { position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.9); color: white; padding: 10px; border-radius: 5px; z-index: 1000; max-width: 400px; font-size: 12px; }
+        #container { width: 100vw; height: 100vh; }
+        #canvas-container { width: 100%; height: 100%; background: #222; }
+    </style>
+</head>
+<body>
+    <div id="debug">
+        <h3>Selection Test Debug</h3>
+        <div id="log">Loading...</div>
+    </div>
+
+    <div id="container">
+        <div id="canvas-container"></div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+    
+    <!-- Load only essential files -->
+    <script src="src/core/EventBus.js"></script>
+    <script src="src/data/profiles.js"></script>
+    <script src="src/data/project-current.js"></script>
+    <script src="src/data/compatibility.js"></script>
+    
+    <script>
+        function addLog(message) {
+            const log = document.getElementById('log');
+            log.innerHTML = message + '<br>' + log.innerHTML;
+            const lines = log.innerHTML.split('<br>');
+            if (lines.length > 20) {
+                log.innerHTML = lines.slice(0, 20).join('<br>');
+            }
+        }
+        
+        // Override console.log to also show in debug panel
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.join(' ');
+            if (message.includes('🔥')) {
+                addLog(message);
+            }
+        };
+
+        // Simple test setup
+        class MinimalTest {
+            constructor() {
+                this.eventBus = new EventBus();
+                this.setupThreeJS();
+                this.setupEventCoordinator();
+                this.setupSelectionManager();
+                
+                addLog('✅ Minimal test setup complete');
+                console.log('🔥 MinimalTest: Setup complete');
+            }
+            
+            setupThreeJS() {
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.renderer = new THREE.WebGLRenderer();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                document.getElementById('canvas-container').appendChild(this.renderer.domElement);
+                
+                // Add a simple test cube
+                const geometry = new THREE.BoxGeometry(100, 100, 100);
+                const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                this.cube = new THREE.Mesh(geometry, material);
+                this.cube.userData = { elementId: 'test-cube' };
+                this.scene.add(this.cube);
+                
+                this.camera.position.z = 500;
+                
+                // Animate
+                const animate = () => {
+                    requestAnimationFrame(animate);
+                    this.cube.rotation.x += 0.01;
+                    this.cube.rotation.y += 0.01;
+                    this.renderer.render(this.scene, this.camera);
+                };
+                animate();
+                
+                addLog('✅ Three.js setup with test cube');
+            }
+            
+            setupEventCoordinator() {
+                this.eventCoordinator = {
+                    onMouseDown: (event) => {
+                        console.log('🔥 EventCoordinator: onMouseDown, button:', event.button);
+                        if (event.button === 0) {
+                            console.log('🔥 EventCoordinator: publishing selection:mouseDown');
+                            this.eventBus.publish('selection:mouseDown', { event });
+                        }
+                    }
+                };
+                
+                // Add event listener
+                this.renderer.domElement.addEventListener('mousedown', (e) => this.eventCoordinator.onMouseDown(e));
+                addLog('✅ EventCoordinator setup');
+            }
+            
+            setupSelectionManager() {
+                // Fake beamObjects map for testing
+                this.beamObjects = new Map();
+                this.beamObjects.set('test-cube', this.cube);
+                
+                this.selectionManager = {
+                    onMouseDown: (event) => {
+                        console.log('🔥 SelectionManager: onMouseDown received');
+                        
+                        // Simple raycasting test
+                        const mouse = new THREE.Vector2();
+                        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                        
+                        const raycaster = new THREE.Raycaster();
+                        raycaster.setFromCamera(mouse, this.camera);
+                        
+                        const intersects = raycaster.intersectObjects([this.cube]);
+                        console.log('🔥 SelectionManager: intersects:', intersects.length);
+                        
+                        if (intersects.length > 0) {
+                            const obj = intersects[0].object;
+                            console.log('🔥 SelectionManager: Hit object with elementId:', obj.userData.elementId);
+                            addLog(`🎯 HIT: ${obj.userData.elementId}`);
+                            
+                            // Change color to show selection
+                            obj.material.color.setHex(0xff0000);
+                            setTimeout(() => {
+                                obj.material.color.setHex(0x00ff00);
+                            }, 1000);
+                        } else {
+                            addLog('❌ No intersection');
+                        }
+                    }
+                };
+                
+                // Subscribe to events
+                console.log('🔥 SelectionManager: Subscribing to events');
+                this.eventBus.subscribe('selection:mouseDown', (data) => {
+                    console.log('🔥 SelectionManager: Received selection:mouseDown');
+                    this.selectionManager.onMouseDown(data.event);
+                });
+                
+                addLog('✅ SelectionManager setup');
+            }
+        }
+        
+        // Start test
+        new MinimalTest();
+        addLog('🚀 Click on the green cube to test selection');
+    </script>
+</body>
+</html>

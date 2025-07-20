@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Events</title>
+    <style>
+        body { margin: 0; }
+        #canvas { width: 100vw; height: 100vh; background: #222; cursor: pointer; }
+        #log { position: absolute; top: 10px; left: 10px; color: white; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="log">Kliknij na canvas</div>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const log = document.getElementById('log');
+        
+        function addLog(message) {
+            log.innerHTML = message + '<br>' + log.innerHTML;
+        }
+        
+        canvas.addEventListener('mousedown', (e) => {
+            addLog(`mousedown: button=${e.button}, x=${e.clientX}, y=${e.clientY}`);
+        });
+        
+        canvas.addEventListener('mouseup', (e) => {
+            addLog(`mouseup: button=${e.button}, x=${e.clientX}, y=${e.clientY}`);
+        });
+        
+        canvas.addEventListener('click', (e) => {
+            addLog(`click: button=${e.button}, x=${e.clientX}, y=${e.clientY}`);
+        });
+        
+        addLog('Event listeners ready');
+    </script>
+</body>
+</html>

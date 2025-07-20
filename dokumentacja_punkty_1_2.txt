@@ -1,0 +1,5622 @@
+1. Overview
+
+1.1 What is TomCAD What is TomCAD?
+
+TomCAD is a modern **client-side web application** for designing steel structures and architectural steelwork. It runs entirely in web browsers without requiring any server-side installation or cloud dependencies.
+
+Technical Approach
+
+Web-First Architecture
+- **No Installation Required**: Runs in any modern web browser
+- **Cross-Platform**: Works on Windows, Mac, Linux, tablets
+- **Always Updated**: No software updates or version conflicts
+- **Collaborative**: Easy sharing and team access
+
+Performance Focus
+- **Client-Side Processing**: All calculations performed locally
+- **Responsive Interface**: Optimized for speed and efficiency
+- **Hardware Acceleration**: Uses WebGL for 3D graphics
+- **Memory Efficient**: Handles large structural models
+
+Integration Ready
+- **Open Standards**: Built on IFC, web standards, and open formats
+- **API Extensible**: Designed for future integrations
+- **Data Portable**: No vendor lock-in, export everything
+
+TomCAD represents the **next generation** of structural steel design software - combining professional capabilities with unprecedented ease of use, all delivered through modern web technology.
+
+1.2 Mission & Vision Mission & Vision
+
+Mission Statement
+
+TomCAD aims to **compete directly** with industry-leading structural steel design software including:
+
+- **Tekla Structures**
+- **Advance Steel** 
+- **SDS/2**
+- **StruCad**
+- **Bocad**
+
+Our goal is to create software that combines the **best features** from multiple CAD systems while maintaining **exceptional ease of use**.
+
+Vision
+
+**Long-term Vision**: Complete steel construction business management platform - from initial design through fabrication to installation, all in one subscription. Replace multiple expensive software solutions: CAD programs, estimating software, nesting applications, project management tools, and workshop systems - all at a fraction of traditional CAD costs.
+
+1.3 Business Strategy Business Strategy
+
+Business Goals & Market Strategy
+
+Affordable Professional Software
+- **Pricing**: £30-50 per month subscription model
+- **Target**: Achieve larger user base than Tekla Structures through accessibility
+- **Philosophy**: Lower price barrier enables broader adoption across steel industry
+
+Mass Market Approach
+Unlike expensive competitors (Tekla ~£600/month), TomCAD's affordable pricing makes it viable for:
+- **Small fabrication workshops** that cannot justify expensive CAD licenses
+- **Multiple license purchases** - easy to buy 5-10 licenses for team workflows
+- **Occasional users** who don't do extensive detailing but need professional tools
+- **Mixed discipline teams** working on steel projects
+
+Target Markets
+
+**Current Users**: Steel detailers and fabrication teams
+
+**Future Users** (as platform expands):
+- **Structural Engineers**: Analysis and preliminary design
+- **Architects**: Architectural steelwork integration  
+- **Estimators**: Quantity takeoffs and cost analysis
+- **Installation Teams**: Field reference and assembly guidance
+- **Machine Operators**: CNC programming and workshop documentation
+
+1.4 Design Philosophy Design Philosophy
+
+Simplicity First
+TomCAD is designed to be **so intuitive** that even **someone without previous experience in CAD systems** can operate it effectively. We aim for the simplicity of **Tinkercad** but with the power needed for professional structural steel design.
+
+This approach enables easy engagement of personnel with **extensive steel industry experience** but limited CAD knowledge. Experienced welders, installers, and fabricators who can no longer perform physical work due to health constraints can seamlessly transition into design and detailing roles, bringing their valuable practical knowledge to the digital workspace.
+
+Best-in-Class Features
+We borrow the most successful concepts from leading CAD applications:
+
+- **SolidWorks**: Parametric modeling and feature-based design
+- **Inventor**: Assembly constraints and intelligent relationships  
+- **IronCAD**: Intuitive drag-and-drop workflow
+- **Tekla**: Automatic connections, drawings, and reports generation
+
+Target Users
+
+Primary Users: Steel Detailers
+- Create detailed structural steel drawings
+- Generate fabrication drawings automatically
+- Produce material lists and reports
+- Design connections and details
+
+Secondary Users: Fabrication Teams
+- Workshop personnel who need simple design modifications
+- Quality control teams reviewing designs
+- Project managers tracking progress
+
+1.5 Current Capabilities Current Capabilities (Version 1.0)
+
+Core Functionality
+- **3D Structural Modeling**: Beams, columns, plates, connections
+- **Steel Profile Library**: All international standards worldwide
+- **Construction Geometry**: Grids, reference planes, points, axes, and coordinate systems
+- **Operations**: Holes, cuts, welds, and bending
+- **Parametric Relationships**: Automatic rebuilding when construction geometry changes
+
+Configurators Library
+- **Steel Stairs**: Pre-configured stair generators with railings and platforms
+- **Steel Frames**: Portal frames, moment frames, and braced frames
+- **Connections**: Bolted and welded connection templates
+- **Platforms**: Working platforms, mezzanines, and walkways
+- **Railings**: Safety railings and barriers
+
+Configurator Generator
+- **Custom Configurators**: Create your own parametric component generators
+- **Template Sharing**: Share configurators with other users
+- **Parameter Definition**: Define custom parameters and constraints
+- **Community Library**: Access user-generated configurators
+
+Automatic Generation
+- **Technical Drawings**: General arrangement drawings, assembly drawings, and section views
+- **Fabrication Drawings**: Piece marks, shop drawings with dimensions and annotations
+- **Material Reports**: Cut lists, material schedules, weight calculations
+- **Bolt Lists**: Complete fastener specifications and quantities
+
+File Exchange
+- **IFC 2x3 Import/Export**: Industry-standard BIM interoperability
+- **STEP AP214 Import/Export**: CAD data exchange and interoperability
+- **DXF Import/Export**: AutoCAD drawing exchange format
+- **Drawing Export**: PDF technical drawings
+- **Data Export**: CSV reports and material lists
+
+1.6 Future Roadmap Future Development Roadmap
+
+Structural Analysis Module
+- Static and dynamic structural analysis
+- Load application and combinations
+- Code checking and verification
+- Section optimization
+
+Workshop Management Module
+- Inventory management and material tracking
+- Production planning and scheduling  
+- Quality control and inspection workflows
+- Progress tracking and reporting
+
+Information Flow Integration
+- Complete workshop information management
+- Real-time data synchronization
+- Mobile device support for shop floor
+- Integration with ERP systems
+
+1.7 Why Choose TomCAD Why Choose TomCAD?
+
+For Steel Detailers
+- **Faster Learning**: Intuitive interface reduces training time
+- **Increased Productivity**: Automated drawing generation saves hours
+- **Better Quality**: Parametric relationships prevent errors and enable easy last-minute changes
+- **Cost Effective**: Web-based deployment reduces IT costs
+
+For Fabricators  
+- **Workshop Integration**: Designed for fabrication workflow
+- **Simple Modifications**: Shop floor can make simple changes
+- **Real-Time Information**: Always current data and drawings
+- **Scalable Solution**: Grows with your business needs
+
+For the Industry
+- **Accessibility**: Lower barrier to entry for steel detailing
+- **Standardization**: Common platform for improved collaboration  
+- **Innovation**: Modern web technology enabling new workflows
+- **Sustainability**: Reduced software complexity and maintenance
+
+2. Architecture
+
+2.1 System Overview System Overview
+
+Architecture Summary
+
+TomCAD follows a **Component-Based Orchestrator Architecture** designed for extensibility, maintainability, and ease of development. The architecture emphasizes simplicity over performance optimization, making it accessible to developers of varying skill levels while maintaining professional-grade functionality.
+
+High-Level Architecture
+
+```mermaid
+graph TD
+    A[BeamViewer - Main Orchestrator] --> B[Core Systems]
+    A --> C[Managers Layer]
+    A --> D[UI Layer]
+    A --> E[Data Layer]
+    
+    B --> B1[EventBus]
+    B --> B2[ComponentRegistry]
+    B --> B3[EventCoordinator]
+    B --> B4[ThreeJSSetup]
+    
+    C --> C1[CreationManager]
+    C --> C2[SelectionManager]
+    C --> C3[UIManager]
+    C --> C4[ElementManager]
+    C --> C5[GridManager]
+    C --> C6[OperationManager]
+    
+    D --> D1[CreationPanel]
+    D --> D2[EditPanel]
+    D --> D3[ElementListPanel]
+    D --> D4[GridEditPanel]
+    
+    E --> E1[struktura.js]
+    E --> E2[profiles.js]
+    E --> E3[Three.js Scene]
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#fce4ec
+```
+
+Core Components
+
+BeamViewer - Main Orchestrator
+
+**Purpose**: Central coordinator that initializes and manages all application modules.
+
+**Responsibilities**:
+- Initialize core systems (Three.js, EventBus, Managers)
+- Coordinate module startup sequence
+- Handle global application state
+- Manage application lifecycle
+
+```javascript
+class BeamViewer {
+    constructor() {
+        this.initializeThreeJS();
+        this.initializeEventBus();
+        this.initializeManagers();
+        this.setupEventHandlers();
+    }
+    
+    initializeManagers() {
+        this.elementManager = new ElementManager(this);
+        this.creationManager = new CreationManager(this);
+        this.selectionManager = new SelectionManager(this);
+        // ... other managers
+    }
+}
+```
+
+ComponentRegistry - Type System
+
+**Purpose**: Global registry for extensible component types and creators.
+
+**Key Features**:
+- Runtime registration of new element types
+- Creator class mapping and instantiation
+- Metadata management for component types
+- UI generation support
+
+```javascript
+class ComponentRegistry {
+    static register(type, creatorClass) {
+        this.creators.set(type, creatorClass);
+        this.generateUIForType(type, creatorClass);
+    }
+    
+    static getCreator(type) {
+        return this.creators.get(type);
+    }
+}
+```
+
+EventBus - Communication Hub
+
+**Purpose**: Decoupled inter-module communication system.
+
+**Event Categories**:
+- **Interaction Events**: `creation:mouseDown`, `selection:changed`
+- **Data Events**: `element:updated`, `grid:modified`
+- **UI Events**: `panel:opened`, `toolbar:clicked`
+- **System Events**: `viewer:escapePressed`, `scene:rebuilt`
+
+```javascript
+class EventBus {
+    static publish(eventName, data) {
+        const callbacks = this.events.get(eventName) || [];
+        callbacks.forEach(callback => callback(data));
+    }
+    
+    static subscribe(eventName, callback) {
+        if (!this.events.has(eventName)) {
+            this.events.set(eventName, []);
+        }
+        this.events.get(eventName).push(callback);
+    }
+}
+```
+
+Manager Layer Architecture
+
+Manager Responsibilities
+
+Each manager handles a specific application domain with clear boundaries:
+
+| Manager | Domain | Key Responsibilities |
+|---------|--------|---------------------|
+| **CreationManager** | Element Creation | Creator lifecycle, creation workflow, UI coordination |
+| **SelectionManager** | Object Selection | Selection state, highlighting, control points |
+| **ElementManager** | Data Operations | CRUD operations, data consistency, mesh generation |
+| **UIManager** | User Interface | Panel coordination, UI state, event routing |
+| **GridManager** | Parametric Grids | Grid management, parametric relationships, snapping |
+| **OperationManager** | Geometric Ops | Holes, cuts, slots, geometric modifications |
+
+Manager Communication Pattern
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant UI as UIManager
+    participant CM as CreationManager
+    participant EM as ElementManager
+    participant EB as EventBus
+    
+    U->>UI: Click Create Beam
+    UI->>CM: startCreation('beam')
+    CM->>EB: publish('creation:started')
+    U->>CM: Mouse clicks (creation steps)
+    CM->>EM: createElement(elementData)
+    EM->>EB: publish('element:created')
+    EB->>UI: Update element list
+```
+
+File Loading Architecture
+
+Dependency Order
+
+Critical file loading sequence in `index.html`:
+
+```html
+<!-- 1. Core utilities and data -->
+<script type="module" src="src/data/struktura.js"></script>
+<script type="module" src="src/data/profiles.js"></script>
+
+<!-- 2. Core architecture -->
+<script type="module" src="src/core/EventBus.js"></script>
+<script type="module" src="src/core/core.js"></script>
+
+<!-- 3. Managers and components -->
+<script type="module" src="src/managers/ElementManager.js"></script>
+<script type="module" src="src/components/creators/BaseCreator.js"></script>
+
+<!-- 4. Main application -->
+<script type="module" src="src/core/BeamViewer.js"></script>
+```
+
+Module Dependencies
+
+- **No Circular Dependencies**: Strict dependency hierarchy
+- **Explicit Imports**: Clear module import statements
+- **Global Objects**: Core data objects available globally
+- **Registration Pattern**: Modules register themselves at startup
+
+Extension Points
+
+Adding New Features
+
+1. **New Element Types**: Extend BaseCreator and register
+2. **New Operations**: Add to OperationManager
+3. **New UI Panels**: Extend base panel class
+4. **New Managers**: Follow manager pattern and integrate with EventBus
+5. **New Data Types**: Extend strukturaData schema
+
+Plugin Architecture
+
+Future plugin system will support:
+- Runtime module loading
+- Isolated plugin contexts
+- Plugin configuration management
+- Plugin marketplace integration
+
+This architecture provides a solid foundation for rapid development while maintaining the flexibility needed for TomCAD's ambitious feature roadmap.
+
+2.2 Core Principles Core Principles
+
+Architectural Philosophy
+
+TomCAD's architecture is built on fundamental principles that guide all development decisions and ensure consistency across the entire codebase.
+
+1. Simplicity First
+
+Design for Understanding
+- **Clear Code Structure**: Every module has a single, obvious purpose
+- **Readable Patterns**: Consistent naming and organization throughout
+- **Minimal Abstractions**: Avoid over-engineering and complex inheritance hierarchies
+- **Direct Relationships**: Prefer explicit dependencies over hidden coupling
+
+Implementation Examples
+```javascript
+// Good: Simple, clear responsibility
+class BeamCreator extends BaseCreator {
+    execute() {
+        const elementData = this.collectElementData();
+        this.creationManager.createElement(elementData);
+    }
+}
+
+// Avoid: Over-abstracted, hard to follow
+class AbstractParametricElementCreatorFactory {
+    createCreatorInstance(type, params, context, metadata) {
+        // Complex factory logic...
+    }
+}
+```
+
+2. Extensibility by Design
+
+Plugin-Ready Architecture
+- **Component Registry**: Runtime registration enables plugins
+- **Event-Driven Communication**: Loose coupling allows new modules
+- **Interface Consistency**: Standard patterns for all extensions
+- **Metadata-Driven UI**: Automatic UI generation from component definitions
+
+Extension Patterns
+```javascript
+// Register new element type
+class CustomElementCreator extends BaseCreator {
+    static meta = { type: 'custom', name: 'Custom Element' };
+    execute() { /* implementation */ }
+}
+
+ComponentRegistry.register('creator', 'custom', CustomElementCreator);
+// Element automatically appears in UI
+```
+
+3. Web-Native Approach
+
+Browser-First Design
+- **No Server Dependencies**: Complete client-side functionality
+- **Modern Web Standards**: ES6+ modules, WebGL, modern APIs
+- **Cross-Platform**: Works on Windows, Mac, Linux, tablets
+- **Progressive Enhancement**: Graceful degradation on older browsers
+
+Technical Benefits
+- **Zero Installation**: Runs immediately in browser
+- **Always Updated**: No version conflicts or update procedures
+- **Easy Deployment**: Simple file hosting requirements
+- **Collaborative Ready**: Easy sharing and team access
+
+4. Development Priority: Simplicity Over Performance
+
+Version 1.0 Philosophy
+**Development speed and code maintainability take precedence over performance optimization.**
+
+Why This Approach Works
+- **Faster Feature Development**: Simple patterns accelerate implementation
+- **Easy Debugging**: Clear structure makes issues obvious
+- **Rapid Iteration**: Simple architecture enables quick changes
+- **Lower Learning Curve**: New developers can contribute immediately
+
+Performance Strategy
+Performance improvements will be implemented **after** core functionality is stable:
+
+1. **Build Working Software First**: Establish solid feature foundation
+2. **Identify Bottlenecks**: Profile real usage patterns
+3. **Optimize Systematically**: Target actual performance issues
+4. **Maintain Simplicity**: Keep optimizations understandable
+
+Trade-offs Accepted in V1.0
+- **Brute-force scene regeneration** over incremental updates
+- **Simple algorithms** over optimized ones  
+- **Code clarity** over micro-optimizations
+- **Development velocity** over runtime efficiency
+
+5. Event-Driven Communication
+
+Decoupled Architecture
+- **EventBus Central Hub**: All inter-module communication via events
+- **Loose Coupling**: Modules don't directly reference each other
+- **Easy Testing**: Mock events for isolated unit testing
+- **Plugin Integration**: External modules integrate via same event system
+
+Communication Patterns
+```javascript
+// Publish events for state changes
+EventBus.publish('element:created', { elementId, data });
+
+// Subscribe to relevant events
+EventBus.subscribe('element:created', this.onElementCreated.bind(this));
+
+// No direct manager references needed
+```
+
+6. Data-Driven UI Generation
+
+Configuration Over Code
+- **Metadata Definitions**: UI automatically generated from component metadata
+- **Consistent Interfaces**: Same UI patterns across all element types
+- **Easy Customization**: Change UI by modifying metadata
+- **Plugin-Friendly**: External components get UI automatically
+
+UI Generation Example
+```javascript
+static getUI() {
+    return [
+        { id: 'profile', type: 'profile', label: 'Steel Profile' },
+        { id: 'material', type: 'material', label: 'Material' }
+    ];
+    // UI automatically generated from this config
+}
+```
+
+7. Brute-Force Consistency
+
+Regeneration Over Optimization
+- **Full Scene Rebuild**: Regenerate everything when data changes
+- **Data Consistency**: Always accurate visual representation
+- **Simple Debugging**: No complex state synchronization issues
+- **Reliable Updates**: Changes always properly reflected
+
+Benefits for Development
+```javascript
+// Simple update pattern
+updateElement(elementId, changes) {
+    // Update data
+    Object.assign(element, changes);
+    
+    // Regenerate mesh - always consistent
+    this.regenerateMesh(elementId);
+    
+    // No complex state tracking needed
+}
+```
+
+8. Clear Separation of Concerns
+
+Layer Responsibilities
+- **Data Layer**: Pure data structures, no business logic
+- **Manager Layer**: Business logic, no UI concerns
+- **UI Layer**: User interface, no data manipulation
+- **Rendering Layer**: Three.js visualization, no application logic
+
+No Cross-Layer Dependencies
+```javascript
+// Good: Clear layer separation
+class ElementManager {
+    updateElement(id, data) {
+        // Data operations only
+        strukturaData.elements.update(id, data);
+        EventBus.publish('element:updated', { id, data });
+    }
+}
+
+class EditPanel {
+    onElementUpdate(data) {
+        // UI updates only
+        this.refreshDisplayFields(data);
+    }
+}
+```
+
+9. Fail-Fast Development
+
+Early Error Detection
+- **Input Validation**: Validate data at entry points
+- **Type Checking**: Runtime type validation where needed
+- **Clear Error Messages**: Descriptive errors for debugging
+- **Graceful Degradation**: System continues working when possible
+
+Error Handling Example
+```javascript
+static validate(elementData) {
+    const errors = [];
+    
+    if (!elementData.profile) {
+        errors.push('Profile is required');
+    }
+    
+    if (elementData.length <= 0) {
+        errors.push('Length must be positive');
+    }
+    
+    return { valid: errors.length === 0, errors };
+}
+```
+
+10. Future-Proof Foundation
+
+Designed for Growth
+- **Modular Architecture**: Add features without affecting existing code
+- **Standard Interfaces**: Consistent patterns enable easy extension
+- **Plugin System Ready**: Architecture supports future plugin marketplace
+- **Version Migration**: Data structures support schema evolution
+
+Scalability Considerations
+- **Memory Management**: Proper resource cleanup patterns
+- **Performance Hooks**: Places for future optimization
+- **Configuration System**: Settings for future advanced features
+- **API Readiness**: Internal APIs ready for external access
+
+These principles ensure TomCAD remains maintainable and extensible as it grows from a simple drawing tool to a comprehensive steel construction platform.
+
+2.3 File Structure File Structure
+
+Project Directory Layout
+
+```
+tomcad/
+├── index.html              # Main application entry point
+├── style.css              # Global application styles
+├── app.js                 # Application startup script
+└── src/                   # Source code directory
+    ├── core/              # Core application architecture
+    │   ├── BeamViewer.js      # Main orchestrator class
+    │   ├── EventBus.js        # Event communication system
+    │   ├── EventCoordinator.js # Global event routing
+    │   ├── ThreeJSSetup.js    # Three.js initialization
+    │   ├── DependencyCheck.js # Module dependency verification
+    │   └── core.js            # Base classes and registry
+    ├── managers/          # Domain-specific managers
+    │   ├── CreationManager.js     # Element creation workflow
+    │   ├── SelectionManager.js    # Object selection management
+    │   ├── ElementManager.js      # Element CRUD operations
+    │   ├── UIManager.js           # UI coordination
+    │   ├── GridManager.js         # Parametric grid system
+    │   ├── OperationManager.js    # Geometric operations
+    │   ├── SnapManager.js         # Geometric snapping
+    │   ├── CopyManager.js         # Copy/paste operations
+    │   ├── ProfileManager.js      # Steel profile database
+    │   └── ConnectionManager.js   # Steel connections
+    ├── components/        # Reusable application components
+    │   ├── creators/          # Element creation classes
+    │   │   ├── BaseCreator.js     # Abstract creator base
+    │   │   ├── BeamCreator.js     # Beam element creator
+    │   │   ├── ColumnCreator.js   # Column element creator
+    │   │   ├── GoalPostCreator.js # Goalpost structure creator
+    │   │   └── StairsCreator.js   # Stairs element creator
+    │   ├── elements/          # Element data management
+    │   │   ├── ElementFactory.js  # Element creation factory
+    │   │   ├── ElementModifier.js # Element modification
+    │   │   ├── Manager.js         # Element lifecycle
+    │   │   └── MeshBuilder.js     # Three.js mesh generation
+    │   └── operations/        # Geometric operations
+    │       ├── HoleOperation.js   # Hole cutting operation
+    │       ├── SlotOperation.js   # Slot cutting operation
+    │       └── RectCutOperation.js # Rectangular cuts
+    ├── ui/                # User interface components
+    │   ├── panels/            # UI panel implementations
+    │   │   ├── CreationPanel.js   # Element creation UI
+    │   │   ├── EditPanel.js       # Element editing UI
+    │   │   ├── ElementListPanel.js # Element browser
+    │   │   ├── GridEditPanel.js   # Grid configuration UI
+    │   │   └── ConnectionPanel.js # Connection editing
+    │   ├── controls/          # UI control widgets
+    │   └── dialogs/           # Modal dialogs
+    ├── data/              # Data models and configurations
+    │   ├── struktura.js       # Main project data model
+    │   ├── profiles.js        # Steel profile definitions
+    │   └── profiles/          # Profile data files
+    ├── rendering/         # 3D rendering components
+    │   ├── CameraControls.js  # Camera manipulation
+    │   ├── ViewCube.js        # 3D navigation widget
+    │   ├── DragControls.js    # Object dragging
+    │   └── ConnectionVisualizer.js # Connection visualization
+    ├── utils/             # Shared utility functions
+    │   └── GeometryUtils.js   # Geometric calculations
+    └── export/            # Import/export functionality
+        ├── ImportExport.js    # Main import/export manager
+        ├── IfcGenerator.js    # IFC file generation
+        └── IfcProjectBuilder.js # IFC project structure
+```
+
+File Loading Dependencies
+
+Critical Loading Order
+
+The application uses ES6 modules with a specific loading order defined in `index.html`:
+
+```html
+<!-- 1. Core Data Models -->
+<script type="module" src="src/data/struktura.js"></script>
+<script type="module" src="src/data/profiles.js"></script>
+
+<!-- 2. Core Architecture -->
+<script type="module" src="src/core/EventBus.js"></script>
+<script type="module" src="src/core/core.js"></script>
+
+<!-- 3. Utilities -->
+<script type="module" src="src/utils/GeometryUtils.js"></script>
+
+<!-- 4. Managers (order matters) -->
+<script type="module" src="src/managers/ElementManager.js"></script>
+<script type="module" src="src/managers/CreationManager.js"></script>
+<script type="module" src="src/managers/SelectionManager.js"></script>
+
+<!-- 5. Components -->
+<script type="module" src="src/components/creators/BaseCreator.js"></script>
+<script type="module" src="src/components/creators/BeamCreator.js"></script>
+
+<!-- 6. UI Components -->
+<script type="module" src="src/ui/panels/CreationPanel.js"></script>
+
+<!-- 7. Main Application -->
+<script type="module" src="src/core/BeamViewer.js"></script>
+```
+
+Core File Descriptions
+
+Application Entry Points
+
+| File | Purpose | Dependencies |
+|------|---------|-------------|
+| `index.html` | Main application entry, defines loading order | All modules |
+| `app.js` | Application startup script | BeamViewer |
+| `style.css` | Global CSS styles | None |
+
+Core Architecture (`src/core/`)
+
+| File | Purpose | Key Classes |
+|------|---------|-------------|
+| `BeamViewer.js` | Main application orchestrator | BeamViewer |
+| `EventBus.js` | Inter-module communication | EventBus |
+| `core.js` | Base classes and component registry | BaseComponent, ComponentRegistry |
+| `EventCoordinator.js` | Global event routing | EventCoordinator |
+| `ThreeJSSetup.js` | Three.js scene initialization | ThreeJSSetup |
+
+Manager Layer (`src/managers/`)
+
+| File | Domain | Primary Responsibilities |
+|------|--------|------------------------|
+| `CreationManager.js` | Element Creation | Creator lifecycle, UI coordination |
+| `SelectionManager.js` | Object Selection | Selection state, highlighting |
+| `ElementManager.js` | Data Operations | CRUD operations, data consistency |
+| `UIManager.js` | User Interface | Panel management, UI state |
+| `GridManager.js` | Parametric Grids | Grid management, relationships |
+| `OperationManager.js` | Geometric Operations | Holes, cuts, modifications |
+
+Component Layer (`src/components/`)
+
+Creators (`src/components/creators/`)
+| File | Element Type | Creation Steps |
+|------|-------------|----------------|
+| `BaseCreator.js` | Abstract Base | Creator interface definition |
+| `BeamCreator.js` | Structural Beams | Start point → End point → Profile |
+| `ColumnCreator.js` | Structural Columns | Position → Height → Profile |
+| `GoalPostCreator.js` | Portal Frames | Multi-step goalpost creation |
+| `StairsCreator.js` | Steel Stairs | Complex stair geometry generation |
+
+Elements (`src/components/elements/`)
+| File | Purpose | Key Functions |
+|------|---------|---------------|
+| `ElementFactory.js` | Element Creation | `createElement()`, ID generation |
+| `ElementModifier.js` | Element Updates | `updateElement()`, `deleteElement()` |
+| `MeshBuilder.js` | 3D Visualization | Three.js mesh generation |
+| `Manager.js` | Element Lifecycle | Element state management |
+
+Data Layer (`src/data/`)
+
+| File | Content | Structure |
+|------|---------|-----------|
+| `struktura.js` | Project data model | Elements, operations, grids, metadata |
+| `profiles.js` | Steel profile database | HEA, IPE, RHS, CHS profile definitions |
+| `profiles/` | Profile data files | Individual profile specifications |
+
+UI Layer (`src/ui/`)
+
+| File | Purpose | Manages |
+|------|---------|---------|
+| `panels/CreationPanel.js` | Element creation UI | Creator parameter input |
+| `panels/EditPanel.js` | Element editing UI | Property modification |
+| `panels/ElementListPanel.js` | Project browser | Element hierarchy display |
+| `panels/GridEditPanel.js` | Grid configuration | Grid parameters and settings |
+
+File Naming Conventions
+
+Class Files
+- **PascalCase**: `BeamCreator.js`, `ElementManager.js`
+- **Descriptive**: Names clearly indicate purpose
+- **Suffix Patterns**: `*Creator.js`, `*Manager.js`, `*Panel.js`
+
+Data Files
+- **Lowercase**: `struktura.js`, `profiles.js`
+- **Descriptive**: Clear data content indication
+
+Directory Structure
+- **Plural Names**: `managers/`, `creators/`, `panels/`
+- **Domain Grouping**: Related functionality grouped together
+- **Shallow Hierarchy**: Maximum 3 levels deep
+
+Module Dependencies
+
+No Circular Dependencies
+- Strict dependency hierarchy enforced
+- Base classes loaded before derived classes
+- Managers loaded before UI components
+
+Global Objects
+- `strukturaData`: Central project data
+- `profilesData`: Steel profile database
+- `beamObjects`: Three.js mesh storage
+- `EventBus`: Global communication
+
+Import Patterns
+```javascript
+// ES6 module imports
+import { BaseCreator } from './BaseCreator.js';
+import { GeometryUtils } from '../utils/GeometryUtils.js';
+
+// Global object access
+const element = strukturaData.elements.find(e => e.id === elementId);
+```
+
+File Organization Principles
+
+Single Responsibility
+- Each file has one primary purpose
+- Clear separation of concerns
+- Minimal file interdependencies
+
+Domain Segregation
+- Related functionality grouped in directories
+- Clear boundaries between application layers
+- Consistent naming across similar files
+
+Extensibility Support
+- Easy addition of new creators in `creators/` directory
+- New managers follow established patterns
+- Plugin architecture preparation in directory structure
+
+This file structure supports TomCAD's goal of simplicity while maintaining professional organization suitable for team development and future expansion.
+
+2.4 Data Flow Data Flow
+
+Overview
+
+TomCAD implements a **centralized data model** with **event-driven updates** to maintain consistency between the data layer, 3D visualization, and user interface. The data flow follows predictable patterns that make the system easy to understand and extend.
+
+Central Data Model
+
+Primary Data Structure
+
+All application data is stored in the global `strukturaData` object:
+
+```javascript
+const strukturaData = {
+    meta: {
+        version: "1.0.0",
+        units: "mm",
+        created: 1640995200000,
+        modified: 1640995200000,
+        author: "User",
+        description: "Steel structure project"
+    },
+    elements: [
+        {
+            id: "BEAM_001",
+            type: "beam",
+            profile: "IPE200",
+            material: "S355JR",
+            startPoint: [0, 0, 0],
+            endPoint: [5000, 0, 0],
+            rotation: 0,
+            operations: ["HOLE_001", "CUT_001"],
+            gridAttachments: {
+                start: { gridId: "GRID_001", intersection: "A-1" },
+                end: { gridId: "GRID_001", intersection: "B-1" }
+            },
+            created: 1640995200000,
+            modified: 1640995200000
+        }
+    ],
+    operations: [
+        {
+            id: "HOLE_001",
+            type: "hole",
+            targetElement: "BEAM_001",
+            position: [2500, 0, 0],
+            diameter: 20,
+            created: 1640995200000
+        }
+    ],
+    grids: [
+        {
+            id: "GRID_001",
+            name: "Main Grid",
+            type: "rectangular",
+            origin: [0, 0, 0],
+            xSpacings: [5000, 5000, 5000],
+            ySpacings: [6000, 6000],
+            zLevels: [0, 3000, 6000],
+            labels: {
+                x: ["A", "B", "C", "D"],
+                y: ["1", "2", "3"],
+                z: ["L0", "L1", "L2"]
+            }
+        }
+    ]
+};
+```
+
+Secondary Data Sources
+
+| Data Source | Purpose | Content |
+|------------|---------|---------|
+| `profilesData` | Steel profiles database | Profile geometries, properties, standards |
+| `beamObjects` | Three.js meshes | Map of element IDs to Three.js objects |
+| UI State | Interface state | Panel visibility, selected tools, etc. |
+
+Core Data Flow Patterns
+
+1. Element Creation Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant UI as CreationPanel
+    participant CM as CreationManager
+    participant C as Creator
+    participant EF as ElementFactory
+    participant SD as strukturaData
+    participant MB as MeshBuilder
+    participant S as Three.js Scene
+    participant EB as EventBus
+
+    U->>UI: Configure element parameters
+    U->>CM: Start creation (mouse click)
+    CM->>C: Create creator instance
+    C->>C: Collect user input (points, etc.)
+    C->>CM: Call createElement()
+    CM->>EF: ElementFactory.create(data)
+    EF->>SD: Add element to strukturaData
+    EF->>MB: Generate Three.js mesh
+    MB->>S: Add mesh to scene
+    EF->>EB: Emit 'element:created'
+    EB->>UI: Update element list
+    EB->>UI: Update property panels
+```
+
+**Code Example**:
+```javascript
+// In BeamCreator.execute()
+const elementData = {
+    type: 'beam',
+    profile: this.getParameterValue('profile'),
+    startPoint: this.startPoint,
+    endPoint: this.endPoint,
+    material: this.getParameterValue('material')
+};
+
+// CreationManager handles the actual creation
+this.creationManager.createElement(elementData);
+```
+
+2. Element Modification Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant EP as EditPanel
+    participant EM as ElementModifier
+    participant SD as strukturaData
+    participant MB as MeshBuilder
+    participant S as Three.js Scene
+    participant EB as EventBus
+
+    U->>EP: Change element property
+    EP->>EM: updateElement(id, changes)
+    EM->>SD: Update element data
+    EM->>MB: Regenerate mesh
+    MB->>S: Replace mesh in scene
+    EM->>EB: Emit 'element:updated'
+    EB->>EP: Refresh UI displays
+```
+
+**Code Example**:
+```javascript
+// In EditPanel
+updateElementProperty(elementId, propertyName, newValue) {
+    const changes = { [propertyName]: newValue };
+    ElementModifier.updateElement(elementId, changes);
+}
+
+// In ElementModifier
+static updateElement(elementId, changes) {
+    const element = strukturaData.elements.find(e => e.id === elementId);
+    Object.assign(element, changes);
+    element.modified = Date.now();
+    
+    this.regenerateMesh(elementId);
+    EventBus.publish('element:updated', { elementId, changes });
+}
+```
+
+3. Parametric Grid Update Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant GP as GridEditPanel
+    participant GM as GridManager
+    participant SD as strukturaData
+    participant EM as ElementManager
+    participant MB as MeshBuilder
+    participant S as Three.js Scene
+    participant EB as EventBus
+
+    U->>GP: Modify grid spacing
+    GP->>GM: updateGrid(gridId, changes)
+    GM->>SD: Update grid definition
+    GM->>GM: Find attached elements
+    GM->>EM: rebuildElementsFromGrid(gridId)
+    EM->>MB: Regenerate affected meshes
+    MB->>S: Update scene
+    GM->>EB: Emit 'grid:updated'
+    EB->>GP: Refresh grid display
+    EB->>EP: Update affected elements
+```
+
+**Code Example**:
+```javascript
+// GridManager.updateGrid()
+updateGrid(gridId, changes) {
+    const grid = strukturaData.grids.find(g => g.id === gridId);
+    Object.assign(grid, changes);
+    
+    // Find elements attached to this grid
+    const attachedElements = strukturaData.elements.filter(element => 
+        element.gridAttachments && 
+        (element.gridAttachments.start?.gridId === gridId ||
+         element.gridAttachments.end?.gridId === gridId)
+    );
+    
+    // Rebuild affected elements
+    attachedElements.forEach(element => {
+        this.recalculateElementFromGrid(element, grid);
+    });
+    
+    EventBus.publish('grid:updated', { gridId, changes, affectedElements });
+}
+```
+
+4. Selection State Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant SM as SelectionManager
+    participant S as Three.js Scene
+    participant EP as EditPanel
+    participant EL as ElementListPanel
+    participant EB as EventBus
+
+    U->>SM: Click on element (mouse event)
+    SM->>SM: Perform raycasting
+    SM->>S: Update visual highlighting
+    SM->>EB: Emit 'selection:changed'
+    EB->>EP: Show element properties
+    EB->>EL: Highlight in element list
+    EB->>SM: Update control points
+```
+
+Data Synchronization Strategies
+
+1. Brute-Force Regeneration
+
+**Philosophy**: Prioritize correctness over performance
+```javascript
+// When data changes, regenerate everything affected
+regenerateScene() {
+    // Clear existing meshes
+    this.clearScene();
+    
+    // Rebuild all elements from data
+    strukturaData.elements.forEach(element => {
+        const mesh = MeshBuilder.createElement(element);
+        this.scene.add(mesh);
+        beamObjects.set(element.id, mesh);
+    });
+    
+    // Rebuild grids
+    this.regenerateGrids();
+    
+    // Rebuild operations
+    this.applyOperations();
+}
+```
+
+**Benefits**:
+- Guaranteed data consistency
+- Simple to understand and debug
+- No complex state management needed
+
+**Trade-offs**:
+- Performance cost for large models
+- Suitable for architectural modeling scale
+
+2. Event-Driven Updates
+
+**Granular Updates**: Only update what changed
+```javascript
+EventBus.subscribe('element:updated', ({ elementId, changes }) => {
+    // Only regenerate the specific element
+    const mesh = beamObjects.get(elementId);
+    if (mesh) {
+        const element = strukturaData.elements.find(e => e.id === elementId);
+        const newMesh = MeshBuilder.createElement(element);
+        
+        // Replace mesh in scene
+        this.scene.remove(mesh);
+        this.scene.add(newMesh);
+        beamObjects.set(elementId, newMesh);
+    }
+});
+```
+
+3. Parametric Relationship Management
+
+**Grid Attachments**: Elements automatically update when grids change
+```javascript
+// Element definition with grid attachment
+const beamElement = {
+    id: "BEAM_001",
+    type: "beam",
+    gridAttachments: {
+        start: { gridId: "GRID_001", intersection: "A-1" },
+        end: { gridId: "GRID_001", intersection: "B-1" }
+    }
+};
+
+// When grid changes, recalculate element positions
+recalculateElementFromGrid(element, grid) {
+    if (element.gridAttachments.start) {
+        element.startPoint = this.getGridIntersection(
+            grid, 
+            element.gridAttachments.start.intersection
+        );
+    }
+    
+    if (element.gridAttachments.end) {
+        element.endPoint = this.getGridIntersection(
+            grid, 
+            element.gridAttachments.end.intersection
+        );
+    }
+    
+    element.modified = Date.now();
+}
+```
+
+Data Validation and Integrity
+
+Element ID Management
+```javascript
+class ElementFactory {
+    static generateId(type) {
+        const existing = strukturaData.elements.filter(e => e.type === type);
+        const maxNum = existing.reduce((max, el) => {
+            const match = el.id.match(new RegExp(`${type.toUpperCase()}_(\\d+)`));
+            return match ? Math.max(max, parseInt(match[1])) : max;
+        }, 0);
+        return `${type.toUpperCase()}_${String(maxNum + 1).padStart(3, '0')}`;
+    }
+}
+```
+
+Reference Integrity
+```javascript
+// When deleting an element, clean up references
+static deleteElement(elementId) {
+    // Remove from main array
+    strukturaData.elements = strukturaData.elements.filter(e => e.id !== elementId);
+    
+    // Remove operations targeting this element
+    strukturaData.operations = strukturaData.operations.filter(
+        op => op.targetElement !== elementId
+    );
+    
+    // Clean up Three.js objects
+    const mesh = beamObjects.get(elementId);
+    if (mesh) {
+        this.scene.remove(mesh);
+        beamObjects.delete(elementId);
+    }
+    
+    EventBus.publish('element:deleted', { elementId });
+}
+```
+
+Performance Considerations
+
+Memory Management
+```javascript
+// Clean up Three.js resources
+cleanupMesh(mesh) {
+    if (mesh.geometry) mesh.geometry.dispose();
+    if (mesh.material) {
+        if (Array.isArray(mesh.material)) {
+            mesh.material.forEach(material => material.dispose());
+        } else {
+            mesh.material.dispose();
+        }
+    }
+}
+```
+
+Batch Operations
+```javascript
+// Batch multiple changes to avoid repeated regeneration
+class BatchUpdater {
+    constructor() {
+        this.changes = [];
+        this.timeout = null;
+    }
+    
+    addChange(change) {
+        this.changes.push(change);
+        this.scheduleUpdate();
+    }
+    
+    scheduleUpdate() {
+        if (this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.applyChanges();
+            this.changes = [];
+        }, 16); // Next frame
+    }
+}
+```
+
+Debugging Data Flow
+
+Event Tracing
+```javascript
+// Development helper for tracing events
+if (window.DEBUG_EVENTS) {
+    const originalPublish = EventBus.publish;
+    EventBus.publish = function(eventName, data) {
+        console.log(`[EVENT] ${eventName}:`, data);
+        return originalPublish.call(this, eventName, data);
+    };
+}
+```
+
+Data State Inspection
+```javascript
+// Console debugging helpers
+window.debugData = {
+    showStructure: () => console.log(strukturaData),
+    showElement: (id) => console.log(strukturaData.elements.find(e => e.id === id)),
+    showMeshes: () => console.log(beamObjects),
+    validateReferences: () => this.validateDataIntegrity()
+};
+```
+
+This data flow architecture ensures that TomCAD maintains data consistency while providing the flexibility needed for complex parametric relationships and real-time user interactions.
+
+2.5 Module System Module System
+
+Overview
+
+TomCAD uses a **component-based module system** built on ES6 modules with a centralized registry pattern. The system is designed for extensibility, allowing new components to be added without modifying existing code.
+
+Core Module Architecture
+
+Module Categories
+
+| Category | Purpose | Examples | Registration |
+|----------|---------|----------|-------------|
+| **Creators** | Element creation logic | BeamCreator, ColumnCreator | ComponentRegistry |
+| **Managers** | Domain-specific coordination | ElementManager, UIManager | Manual initialization |
+| **Operations** | Geometric modifications | HoleOperation, CutOperation | OperationRegistry |
+| **UI Panels** | User interface components | CreationPanel, EditPanel | UIManager |
+| **Exporters** | Data export functionality | IFCExporter, DXFExporter | ExportRegistry |
+
+Base Module Classes
+
+```javascript
+// Base class for all components
+class BaseComponent {
+    constructor(core) {
+        this.core = core;
+        this.id = this.generateId();
+        this.initialized = false;
+    }
+    
+    initialize() {
+        this.initialized = true;
+        return this;
+    }
+    
+    destroy() {
+        this.initialized = false;
+    }
+    
+    generateId() {
+        return `${this.constructor.name}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
+}
+
+// Base class for managers
+class Manager extends BaseComponent {
+    constructor(core) {
+        super(core);
+        this.setupEventListeners();
+    }
+    
+    setupEventListeners() {
+        // Override in subclasses
+    }
+}
+```
+
+Component Registry System
+
+ComponentRegistry Implementation
+
+```javascript
+class ComponentRegistry {
+    static creators = new Map();
+    static operations = new Map();
+    static exporters = new Map();
+    static metadata = new Map();
+    
+    // Register a new component type
+    static register(category, type, componentClass) {
+        const registry = this.getRegistry(category);
+        registry.set(type, componentClass);
+        
+        // Store metadata for UI generation
+        if (componentClass.meta) {
+            this.metadata.set(`${category}:${type}`, componentClass.meta);
+        }
+        
+        console.log(`[Registry] Registered ${category}: ${type}`);
+        return this;
+    }
+    
+    // Get component class by type
+    static get(category, type) {
+        const registry = this.getRegistry(category);
+        return registry.get(type);
+    }
+    
+    // Get all components in category
+    static getAll(category) {
+        const registry = this.getRegistry(category);
+        return Array.from(registry.entries());
+    }
+    
+    // Get registry by category
+    static getRegistry(category) {
+        switch (category) {
+            case 'creator': return this.creators;
+            case 'operation': return this.operations;
+            case 'exporter': return this.exporters;
+            default: throw new Error(`Unknown registry category: ${category}`);
+        }
+    }
+    
+    // Generate UI configuration from registered components
+    static generateToolbar() {
+        const toolbar = [];
+        
+        this.creators.forEach((creatorClass, type) => {
+            if (creatorClass.meta) {
+                toolbar.push({
+                    type: type,
+                    name: creatorClass.meta.name,
+                    icon: creatorClass.meta.icon,
+                    category: creatorClass.meta.category || 'elements'
+                });
+            }
+        });
+        
+        return toolbar;
+    }
+}
+```
+
+Module Registration Pattern
+
+```javascript
+// Creator registration example
+class BeamCreator extends BaseCreator {
+    static meta = {
+        type: 'beam',
+        name: 'Beam',
+        icon: 'beam-icon',
+        category: 'structural',
+        description: 'Create structural steel beams',
+        steps: ['start_point', 'end_point', 'properties']
+    };
+    
+    static getUI() {
+        return [
+            { id: 'profile', type: 'profile', label: 'Steel Profile', value: 'IPE200' },
+            { id: 'material', type: 'material', label: 'Material', value: 'S355JR' },
+            { id: 'rotation', type: 'number', label: 'Rotation (°)', value: 0 }
+        ];
+    }
+    
+    // ... implementation
+}
+
+// Register the creator
+ComponentRegistry.register('creator', 'beam', BeamCreator);
+```
+
+Module Lifecycle
+
+Initialization Sequence
+
+```javascript
+class ModuleSystem {
+    static async initialize() {
+        console.log('[ModuleSystem] Starting initialization...');
+        
+        // 1. Initialize core systems
+        await this.initializeCore();
+        
+        // 2. Register built-in components
+        await this.registerBuiltinComponents();
+        
+        // 3. Load plugin modules
+        await this.loadPlugins();
+        
+        // 4. Initialize managers
+        await this.initializeManagers();
+        
+        // 5. Generate UI from registered components
+        await this.generateUI();
+        
+        console.log('[ModuleSystem] Initialization complete');
+    }
+    
+    static async registerBuiltinComponents() {
+        // Creators
+        ComponentRegistry.register('creator', 'beam', BeamCreator);
+        ComponentRegistry.register('creator', 'column', ColumnCreator);
+        ComponentRegistry.register('creator', 'goalpost', GoalPostCreator);
+        
+        // Operations
+        ComponentRegistry.register('operation', 'hole', HoleOperation);
+        ComponentRegistry.register('operation', 'slot', SlotOperation);
+        ComponentRegistry.register('operation', 'cut', RectCutOperation);
+        
+        // Exporters
+        ComponentRegistry.register('exporter', 'ifc', IFCExporter);
+        ComponentRegistry.register('exporter', 'dxf', DXFExporter);
+    }
+}
+```
+
+Dynamic Module Loading
+
+```javascript
+// Future plugin system implementation
+class PluginLoader {
+    static async loadPlugin(pluginUrl) {
+        try {
+            // Dynamic import of plugin module
+            const plugin = await import(pluginUrl);
+            
+            // Validate plugin structure
+            if (!plugin.default || !plugin.default.register) {
+                throw new Error('Invalid plugin structure');
+            }
+            
+            // Register plugin components
+            await plugin.default.register(ComponentRegistry);
+            
+            console.log(`[PluginLoader] Loaded plugin: ${plugin.default.name}`);
+            return plugin.default;
+        } catch (error) {
+            console.error(`[PluginLoader] Failed to load plugin ${pluginUrl}:`, error);
+            throw error;
+        }
+    }
+    
+    static async loadPluginsFromConfig(config) {
+        const promises = config.plugins.map(url => this.loadPlugin(url));
+        return Promise.allSettled(promises);
+    }
+}
+```
+
+Creator Module Pattern
+
+Creator Interface
+
+```javascript
+class BaseCreator {
+    // Static metadata for registration
+    static meta = {
+        type: '',           // Unique identifier
+        name: '',           // Display name
+        icon: '',           // UI icon
+        category: '',       // Toolbar category
+        description: '',    // Tooltip description
+        steps: []           // Creation steps
+    };
+    
+    // UI configuration
+    static getUI() {
+        return []; // Array of UI control definitions
+    }
+    
+    // Edit UI configuration
+    static getEditUI(elementData) {
+        return []; // Array of edit control definitions
+    }
+    
+    // Control points for manipulation
+    static getControlPoints(elementData) {
+        return []; // Array of control point definitions
+    }
+    
+    // Instance methods
+    constructor(creationManager) {
+        this.creationManager = creationManager;
+        this.reset();
+    }
+    
+    reset() {
+        this.currentStep = 0;
+        this.data = {};
+        this.preview = null;
+    }
+    
+    // Handle mouse events
+    onMouseDown(event) {}
+    onMouseMove(event) {}
+    onMouseUp(event) {}
+    
+    // Handle keyboard events
+    onKeyDown(event) {}
+    
+    // Execute creation
+    execute() {
+        // Abstract method - implement in subclasses
+        throw new Error('execute() must be implemented');
+    }
+    
+    // Should continue creating after completion
+    shouldRestart() {
+        return true; // Default: continue creating
+    }
+    
+    // Cleanup
+    destroy() {
+        if (this.preview) {
+            this.creationManager.removePreview(this.preview);
+        }
+    }
+}
+```
+
+Creator Example Implementation
+
+```javascript
+class StairsCreator extends BaseCreator {
+    static meta = {
+        type: 'stairs',
+        name: 'Steel Stairs',
+        icon: 'stairs-icon',
+        category: 'structural',
+        description: 'Create steel stairs with railings',
+        steps: ['start_point', 'end_point', 'configuration']
+    };
+    
+    static getUI() {
+        return [
+            { id: 'steps', type: 'number', label: 'Number of Steps', value: 12, min: 3, max: 30 },
+            { id: 'width', type: 'number', label: 'Width (mm)', value: 1000, min: 600, max: 2000 },
+            { id: 'railing', type: 'checkbox', label: 'Include Railings', value: true },
+            { id: 'platform', type: 'checkbox', label: 'Include Platform', value: false }
+        ];
+    }
+    
+    onMouseDown(event) {
+        const point = this.creationManager.getWorldPosition(event);
+        
+        switch (this.currentStep) {
+            case 0: // Start point
+                this.data.startPoint = point;
+                this.currentStep = 1;
+                this.updatePreview();
+                break;
+                
+            case 1: // End point
+                this.data.endPoint = point;
+                this.currentStep = 2;
+                this.execute();
+                break;
+        }
+    }
+    
+    execute() {
+        const elementData = {
+            type: 'stairs',
+            startPoint: this.data.startPoint,
+            endPoint: this.data.endPoint,
+            steps: this.getParameterValue('steps'),
+            width: this.getParameterValue('width'),
+            includeRailing: this.getParameterValue('railing'),
+            includePlatform: this.getParameterValue('platform')
+        };
+        
+        this.creationManager.createElement(elementData);
+        
+        if (this.shouldRestart()) {
+            this.reset();
+        }
+    }
+}
+
+// Register the creator
+ComponentRegistry.register('creator', 'stairs', StairsCreator);
+```
+
+Operation Module Pattern
+
+Operation Interface
+
+```javascript
+class BaseOperation {
+    static meta = {
+        type: '',
+        name: '',
+        description: '',
+        targetTypes: [] // Element types this operation can be applied to
+    };
+    
+    constructor(targetElement, parameters) {
+        this.targetElement = targetElement;
+        this.parameters = parameters;
+        this.id = this.generateId();
+    }
+    
+    // Apply operation to element geometry
+    apply(geometry) {
+        throw new Error('apply() must be implemented');
+    }
+    
+    // Get UI for operation parameters
+    static getUI() {
+        return [];
+    }
+    
+    // Validate operation parameters
+    validate() {
+        return { valid: true, errors: [] };
+    }
+    
+    generateId() {
+        return `${this.constructor.meta.type.toUpperCase()}_${Date.now()}`;
+    }
+}
+```
+
+Operation Example
+
+```javascript
+class HoleOperation extends BaseOperation {
+    static meta = {
+        type: 'hole',
+        name: 'Hole',
+        description: 'Create circular holes in elements',
+        targetTypes: ['beam', 'column', 'plate']
+    };
+    
+    static getUI() {
+        return [
+            { id: 'diameter', type: 'number', label: 'Diameter (mm)', value: 20, min: 5, max: 100 },
+            { id: 'position', type: 'point', label: 'Position', value: [0, 0, 0] }
+        ];
+    }
+    
+    apply(geometry) {
+        // Create hole geometry using CSG operations
+        const hole = new THREE.CylinderGeometry(
+            this.parameters.diameter / 2,
+            this.parameters.diameter / 2,
+            geometry.thickness + 10, // Slightly thicker to ensure clean cut
+            16
+        );
+        
+        // Position hole
+        hole.translate(
+            this.parameters.position[0],
+            this.parameters.position[1],
+            this.parameters.position[2]
+        );
+        
+        // Subtract hole from geometry (CSG operation)
+        return this.performCSGSubtraction(geometry, hole);
+    }
+    
+    validate() {
+        const errors = [];
+        
+        if (this.parameters.diameter <= 0) {
+            errors.push('Diameter must be positive');
+        }
+        
+        if (this.parameters.diameter > this.targetElement.profile.height) {
+            errors.push('Hole diameter exceeds element height');
+        }
+        
+        return {
+            valid: errors.length === 0,
+            errors: errors
+        };
+    }
+}
+
+ComponentRegistry.register('operation', 'hole', HoleOperation);
+```
+
+Module Communication
+
+Event-Based Communication
+
+```javascript
+// Modules communicate via EventBus
+class CreationManager extends Manager {
+    setupEventListeners() {
+        EventBus.subscribe('creator:selected', this.onCreatorSelected.bind(this));
+        EventBus.subscribe('element:created', this.onElementCreated.bind(this));
+        EventBus.subscribe('ui:parameter:changed', this.onParameterChanged.bind(this));
+    }
+    
+    startCreation(type) {
+        const CreatorClass = ComponentRegistry.get('creator', type);
+        if (!CreatorClass) {
+            throw new Error(`Unknown creator type: ${type}`);
+        }
+        
+        this.activeCreator = new CreatorClass(this);
+        EventBus.publish('creation:started', { type, creator: this.activeCreator });
+    }
+}
+```
+
+Module Dependencies
+
+```javascript
+// Dependency injection pattern
+class ModuleDependency {
+    static resolve(moduleClass) {
+        const dependencies = moduleClass.dependencies || [];
+        const resolved = {};
+        
+        dependencies.forEach(dep => {
+            resolved[dep] = this.getInstance(dep);
+        });
+        
+        return resolved;
+    }
+    
+    static getInstance(type) {
+        // Return singleton instance of manager/service
+        return this.instances.get(type);
+    }
+}
+
+// Example module with dependencies
+class ElementManager extends Manager {
+    static dependencies = ['gridManager', 'operationManager'];
+    
+    constructor(core, dependencies) {
+        super(core);
+        this.gridManager = dependencies.gridManager;
+        this.operationManager = dependencies.operationManager;
+    }
+}
+```
+
+Module Configuration
+
+Configuration System
+
+```javascript
+class ModuleConfig {
+    static config = {
+        creators: {
+            enableAll: true,
+            disabled: [],
+            customPath: null
+        },
+        operations: {
+            enableCSG: true,
+            precision: 0.01
+        },
+        ui: {
+            showAdvanced: false,
+            theme: 'default'
+        }
+    };
+    
+    static get(path) {
+        return path.split('.').reduce((obj, key) => obj[key], this.config);
+    }
+    
+    static set(path, value) {
+        const keys = path.split('.');
+        const lastKey = keys.pop();
+        const target = keys.reduce((obj, key) => obj[key], this.config);
+        target[lastKey] = value;
+    }
+}
+```
+
+Extension and Plugin System
+
+Plugin Interface
+
+```javascript
+class Plugin {
+    constructor(name, version) {
+        this.name = name;
+        this.version = version;
+        this.components = [];
+    }
+    
+    // Plugin registration method
+    register(registry) {
+        this.components.forEach(component => {
+            registry.register(component.category, component.type, component.class);
+        });
+    }
+    
+    // Plugin lifecycle hooks
+    onLoad() {}
+    onUnload() {}
+    onActivate() {}
+    onDeactivate() {}
+}
+
+// Example plugin
+class CustomStairsPlugin extends Plugin {
+    constructor() {
+        super('Custom Stairs', '1.0.0');
+        
+        this.components = [
+            {
+                category: 'creator',
+                type: 'spiral_stairs',
+                class: SpiralStairsCreator
+            },
+            {
+                category: 'operation', 
+                type: 'landing_platform',
+                class: LandingPlatformOperation
+            }
+        ];
+    }
+}
+```
+
+This module system provides a robust foundation for TomCAD's extensible architecture while maintaining simplicity and ease of development.
+
+2.6 Event System Event System
+
+Overview
+
+TomCAD uses a **centralized event-driven architecture** based on the publish-subscribe pattern. The `EventBus` serves as the communication hub, enabling loose coupling between modules while maintaining clear data flow.
+
+EventBus Implementation
+
+Core EventBus Class
+
+```javascript
+class EventBus {
+    static events = new Map();
+    static debugMode = false;
+    
+    /**
+     * Subscribe to an event
+     * @param {string} eventName - Name of the event
+     * @param {function} callback - Function to call when event is published
+     * @returns {function} Unsubscribe function
+     */
+    static subscribe(eventName, callback) {
+        if (!this.events.has(eventName)) {
+            this.events.set(eventName, []);
+        }
+        
+        this.events.get(eventName).push(callback);
+        
+        if (this.debugMode) {
+            console.log(`[EventBus] Subscribed to: ${eventName}`);
+        }
+        
+        // Return unsubscribe function
+        return () => this.unsubscribe(eventName, callback);
+    }
+    
+    /**
+     * Publish an event to all subscribers
+     * @param {string} eventName - Name of the event
+     * @param {*} data - Data to pass to subscribers
+     */
+    static publish(eventName, data) {
+        const callbacks = this.events.get(eventName);
+        
+        if (this.debugMode) {
+            console.log(`[EventBus] Publishing: ${eventName}`, data);
+        }
+        
+        if (callbacks) {
+            callbacks.forEach(callback => {
+                try {
+                    callback(data);
+                } catch (error) {
+                    console.error(`[EventBus] Error in callback for ${eventName}:`, error);
+                }
+            });
+        }
+    }
+    
+    /**
+     * Unsubscribe from an event
+     * @param {string} eventName - Name of the event
+     * @param {function} callback - Callback function to remove
+     */
+    static unsubscribe(eventName, callback) {
+        const callbacks = this.events.get(eventName);
+        if (callbacks) {
+            const index = callbacks.indexOf(callback);
+            if (index > -1) {
+                callbacks.splice(index, 1);
+            }
+        }
+    }
+    
+    /**
+     * Remove all subscribers for an event
+     * @param {string} eventName - Name of the event
+     */
+    static clear(eventName) {
+        this.events.delete(eventName);
+    }
+    
+    /**
+     * Get all event names
+     * @returns {string[]} Array of event names
+     */
+    static getEventNames() {
+        return Array.from(this.events.keys());
+    }
+    
+    /**
+     * Get subscriber count for an event
+     * @param {string} eventName - Name of the event
+     * @returns {number} Number of subscribers
+     */
+    static getSubscriberCount(eventName) {
+        const callbacks = this.events.get(eventName);
+        return callbacks ? callbacks.length : 0;
+    }
+}
+```
+
+Event Categories
+
+1. User Interaction Events
+
+Events triggered by user mouse and keyboard actions:
+
+```javascript
+// Mouse events
+EventBus.publish('mouse:down', { 
+    button: 0, 
+    position: { x: 100, y: 200 }, 
+    worldPosition: [1000, 0, 500] 
+});
+
+EventBus.publish('mouse:move', { 
+    position: { x: 105, y: 205 }, 
+    worldPosition: [1025, 0, 525] 
+});
+
+EventBus.publish('mouse:up', { 
+    button: 0, 
+    position: { x: 105, y: 205 } 
+});
+
+// Keyboard events
+EventBus.publish('key:down', { 
+    key: 'Escape', 
+    ctrlKey: false, 
+    shiftKey: false 
+});
+
+// Specialized interaction events
+EventBus.publish('viewer:escape', {});
+EventBus.publish('viewer:doubleClick', { 
+    position: { x: 100, y: 200 } 
+});
+```
+
+2. Creation Workflow Events
+
+Events related to element creation process:
+
+```javascript
+// Creation lifecycle
+EventBus.publish('creation:started', { 
+    type: 'beam', 
+    creator: creatorInstance 
+});
+
+EventBus.publish('creation:step:completed', { 
+    step: 'start_point', 
+    data: [0, 0, 0] 
+});
+
+EventBus.publish('creation:preview:updated', { 
+    previewMesh: mesh 
+});
+
+EventBus.publish('creation:completed', { 
+    elementId: 'BEAM_001' 
+});
+
+EventBus.publish('creation:cancelled', { 
+    reason: 'user_escape' 
+});
+```
+
+3. Selection Events
+
+Events for object selection and highlighting:
+
+```javascript
+// Selection changes
+EventBus.publish('selection:changed', { 
+    selectedIds: ['BEAM_001', 'COLUMN_002'], 
+    previousIds: ['BEAM_001'] 
+});
+
+EventBus.publish('selection:cleared', {});
+
+EventBus.publish('selection:highlighted', { 
+    elementId: 'BEAM_001', 
+    type: 'hover' 
+});
+
+// Control point events
+EventBus.publish('controlPoints:shown', { 
+    elementId: 'BEAM_001', 
+    points: [startPoint, endPoint] 
+});
+
+EventBus.publish('controlPoints:dragging', { 
+    elementId: 'BEAM_001', 
+    pointIndex: 0, 
+    newPosition: [1000, 0, 0] 
+});
+```
+
+4. Data Model Events
+
+Events for data changes and synchronization:
+
+```javascript
+// Element lifecycle
+EventBus.publish('element:created', { 
+    elementId: 'BEAM_001', 
+    elementData: elementObject 
+});
+
+EventBus.publish('element:updated', { 
+    elementId: 'BEAM_001', 
+    changes: { profile: 'IPE300' }, 
+    previousValues: { profile: 'IPE200' } 
+});
+
+EventBus.publish('element:deleted', { 
+    elementId: 'BEAM_001' 
+});
+
+// Grid events
+EventBus.publish('grid:created', { 
+    gridId: 'GRID_001', 
+    gridData: gridObject 
+});
+
+EventBus.publish('grid:updated', { 
+    gridId: 'GRID_001', 
+    changes: { xSpacings: [5000, 5000, 5000] }, 
+    affectedElements: ['BEAM_001', 'BEAM_002'] 
+});
+
+// Operation events
+EventBus.publish('operation:applied', { 
+    operationId: 'HOLE_001', 
+    targetElement: 'BEAM_001' 
+});
+```
+
+5. UI Events
+
+Events for user interface updates and state:
+
+```javascript
+// Panel events
+EventBus.publish('panel:opened', { 
+    panelType: 'creation', 
+    config: uiConfig 
+});
+
+EventBus.publish('panel:closed', { 
+    panelType: 'edit' 
+});
+
+// Parameter changes
+EventBus.publish('ui:parameter:changed', { 
+    parameterId: 'profile', 
+    value: 'IPE300', 
+    previousValue: 'IPE200' 
+});
+
+// Status updates
+EventBus.publish('ui:status:update', { 
+    message: 'Beam created successfully', 
+    type: 'success', 
+    duration: 3000 
+});
+
+// Toolbar events
+EventBus.publish('toolbar:tool:selected', { 
+    toolType: 'beam', 
+    previousTool: 'select' 
+});
+```
+
+6. System Events
+
+Events for application state and system operations:
+
+```javascript
+// Application lifecycle
+EventBus.publish('app:initialized', {});
+EventBus.publish('app:ready', {});
+
+// Scene events
+EventBus.publish('scene:rebuilt', { 
+    elementCount: 15, 
+    renderTime: 45 
+});
+
+EventBus.publish('scene:rendered', { 
+    frameTime: 16.7 
+});
+
+// Export/Import events
+EventBus.publish('export:started', { 
+    format: 'ifc', 
+    filename: 'project.ifc' 
+});
+
+EventBus.publish('export:completed', { 
+    format: 'ifc', 
+    filepath: '/downloads/project.ifc' 
+});
+```
+
+Event Flow Patterns
+
+1. User Interaction Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant EC as EventCoordinator
+    participant EB as EventBus
+    participant CM as CreationManager
+    participant SM as SelectionManager
+
+    U->>EC: Mouse click
+    EC->>EB: publish('mouse:down')
+    EB->>CM: Handle if in creation mode
+    EB->>SM: Handle if in selection mode
+    CM->>EB: publish('creation:step:completed')
+    EB->>UI: Update UI panels
+```
+
+2. Data Update Flow
+
+```mermaid
+sequenceDiagram
+    participant UI as EditPanel
+    participant EB as EventBus
+    participant EM as ElementModifier
+    participant MB as MeshBuilder
+    participant S as Scene
+
+    UI->>EB: publish('ui:parameter:changed')
+    EB->>EM: Update element data
+    EM->>EB: publish('element:updated')
+    EB->>MB: Regenerate mesh
+    EB->>UI: Refresh UI
+    EB->>S: Update scene
+```
+
+3. Grid Parametric Flow
+
+```mermaid
+sequenceDiagram
+    participant GP as GridPanel
+    participant EB as EventBus
+    participant GM as GridManager
+    participant EM as ElementManager
+
+    GP->>EB: publish('grid:updated')
+    EB->>GM: Update grid data
+    GM->>GM: Find attached elements
+    GM->>EM: Rebuild affected elements
+    GM->>EB: publish('grid:elements:rebuilt')
+    EB->>GP: Update UI
+```
+
+Event Handler Patterns
+
+1. Manager Event Handling
+
+```javascript
+class CreationManager extends Manager {
+    setupEventListeners() {
+        // Subscribe to relevant events
+        this.unsubscribers = [
+            EventBus.subscribe('mouse:down', this.onMouseDown.bind(this)),
+            EventBus.subscribe('mouse:move', this.onMouseMove.bind(this)),
+            EventBus.subscribe('viewer:escape', this.onEscape.bind(this)),
+            EventBus.subscribe('toolbar:tool:selected', this.onToolSelected.bind(this))
+        ];
+    }
+    
+    onMouseDown(eventData) {
+        if (this.activeCreator) {
+            this.activeCreator.onMouseDown(eventData);
+        }
+    }
+    
+    onToolSelected(eventData) {
+        if (eventData.toolType !== 'select') {
+            this.startCreation(eventData.toolType);
+        } else {
+            this.stopCreation();
+        }
+    }
+    
+    // Cleanup subscriptions
+    destroy() {
+        this.unsubscribers.forEach(unsubscribe => unsubscribe());
+        super.destroy();
+    }
+}
+```
+
+2. UI Panel Event Handling
+
+```javascript
+class EditPanel {
+    constructor() {
+        this.setupEventListeners();
+        this.element = null;
+    }
+    
+    setupEventListeners() {
+        EventBus.subscribe('selection:changed', this.onSelectionChanged.bind(this));
+        EventBus.subscribe('element:updated', this.onElementUpdated.bind(this));
+        EventBus.subscribe('element:deleted', this.onElementDeleted.bind(this));
+    }
+    
+    onSelectionChanged(eventData) {
+        if (eventData.selectedIds.length === 1) {
+            this.showElement(eventData.selectedIds[0]);
+        } else {
+            this.hide();
+        }
+    }
+    
+    onElementUpdated(eventData) {
+        if (this.element && this.element.id === eventData.elementId) {
+            this.refreshDisplay();
+        }
+    }
+    
+    onParameterChange(parameterId, value) {
+        // Update element and publish change
+        ElementModifier.updateElement(this.element.id, { [parameterId]: value });
+        
+        EventBus.publish('ui:parameter:changed', {
+            parameterId: parameterId,
+            value: value,
+            elementId: this.element.id
+        });
+    }
+}
+```
+
+3. Component Event Handling
+
+```javascript
+class BeamCreator extends BaseCreator {
+    constructor(creationManager) {
+        super(creationManager);
+        this.setupEventListeners();
+    }
+    
+    setupEventListeners() {
+        EventBus.subscribe('ui:parameter:changed', this.onParameterChanged.bind(this));
+        EventBus.subscribe('viewer:escape', this.onEscape.bind(this));
+    }
+    
+    onParameterChanged(eventData) {
+        // Update preview when parameters change
+        if (this.preview) {
+            this.updatePreview();
+        }
+    }
+    
+    onEscape() {
+        this.cancel();
+        EventBus.publish('creation:cancelled', { type: 'beam' });
+    }
+}
+```
+
+Event Debugging and Development
+
+Event Tracing
+
+```javascript
+class EventDebugger {
+    static enable() {
+        EventBus.debugMode = true;
+        this.setupTracing();
+    }
+    
+    static setupTracing() {
+        const originalPublish = EventBus.publish;
+        EventBus.publish = function(eventName, data) {
+            console.group(`[EVENT] ${eventName}`);
+            console.log('Data:', data);
+            console.log('Subscribers:', EventBus.getSubscriberCount(eventName));
+            console.trace('Call stack');
+            console.groupEnd();
+            
+            return originalPublish.call(this, eventName, data);
+        };
+    }
+    
+    static logEventStats() {
+        const stats = {};
+        EventBus.getEventNames().forEach(name => {
+            stats[name] = EventBus.getSubscriberCount(name);
+        });
+        
+        console.table(stats);
+    }
+}
+
+// Development helper
+window.debugEvents = EventDebugger;
+```
+
+Event Recording and Replay
+
+```javascript
+class EventRecorder {
+    static events = [];
+    static recording = false;
+    
+    static startRecording() {
+        this.events = [];
+        this.recording = true;
+        
+        const originalPublish = EventBus.publish;
+        EventBus.publish = function(eventName, data) {
+            if (EventRecorder.recording) {
+                EventRecorder.events.push({
+                    timestamp: Date.now(),
+                    event: eventName,
+                    data: JSON.parse(JSON.stringify(data))
+                });
+            }
+            return originalPublish.call(this, eventName, data);
+        };
+    }
+    
+    static stopRecording() {
+        this.recording = false;
+        return this.events;
+    }
+    
+    static replay(events, speed = 1) {
+        const startTime = events[0].timestamp;
+        
+        events.forEach(record => {
+            const delay = (record.timestamp - startTime) / speed;
+            setTimeout(() => {
+                EventBus.publish(record.event, record.data);
+            }, delay);
+        });
+    }
+}
+```
+
+Event Performance Optimization
+
+Event Throttling
+
+```javascript
+class EventThrottler {
+    static throttle(eventName, delay = 16) {
+        let lastCall = 0;
+        let timeoutId = null;
+        
+        const originalPublish = EventBus.publish;
+        
+        EventBus.publish = function(name, data) {
+            if (name === eventName) {
+                const now = Date.now();
+                const timeSinceLastCall = now - lastCall;
+                
+                if (timeSinceLastCall >= delay) {
+                    lastCall = now;
+                    return originalPublish.call(this, name, data);
+                } else {
+                    if (timeoutId) clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        lastCall = Date.now();
+                        originalPublish.call(EventBus, name, data);
+                    }, delay - timeSinceLastCall);
+                }
+            } else {
+                return originalPublish.call(this, name, data);
+            }
+        };
+    }
+}
+
+// Throttle mouse move events
+EventThrottler.throttle('mouse:move', 16); // ~60fps
+```
+
+Event Batching
+
+```javascript
+class EventBatcher {
+    static batches = new Map();
+    
+    static batch(eventName, batchDelay = 16) {
+        if (!this.batches.has(eventName)) {
+            this.batches.set(eventName, {
+                events: [],
+                timeout: null
+            });
+        }
+        
+        const originalPublish = EventBus.publish;
+        
+        EventBus.publish = function(name, data) {
+            if (name === eventName) {
+                const batch = EventBatcher.batches.get(name);
+                batch.events.push(data);
+                
+                if (batch.timeout) clearTimeout(batch.timeout);
+                batch.timeout = setTimeout(() => {
+                    originalPublish.call(EventBus, name + ':batch', batch.events);
+                    batch.events = [];
+                }, batchDelay);
+            } else {
+                return originalPublish.call(this, name, data);
+            }
+        };
+    }
+}
+
+// Batch parameter changes
+EventBatcher.batch('ui:parameter:changed', 100);
+```
+
+Event Best Practices
+
+1. Event Naming Conventions
+
+```javascript
+// Use category:action:detail pattern
+'creation:started'
+'creation:step:completed'
+'selection:changed'
+'element:updated'
+'ui:parameter:changed'
+'grid:elements:rebuilt'
+```
+
+2. Event Data Structure
+
+```javascript
+// Always include relevant context
+EventBus.publish('element:updated', {
+    elementId: 'BEAM_001',           // Primary identifier
+    changes: { profile: 'IPE300' },  // What changed
+    previousValues: { profile: 'IPE200' }, // Previous state
+    timestamp: Date.now(),           // When it happened
+    source: 'user_edit'              // Why it happened
+});
+```
+
+3. Error Handling
+
+```javascript
+class SafeEventHandler {
+    static wrap(callback) {
+        return function(data) {
+            try {
+                return callback(data);
+            } catch (error) {
+                console.error('Event handler error:', error);
+                EventBus.publish('error:handler', {
+                    error: error.message,
+                    stack: error.stack,
+                    event: data
+                });
+            }
+        };
+    }
+}
+
+// Usage
+EventBus.subscribe('element:updated', SafeEventHandler.wrap(this.onElementUpdated.bind(this)));
+```
+
+This event system provides the backbone for TomCAD's modular architecture, enabling clean separation of concerns while maintaining efficient communication between all application components.
+
+2.7 Component Registry Component Registry
+
+Overview
+
+The ComponentRegistry is TomCAD's **type system** that enables runtime registration and instantiation of extensible components. It serves as the foundation for TomCAD's plugin architecture and allows easy addition of new element types, operations, and UI components.
+
+Registry Architecture
+
+Core Registry Class
+
+```javascript
+class ComponentRegistry {
+    // Static storage for different component categories
+    static creators = new Map();
+    static operations = new Map();
+    static exporters = new Map();
+    static importers = new Map();
+    static panels = new Map();
+    
+    // Metadata storage for UI generation
+    static metadata = new Map();
+    static categories = new Map();
+    
+    /**
+     * Register a component in the specified category
+     * @param {string} category - Component category ('creator', 'operation', etc.)
+     * @param {string} type - Unique type identifier
+     * @param {class} componentClass - Component class to register
+     * @param {object} options - Additional registration options
+     */
+    static register(category, type, componentClass, options = {}) {
+        const registry = this.getRegistry(category);
+        
+        // Validate component class
+        this.validateComponent(category, componentClass);
+        
+        // Store component class
+        registry.set(type, componentClass);
+        
+        // Store metadata for UI generation
+        if (componentClass.meta) {
+            this.metadata.set(`${category}:${type}`, {
+                ...componentClass.meta,
+                ...options
+            });
+        }
+        
+        // Update category information
+        this.updateCategory(category, type, componentClass);
+        
+        console.log(`[Registry] Registered ${category}: ${type}`);
+        
+        // Notify system of new registration
+        if (typeof EventBus !== 'undefined') {
+            EventBus.publish('registry:component:registered', {
+                category,
+                type,
+                componentClass,
+                options
+            });
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Get component class by category and type
+     * @param {string} category - Component category
+     * @param {string} type - Component type
+     * @returns {class|null} Component class or null if not found
+     */
+    static get(category, type) {
+        const registry = this.getRegistry(category);
+        return registry.get(type) || null;
+    }
+    
+    /**
+     * Create instance of component
+     * @param {string} category - Component category
+     * @param {string} type - Component type
+     * @param {...any} args - Constructor arguments
+     * @returns {object} Component instance
+     */
+    static create(category, type, ...args) {
+        const ComponentClass = this.get(category, type);
+        if (!ComponentClass) {
+            throw new Error(`Component not found: ${category}:${type}`);
+        }
+        
+        return new ComponentClass(...args);
+    }
+    
+    /**
+     * Get all components in a category
+     * @param {string} category - Component category
+     * @returns {Map} Map of type -> class
+     */
+    static getAll(category) {
+        return new Map(this.getRegistry(category));
+    }
+    
+    /**
+     * Get component types in category
+     * @param {string} category - Component category
+     * @returns {string[]} Array of type names
+     */
+    static getTypes(category) {
+        return Array.from(this.getRegistry(category).keys());
+    }
+    
+    /**
+     * Get component metadata
+     * @param {string} category - Component category
+     * @param {string} type - Component type
+     * @returns {object|null} Metadata object
+     */
+    static getMeta(category, type) {
+        return this.metadata.get(`${category}:${type}`) || null;
+    }
+    
+    /**
+     * Check if component exists
+     * @param {string} category - Component category
+     * @param {string} type - Component type
+     * @returns {boolean} True if component exists
+     */
+    static has(category, type) {
+        return this.getRegistry(category).has(type);
+    }
+    
+    /**
+     * Unregister a component
+     * @param {string} category - Component category
+     * @param {string} type - Component type
+     * @returns {boolean} True if component was removed
+     */
+    static unregister(category, type) {
+        const registry = this.getRegistry(category);
+        const removed = registry.delete(type);
+        
+        if (removed) {
+            this.metadata.delete(`${category}:${type}`);
+            console.log(`[Registry] Unregistered ${category}: ${type}`);
+            
+            if (typeof EventBus !== 'undefined') {
+                EventBus.publish('registry:component:unregistered', {
+                    category,
+                    type
+                });
+            }
+        }
+        
+        return removed;
+    }
+    
+    /**
+     * Get registry map for category
+     * @param {string} category - Component category
+     * @returns {Map} Registry map
+     * @private
+     */
+    static getRegistry(category) {
+        switch (category) {
+            case 'creator': return this.creators;
+            case 'operation': return this.operations;
+            case 'exporter': return this.exporters;
+            case 'importer': return this.importers;
+            case 'panel': return this.panels;
+            default:
+                throw new Error(`Unknown registry category: ${category}`);
+        }
+    }
+    
+    /**
+     * Validate component class structure
+     * @param {string} category - Component category
+     * @param {class} componentClass - Component class to validate
+     * @private
+     */
+    static validateComponent(category, componentClass) {
+        if (typeof componentClass !== 'function') {
+            throw new Error('Component must be a class/constructor function');
+        }
+        
+        // Category-specific validation
+        switch (category) {
+            case 'creator':
+                this.validateCreator(componentClass);
+                break;
+            case 'operation':
+                this.validateOperation(componentClass);
+                break;
+            case 'exporter':
+                this.validateExporter(componentClass);
+                break;
+        }
+    }
+    
+    /**
+     * Update category information
+     * @param {string} category - Component category
+     * @param {string} type - Component type
+     * @param {class} componentClass - Component class
+     * @private
+     */
+    static updateCategory(category, type, componentClass) {
+        if (!this.categories.has(category)) {
+            this.categories.set(category, {
+                count: 0,
+                types: [],
+                displayCategories: new Set()
+            });
+        }
+        
+        const categoryInfo = this.categories.get(category);
+        categoryInfo.count++;
+        categoryInfo.types.push(type);
+        
+        // Track display categories from metadata
+        if (componentClass.meta && componentClass.meta.category) {
+            categoryInfo.displayCategories.add(componentClass.meta.category);
+        }
+    }
+}
+```
+
+Creator Registration
+
+Creator Validation
+
+```javascript
+static validateCreator(componentClass) {
+    // Must have meta property
+    if (!componentClass.meta) {
+        throw new Error('Creator must have static meta property');
+    }
+    
+    const meta = componentClass.meta;
+    
+    // Required meta fields
+    const required = ['type', 'name', 'steps'];
+    required.forEach(field => {
+        if (!meta[field]) {
+            throw new Error(`Creator meta missing required field: ${field}`);
+        }
+    });
+    
+    // Must have getUI static method
+    if (typeof componentClass.getUI !== 'function') {
+        throw new Error('Creator must have static getUI() method');
+    }
+    
+    // Prototype must extend BaseCreator
+    if (!componentClass.prototype || 
+        typeof componentClass.prototype.execute !== 'function') {
+        throw new Error('Creator must extend BaseCreator and implement execute()');
+    }
+}
+```
+
+Creator Registration Example
+
+```javascript
+// Define creator class
+class CustomBeamCreator extends BaseCreator {
+    static meta = {
+        type: 'custom_beam',
+        name: 'Custom Beam',
+        icon: 'custom-beam-icon',
+        category: 'structural',
+        description: 'Create custom beam with special properties',
+        steps: ['start_point', 'end_point', 'properties'],
+        version: '1.0.0',
+        author: 'Plugin Developer'
+    };
+    
+    static getUI() {
+        return [
+            { id: 'profile', type: 'profile', label: 'Steel Profile', value: 'IPE200' },
+            { id: 'material', type: 'material', label: 'Material', value: 'S355JR' },
+            { id: 'customProperty', type: 'number', label: 'Custom Value', value: 100 }
+        ];
+    }
+    
+    static getEditUI(elementData) {
+        return this.getUI(); // Same UI for editing
+    }
+    
+    execute() {
+        // Implementation...
+    }
+}
+
+// Register creator
+ComponentRegistry.register('creator', 'custom_beam', CustomBeamCreator, {
+    priority: 1,
+    experimental: false
+});
+```
+
+Operation Registration
+
+Operation Validation
+
+```javascript
+static validateOperation(componentClass) {
+    if (!componentClass.meta) {
+        throw new Error('Operation must have static meta property');
+    }
+    
+    const meta = componentClass.meta;
+    const required = ['type', 'name', 'targetTypes'];
+    required.forEach(field => {
+        if (!meta[field]) {
+            throw new Error(`Operation meta missing required field: ${field}`);
+        }
+    });
+    
+    // Must have apply method
+    if (typeof componentClass.prototype.apply !== 'function') {
+        throw new Error('Operation must implement apply() method');
+    }
+}
+```
+
+Operation Registration Example
+
+```javascript
+class AdvancedHoleOperation extends BaseOperation {
+    static meta = {
+        type: 'advanced_hole',
+        name: 'Advanced Hole',
+        description: 'Create holes with custom shapes and parameters',
+        targetTypes: ['beam', 'column', 'plate'],
+        category: 'cutting'
+    };
+    
+    static getUI() {
+        return [
+            { id: 'shape', type: 'dropdown', label: 'Shape', 
+              options: ['circle', 'square', 'slot'], value: 'circle' },
+            { id: 'diameter', type: 'number', label: 'Diameter (mm)', value: 20 },
+            { id: 'depth', type: 'number', label: 'Depth (mm)', value: 100 }
+        ];
+    }
+    
+    apply(geometry) {
+        // Implementation...
+    }
+}
+
+ComponentRegistry.register('operation', 'advanced_hole', AdvancedHoleOperation);
+```
+
+UI Generation from Registry
+
+Toolbar Generation
+
+```javascript
+class ToolbarGenerator {
+    static generateFromRegistry() {
+        const toolbar = {
+            categories: {},
+            tools: []
+        };
+        
+        // Generate creator tools
+        ComponentRegistry.getAll('creator').forEach((CreatorClass, type) => {
+            const meta = ComponentRegistry.getMeta('creator', type);
+            
+            if (meta) {
+                const tool = {
+                    id: type,
+                    name: meta.name,
+                    icon: meta.icon || 'default-icon',
+                    category: meta.category || 'misc',
+                    description: meta.description || '',
+                    type: 'creator'
+                };
+                
+                toolbar.tools.push(tool);
+                
+                // Group by category
+                if (!toolbar.categories[tool.category]) {
+                    toolbar.categories[tool.category] = [];
+                }
+                toolbar.categories[tool.category].push(tool);
+            }
+        });
+        
+        return toolbar;
+    }
+    
+    static generateContextMenu(elementType) {
+        const menu = [];
+        
+        // Get applicable operations
+        ComponentRegistry.getAll('operation').forEach((OperationClass, type) => {
+            const meta = ComponentRegistry.getMeta('operation', type);
+            
+            if (meta && meta.targetTypes.includes(elementType)) {
+                menu.push({
+                    id: type,
+                    name: meta.name,
+                    icon: meta.icon,
+                    action: () => this.applyOperation(type, elementType)
+                });
+            }
+        });
+        
+        return menu;
+    }
+}
+```
+
+Dynamic Panel Generation
+
+```javascript
+class PanelGenerator {
+    static generateCreationPanel(creatorType) {
+        const CreatorClass = ComponentRegistry.get('creator', creatorType);
+        if (!CreatorClass) return null;
+        
+        const ui = CreatorClass.getUI();
+        const meta = ComponentRegistry.getMeta('creator', creatorType);
+        
+        return {
+            title: meta.name,
+            description: meta.description,
+            fields: ui.map(field => ({
+                ...field,
+                onChange: (value) => this.handleParameterChange(field.id, value)
+            }))
+        };
+    }
+    
+    static generateEditPanel(elementData) {
+        const CreatorClass = ComponentRegistry.get('creator', elementData.type);
+        if (!CreatorClass || typeof CreatorClass.getEditUI !== 'function') {
+            return null;
+        }
+        
+        const ui = CreatorClass.getEditUI(elementData);
+        
+        return {
+            title: `Edit ${elementData.type}`,
+            elementId: elementData.id,
+            fields: ui.map(field => ({
+                ...field,
+                value: elementData[field.id] || field.value,
+                onChange: (value) => this.handleElementUpdate(elementData.id, field.id, value)
+            }))
+        };
+    }
+}
+```
+
+Registry Querying and Filtering
+
+Advanced Queries
+
+```javascript
+class RegistryQuery {
+    static findByCategory(registryCategory, displayCategory) {
+        const results = [];
+        
+        ComponentRegistry.getAll(registryCategory).forEach((ComponentClass, type) => {
+            const meta = ComponentRegistry.getMeta(registryCategory, type);
+            
+            if (meta && meta.category === displayCategory) {
+                results.push({
+                    type,
+                    class: ComponentClass,
+                    meta
+                });
+            }
+        });
+        
+        return results;
+    }
+    
+    static findCompatibleOperations(elementType) {
+        const compatible = [];
+        
+        ComponentRegistry.getAll('operation').forEach((OperationClass, type) => {
+            const meta = ComponentRegistry.getMeta('operation', type);
+            
+            if (meta && meta.targetTypes.includes(elementType)) {
+                compatible.push({
+                    type,
+                    class: OperationClass,
+                    meta
+                });
+            }
+        });
+        
+        return compatible.sort((a, b) => a.meta.name.localeCompare(b.meta.name));
+    }
+    
+    static search(query, category = null) {
+        const results = [];
+        const searchTerm = query.toLowerCase();
+        
+        const categories = category ? [category] : ['creator', 'operation', 'exporter'];
+        
+        categories.forEach(cat => {
+            ComponentRegistry.getAll(cat).forEach((ComponentClass, type) => {
+                const meta = ComponentRegistry.getMeta(cat, type);
+                
+                if (meta) {
+                    const searchableText = [
+                        meta.name,
+                        meta.description,
+                        meta.category,
+                        type
+                    ].join(' ').toLowerCase();
+                    
+                    if (searchableText.includes(searchTerm)) {
+                        results.push({
+                            category: cat,
+                            type,
+                            class: ComponentClass,
+                            meta,
+                            relevance: this.calculateRelevance(searchableText, searchTerm)
+                        });
+                    }
+                }
+            });
+        });
+        
+        return results.sort((a, b) => b.relevance - a.relevance);
+    }
+    
+    static calculateRelevance(text, term) {
+        let relevance = 0;
+        
+        // Exact match in name gets highest score
+        if (text.includes(term)) relevance += 10;
+        
+        // Word boundary matches get medium score
+        const words = text.split(' ');
+        words.forEach(word => {
+            if (word.includes(term)) relevance += 5;
+        });
+        
+        return relevance;
+    }
+}
+```
+
+Registry Events and Hooks
+
+Registration Hooks
+
+```javascript
+class RegistryHooks {
+    static hooks = {
+        beforeRegister: [],
+        afterRegister: [],
+        beforeUnregister: [],
+        afterUnregister: []
+    };
+    
+    static addHook(hookName, callback) {
+        if (this.hooks[hookName]) {
+            this.hooks[hookName].push(callback);
+        }
+    }
+    
+    static executeHooks(hookName, data) {
+        const hooks = this.hooks[hookName] || [];
+        hooks.forEach(callback => {
+            try {
+                callback(data);
+            } catch (error) {
+                console.error(`Hook error in ${hookName}:`, error);
+            }
+        });
+    }
+}
+
+// Enhanced register method with hooks
+const originalRegister = ComponentRegistry.register;
+ComponentRegistry.register = function(category, type, componentClass, options = {}) {
+    const data = { category, type, componentClass, options };
+    
+    // Execute before hooks
+    RegistryHooks.executeHooks('beforeRegister', data);
+    
+    // Call original register
+    const result = originalRegister.call(this, category, type, componentClass, options);
+    
+    // Execute after hooks
+    RegistryHooks.executeHooks('afterRegister', data);
+    
+    return result;
+};
+```
+
+Registry Persistence and Loading
+
+Configuration Persistence
+
+```javascript
+class RegistryConfig {
+    static save() {
+        const config = {
+            version: '1.0.0',
+            timestamp: Date.now(),
+            categories: {}
+        };
+        
+        ['creator', 'operation', 'exporter'].forEach(category => {
+            config.categories[category] = {};
+            
+            ComponentRegistry.getAll(category).forEach((ComponentClass, type) => {
+                const meta = ComponentRegistry.getMeta(category, type);
+                config.categories[category][type] = {
+                    enabled: true,
+                    meta: meta,
+                    priority: meta.priority || 0
+                };
+            });
+        });
+        
+        localStorage.setItem('tomcad_registry_config', JSON.stringify(config));
+        return config;
+    }
+    
+    static load() {
+        const configStr = localStorage.getItem('tomcad_registry_config');
+        if (!configStr) return null;
+        
+        try {
+            return JSON.parse(configStr);
+        } catch (error) {
+            console.error('Failed to load registry config:', error);
+            return null;
+        }
+    }
+    
+    static applyConfig(config) {
+        // Disable components that are disabled in config
+        Object.entries(config.categories).forEach(([category, types]) => {
+            Object.entries(types).forEach(([type, typeConfig]) => {
+                if (!typeConfig.enabled) {
+                    ComponentRegistry.unregister(category, type);
+                }
+            });
+        });
+    }
+}
+```
+
+Development Tools
+
+Registry Inspector
+
+```javascript
+class RegistryInspector {
+    static inspect() {
+        const report = {
+            summary: {},
+            details: {},
+            issues: []
+        };
+        
+        ['creator', 'operation', 'exporter'].forEach(category => {
+            const registry = ComponentRegistry.getAll(category);
+            report.summary[category] = registry.size;
+            report.details[category] = {};
+            
+            registry.forEach((ComponentClass, type) => {
+                const meta = ComponentRegistry.getMeta(category, type);
+                report.details[category][type] = {
+                    class: ComponentClass.name,
+                    meta: meta,
+                    hasUI: typeof ComponentClass.getUI === 'function',
+                    hasEditUI: typeof ComponentClass.getEditUI === 'function'
+                };
+                
+                // Check for common issues
+                if (!meta) {
+                    report.issues.push(`${category}:${type} missing metadata`);
+                }
+                
+                if (category === 'creator' && typeof ComponentClass.getUI !== 'function') {
+                    report.issues.push(`${category}:${type} missing getUI() method`);
+                }
+            });
+        });
+        
+        console.table(report.summary);
+        console.log('Full Report:', report);
+        
+        return report;
+    }
+    
+    static validateAll() {
+        const issues = [];
+        
+        ['creator', 'operation', 'exporter'].forEach(category => {
+            ComponentRegistry.getAll(category).forEach((ComponentClass, type) => {
+                try {
+                    ComponentRegistry.validateComponent(category, ComponentClass);
+                } catch (error) {
+                    issues.push({
+                        category,
+                        type,
+                        error: error.message
+                    });
+                }
+            });
+        });
+        
+        if (issues.length > 0) {
+            console.error('Registry validation issues:', issues);
+        } else {
+            console.log('All components valid ✓');
+        }
+        
+        return issues;
+    }
+}
+
+// Development helpers
+window.registry = {
+    inspect: RegistryInspector.inspect,
+    validate: RegistryInspector.validateAll,
+    query: RegistryQuery,
+    config: RegistryConfig
+};
+```
+
+The ComponentRegistry serves as the backbone of TomCAD's extensible architecture, enabling easy addition of new functionality while maintaining clean separation of concerns and automatic UI generation.
+
+2.8 Creator Pattern Creator Pattern
+
+Overview
+
+The Creator Pattern in TomCAD provides a **unified interface** for creating different types of structural elements. Each creator handles the complete workflow from user interaction to element generation, ensuring consistency across all element types while allowing for type-specific behavior.
+
+Creator Architecture
+
+Base Creator Interface
+
+```javascript
+class BaseCreator {
+    // Static metadata for registration and UI generation
+    static meta = {
+        type: '',           // Unique type identifier (e.g., 'beam', 'column')
+        name: '',           // Display name for UI
+        icon: '',           // Icon identifier for toolbar
+        category: '',       // Toolbar category grouping
+        description: '',    // Tooltip description
+        steps: [],          // Array of creation step names
+        version: '1.0.0',   // Creator version
+        author: ''          // Creator author/plugin name
+    };
+    
+    /**
+     * Static UI configuration method
+     * @returns {Array} Array of UI control definitions
+     */
+    static getUI() {
+        return []; // Override in subclasses
+    }
+    
+    /**
+     * Static edit UI configuration method
+     * @param {Object} elementData - Element data for editing
+     * @returns {Array} Array of edit control definitions
+     */
+    static getEditUI(elementData) {
+        return this.getUI(); // Default: same as creation UI
+    }
+    
+    /**
+     * Get control points for element manipulation
+     * @param {Object} elementData - Element data
+     * @returns {Array} Array of control point definitions
+     */
+    static getControlPoints(elementData) {
+        return []; // Override in subclasses
+    }
+    
+    /**
+     * Validate element data
+     * @param {Object} elementData - Element data to validate
+     * @returns {Object} Validation result {valid: boolean, errors: Array}
+     */
+    static validate(elementData) {
+        return { valid: true, errors: [] };
+    }
+    
+    // Instance properties and methods
+    constructor(creationManager) {
+        this.creationManager = creationManager;
+        this.currentStep = 0;
+        this.stepData = {};
+        this.parameters = {};
+        this.preview = null;
+        this.isActive = false;
+        
+        this.initialize();
+    }
+    
+    /**
+     * Initialize creator instance
+     */
+    initialize() {
+        this.reset();
+        this.setupUI();
+        this.isActive = true;
+    }
+    
+    /**
+     * Reset creator to initial state
+     */
+    reset() {
+        this.currentStep = 0;
+        this.stepData = {};
+        this.clearPreview();
+        
+        // Initialize parameters with default values
+        const ui = this.constructor.getUI();
+        ui.forEach(control => {
+            if (control.value !== undefined) {
+                this.parameters[control.id] = control.value;
+            }
+        });
+    }
+    
+    /**
+     * Handle mouse down events
+     * @param {Object} event - Mouse event data
+     */
+    onMouseDown(event) {
+        if (!this.isActive) return;
+        
+        const currentStepName = this.constructor.meta.steps[this.currentStep];
+        this.handleStep(currentStepName, event);
+    }
+    
+    /**
+     * Handle mouse move events
+     * @param {Object} event - Mouse event data
+     */
+    onMouseMove(event) {
+        if (!this.isActive) return;
+        this.updatePreview(event);
+    }
+    
+    /**
+     * Handle mouse up events
+     * @param {Object} event - Mouse event data
+     */
+    onMouseUp(event) {
+        // Override in subclasses if needed
+    }
+    
+    /**
+     * Handle keyboard events
+     * @param {Object} event - Keyboard event data
+     */
+    onKeyDown(event) {
+        if (event.key === 'Escape') {
+            this.cancel();
+        } else if (event.key === 'Enter') {
+            this.completeCurrentStep();
+        }
+    }
+    
+    /**
+     * Handle creation step
+     * @param {string} stepName - Name of current step
+     * @param {Object} event - Event data
+     */
+    handleStep(stepName, event) {
+        // Override in subclasses
+        throw new Error('handleStep() must be implemented in subclass');
+    }
+    
+    /**
+     * Execute element creation
+     */
+    execute() {
+        // Override in subclasses
+        throw new Error('execute() must be implemented in subclass');
+    }
+    
+    /**
+     * Update preview visualization
+     * @param {Object} event - Event data for preview update
+     */
+    updatePreview(event) {
+        // Override in subclasses if preview is needed
+    }
+    
+    /**
+     * Clear preview visualization
+     */
+    clearPreview() {
+        if (this.preview) {
+            this.creationManager.removePreview(this.preview);
+            this.preview = null;
+        }
+    }
+    
+    /**
+     * Complete current creation step
+     */
+    completeCurrentStep() {
+        if (this.currentStep < this.constructor.meta.steps.length - 1) {
+            this.currentStep++;
+            this.onStepChanged();
+        } else {
+            this.execute();
+        }
+    }
+    
+    /**
+     * Go back to previous step
+     */
+    previousStep() {
+        if (this.currentStep > 0) {
+            this.currentStep--;
+            this.onStepChanged();
+        }
+    }
+    
+    /**
+     * Handle step change
+     */
+    onStepChanged() {
+        EventBus.publish('creation:step:changed', {
+            creator: this,
+            currentStep: this.currentStep,
+            stepName: this.constructor.meta.steps[this.currentStep]
+        });
+    }
+    
+    /**
+     * Cancel creation
+     */
+    cancel() {
+        this.clearPreview();
+        this.isActive = false;
+        
+        EventBus.publish('creation:cancelled', {
+            type: this.constructor.meta.type
+        });
+    }
+    
+    /**
+     * Check if should restart after creation
+     * @returns {boolean}
+     */
+    shouldRestart() {
+        return true; // Default: continue creating same type
+    }
+    
+    /**
+     * Get parameter value
+     * @param {string} parameterId - Parameter identifier
+     * @returns {*} Parameter value
+     */
+    getParameterValue(parameterId) {
+        return this.parameters[parameterId];
+    }
+    
+    /**
+     * Set parameter value
+     * @param {string} parameterId - Parameter identifier
+     * @param {*} value - New value
+     */
+    setParameterValue(parameterId, value) {
+        this.parameters[parameterId] = value;
+        this.onParameterChanged(parameterId, value);
+    }
+    
+    /**
+     * Handle parameter change
+     * @param {string} parameterId - Parameter identifier
+     * @param {*} value - New value
+     */
+    onParameterChanged(parameterId, value) {
+        // Update preview if it exists
+        if (this.preview) {
+            this.updatePreview();
+        }
+        
+        EventBus.publish('creation:parameter:changed', {
+            creator: this,
+            parameterId,
+            value
+        });
+    }
+    
+    /**
+     * Setup UI for creator
+     */
+    setupUI() {
+        const ui = this.constructor.getUI();
+        
+        EventBus.publish('ui:creator:setup', {
+            type: this.constructor.meta.type,
+            ui: ui,
+            meta: this.constructor.meta
+        });
+    }
+    
+    /**
+     * Clean up creator resources
+     */
+    destroy() {
+        this.clearPreview();
+        this.isActive = false;
+    }
+}
+```
+
+Creator Implementation Examples
+
+Simple Creator - Column
+
+```javascript
+class ColumnCreator extends BaseCreator {
+    static meta = {
+        type: 'column',
+        name: 'Column',
+        icon: 'column-icon',
+        category: 'structural',
+        description: 'Create vertical structural columns',
+        steps: ['position', 'height', 'properties']
+    };
+    
+    static getUI() {
+        return [
+            { 
+                id: 'profile', 
+                type: 'profile', 
+                label: 'Steel Profile', 
+                value: 'HEA200',
+                filter: 'columns' // Only show profiles suitable for columns
+            },
+            { 
+                id: 'material', 
+                type: 'material', 
+                label: 'Material', 
+                value: 'S355JR' 
+            },
+            { 
+                id: 'height', 
+                type: 'number', 
+                label: 'Height (mm)', 
+                value: 3000, 
+                min: 100, 
+                max: 15000 
+            },
+            { 
+                id: 'rotation', 
+                type: 'number', 
+                label: 'Rotation (°)', 
+                value: 0, 
+                min: 0, 
+                max: 360 
+            }
+        ];
+    }
+    
+    static getControlPoints(elementData) {
+        return [
+            {
+                id: 'base',
+                position: elementData.position,
+                type: 'move',
+                constraint: 'xy' // Only allow XY movement
+            },
+            {
+                id: 'top',
+                position: [
+                    elementData.position[0],
+                    elementData.position[1],
+                    elementData.position[2] + elementData.height
+                ],
+                type: 'resize',
+                constraint: 'z' // Only allow Z movement
+            }
+        ];
+    }
+    
+    handleStep(stepName, event) {
+        const worldPos = this.creationManager.getWorldPosition(event);
+        
+        switch (stepName) {
+            case 'position':
+                this.stepData.position = worldPos;
+                this.completeCurrentStep();
+                break;
+                
+            case 'height':
+                // Height is set via UI parameter
+                this.completeCurrentStep();
+                break;
+                
+            case 'properties':
+                // Properties are set via UI
+                this.execute();
+                break;
+        }
+    }
+    
+    updatePreview(event) {
+        if (this.currentStep === 0) return; // No preview before position is set
+        
+        const previewData = {
+            type: 'column',
+            position: this.stepData.position,
+            height: this.getParameterValue('height'),
+            profile: this.getParameterValue('profile'),
+            material: this.getParameterValue('material'),
+            rotation: this.getParameterValue('rotation')
+        };
+        
+        this.preview = this.creationManager.updatePreview(this.preview, previewData);
+    }
+    
+    execute() {
+        const elementData = {
+            type: 'column',
+            position: this.stepData.position,
+            height: this.getParameterValue('height'),
+            profile: this.getParameterValue('profile'),
+            material: this.getParameterValue('material'),
+            rotation: this.getParameterValue('rotation')
+        };
+        
+        // Validate before creation
+        const validation = this.constructor.validate(elementData);
+        if (!validation.valid) {
+            EventBus.publish('ui:error', {
+                message: 'Invalid column parameters',
+                errors: validation.errors
+            });
+            return;
+        }
+        
+        this.creationManager.createElement(elementData);
+        
+        if (this.shouldRestart()) {
+            this.reset();
+        }
+    }
+    
+    static validate(elementData) {
+        const errors = [];
+        
+        if (!elementData.position || elementData.position.length !== 3) {
+            errors.push('Invalid position');
+        }
+        
+        if (!elementData.height || elementData.height <= 0) {
+            errors.push('Height must be positive');
+        }
+        
+        if (elementData.height > 15000) {
+            errors.push('Height exceeds maximum (15000mm)');
+        }
+        
+        if (!elementData.profile) {
+            errors.push('Profile is required');
+        }
+        
+        return {
+            valid: errors.length === 0,
+            errors: errors
+        };
+    }
+}
+
+// Register the creator
+ComponentRegistry.register('creator', 'column', ColumnCreator);
+```
+
+Complex Creator - Beam
+
+```javascript
+class BeamCreator extends BaseCreator {
+    static meta = {
+        type: 'beam',
+        name: 'Beam',
+        icon: 'beam-icon',
+        category: 'structural',
+        description: 'Create horizontal structural beams',
+        steps: ['start_point', 'end_point', 'properties']
+    };
+    
+    static getUI() {
+        return [
+            { 
+                id: 'profile', 
+                type: 'profile', 
+                label: 'Steel Profile', 
+                value: 'IPE200',
+                filter: 'beams'
+            },
+            { 
+                id: 'material', 
+                type: 'material', 
+                label: 'Material', 
+                value: 'S355JR' 
+            },
+            { 
+                id: 'rotation', 
+                type: 'number', 
+                label: 'Rotation (°)', 
+                value: 0 
+            },
+            {
+                id: 'attachToGrid',
+                type: 'checkbox',
+                label: 'Attach to Grid',
+                value: true
+            }
+        ];
+    }
+    
+    static getControlPoints(elementData) {
+        return [
+            {
+                id: 'start',
+                position: elementData.startPoint,
+                type: 'move',
+                constraint: 'none'
+            },
+            {
+                id: 'end',
+                position: elementData.endPoint,
+                type: 'move',
+                constraint: 'none'
+            },
+            {
+                id: 'middle',
+                position: [
+                    (elementData.startPoint[0] + elementData.endPoint[0]) / 2,
+                    (elementData.startPoint[1] + elementData.endPoint[1]) / 2,
+                    (elementData.startPoint[2] + elementData.endPoint[2]) / 2
+                ],
+                type: 'move',
+                constraint: 'perpendicular' // Move perpendicular to beam axis
+            }
+        ];
+    }
+    
+    handleStep(stepName, event) {
+        const worldPos = this.creationManager.getWorldPosition(event);
+        
+        // Apply grid snapping if enabled
+        if (this.getParameterValue('attachToGrid')) {
+            const snappedPos = this.creationManager.snapToGrid(worldPos);
+            if (snappedPos.snapped) {
+                worldPos[0] = snappedPos.point[0];
+                worldPos[1] = snappedPos.point[1];
+                worldPos[2] = snappedPos.point[2];
+            }
+        }
+        
+        switch (stepName) {
+            case 'start_point':
+                this.stepData.startPoint = worldPos;
+                this.completeCurrentStep();
+                break;
+                
+            case 'end_point':
+                this.stepData.endPoint = worldPos;
+                this.completeCurrentStep();
+                break;
+                
+            case 'properties':
+                this.execute();
+                break;
+        }
+    }
+    
+    updatePreview(event) {
+        if (this.currentStep === 0) return;
+        
+        let endPoint = this.stepData.endPoint;
+        
+        // If we're still in step 1, use mouse position as end point
+        if (this.currentStep === 1 && event) {
+            endPoint = this.creationManager.getWorldPosition(event);
+            
+            if (this.getParameterValue('attachToGrid')) {
+                const snappedPos = this.creationManager.snapToGrid(endPoint);
+                if (snappedPos.snapped) {
+                    endPoint = snappedPos.point;
+                }
+            }
+        }
+        
+        if (!endPoint) return;
+        
+        const previewData = {
+            type: 'beam',
+            startPoint: this.stepData.startPoint,
+            endPoint: endPoint,
+            profile: this.getParameterValue('profile'),
+            material: this.getParameterValue('material'),
+            rotation: this.getParameterValue('rotation')
+        };
+        
+        this.preview = this.creationManager.updatePreview(this.preview, previewData);
+    }
+    
+    execute() {
+        const elementData = {
+            type: 'beam',
+            startPoint: this.stepData.startPoint,
+            endPoint: this.stepData.endPoint,
+            profile: this.getParameterValue('profile'),
+            material: this.getParameterValue('material'),
+            rotation: this.getParameterValue('rotation')
+        };
+        
+        // Add grid attachments if enabled
+        if (this.getParameterValue('attachToGrid')) {
+            elementData.gridAttachments = {
+                start: this.creationManager.getGridAttachment(elementData.startPoint),
+                end: this.creationManager.getGridAttachment(elementData.endPoint)
+            };
+        }
+        
+        const validation = this.constructor.validate(elementData);
+        if (!validation.valid) {
+            EventBus.publish('ui:error', {
+                message: 'Invalid beam parameters',
+                errors: validation.errors
+            });
+            return;
+        }
+        
+        this.creationManager.createElement(elementData);
+        
+        if (this.shouldRestart()) {
+            this.reset();
+        }
+    }
+    
+    static validate(elementData) {
+        const errors = [];
+        
+        if (!elementData.startPoint || elementData.startPoint.length !== 3) {
+            errors.push('Invalid start point');
+        }
+        
+        if (!elementData.endPoint || elementData.endPoint.length !== 3) {
+            errors.push('Invalid end point');
+        }
+        
+        // Check beam length
+        if (elementData.startPoint && elementData.endPoint) {
+            const dx = elementData.endPoint[0] - elementData.startPoint[0];
+            const dy = elementData.endPoint[1] - elementData.startPoint[1];
+            const dz = elementData.endPoint[2] - elementData.startPoint[2];
+            const length = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            
+            if (length < 100) {
+                errors.push('Beam length too short (minimum 100mm)');
+            }
+            
+            if (length > 20000) {
+                errors.push('Beam length too long (maximum 20000mm)');
+            }
+        }
+        
+        if (!elementData.profile) {
+            errors.push('Profile is required');
+        }
+        
+        return {
+            valid: errors.length === 0,
+            errors: errors
+        };
+    }
+}
+
+ComponentRegistry.register('creator', 'beam', BeamCreator);
+```
+
+Advanced Creator - Stairs
+
+```javascript
+class StairsCreator extends BaseCreator {
+    static meta = {
+        type: 'stairs',
+        name: 'Steel Stairs',
+        icon: 'stairs-icon',
+        category: 'structural',
+        description: 'Create steel stairs with railings and platforms',
+        steps: ['start_point', 'end_point', 'configuration', 'preview']
+    };
+    
+    static getUI() {
+        return [
+            { 
+                id: 'steps', 
+                type: 'number', 
+                label: 'Number of Steps', 
+                value: 12, 
+                min: 3, 
+                max: 30 
+            },
+            { 
+                id: 'width', 
+                type: 'number', 
+                label: 'Width (mm)', 
+                value: 1000, 
+                min: 600, 
+                max: 2000 
+            },
+            { 
+                id: 'treadDepth', 
+                type: 'number', 
+                label: 'Tread Depth (mm)', 
+                value: 250, 
+                min: 200, 
+                max: 400 
+            },
+            { 
+                id: 'riserHeight', 
+                type: 'number', 
+                label: 'Riser Height (mm)', 
+                value: 175, 
+                min: 100, 
+                max: 220 
+            },
+            { 
+                id: 'includeRailing', 
+                type: 'checkbox', 
+                label: 'Include Railings', 
+                value: true 
+            },
+            { 
+                id: 'includePlatform', 
+                type: 'checkbox', 
+                label: 'Include Landing Platform', 
+                value: false 
+            },
+            {
+                id: 'railingHeight',
+                type: 'number',
+                label: 'Railing Height (mm)',
+                value: 1000,
+                min: 800,
+                max: 1200,
+                dependsOn: 'includeRailing'
+            }
+        ];
+    }
+    
+    handleStep(stepName, event) {
+        const worldPos = this.creationManager.getWorldPosition(event);
+        
+        switch (stepName) {
+            case 'start_point':
+                this.stepData.startPoint = worldPos;
+                this.completeCurrentStep();
+                break;
+                
+            case 'end_point':
+                this.stepData.endPoint = worldPos;
+                this.calculateStairsGeometry();
+                this.completeCurrentStep();
+                break;
+                
+            case 'configuration':
+                // Parameters are set via UI
+                this.updateStairsGeometry();
+                this.completeCurrentStep();
+                break;
+                
+            case 'preview':
+                this.execute();
+                break;
+        }
+    }
+    
+    calculateStairsGeometry() {
+        const start = this.stepData.startPoint;
+        const end = this.stepData.endPoint;
+        
+        const totalRise = end[2] - start[2];
+        const totalRun = Math.sqrt(
+            Math.pow(end[0] - start[0], 2) + 
+            Math.pow(end[1] - start[1], 2)
+        );
+        
+        // Calculate optimal step count
+        const optimalSteps = Math.round(totalRise / 175); // 175mm ideal riser
+        const actualRiserHeight = totalRise / optimalSteps;
+        const actualTreadDepth = totalRun / optimalSteps;
+        
+        // Update UI parameters with calculated values
+        this.setParameterValue('steps', optimalSteps);
+        this.setParameterValue('riserHeight', actualRiserHeight);
+        this.setParameterValue('treadDepth', actualTreadDepth);
+        
+        this.stepData.geometry = {
+            totalRise,
+            totalRun,
+            angle: Math.atan2(totalRise, totalRun) * 180 / Math.PI
+        };
+    }
+    
+    updateStairsGeometry() {
+        // Recalculate based on current parameters
+        const steps = this.getParameterValue('steps');
+        const riserHeight = this.getParameterValue('riserHeight');
+        const treadDepth = this.getParameterValue('treadDepth');
+        
+        this.stepData.geometry = {
+            ...this.stepData.geometry,
+            actualSteps: steps,
+            actualRiserHeight: riserHeight,
+            actualTreadDepth: treadDepth
+        };
+    }
+    
+    updatePreview(event) {
+        if (this.currentStep < 2) return;
+        
+        const previewData = {
+            type: 'stairs',
+            startPoint: this.stepData.startPoint,
+            endPoint: this.stepData.endPoint,
+            steps: this.getParameterValue('steps'),
+            width: this.getParameterValue('width'),
+            treadDepth: this.getParameterValue('treadDepth'),
+            riserHeight: this.getParameterValue('riserHeight'),
+            includeRailing: this.getParameterValue('includeRailing'),
+            includePlatform: this.getParameterValue('includePlatform'),
+            railingHeight: this.getParameterValue('railingHeight'),
+            geometry: this.stepData.geometry
+        };
+        
+        this.preview = this.creationManager.updatePreview(this.preview, previewData);
+    }
+    
+    execute() {
+        const elementData = {
+            type: 'stairs',
+            startPoint: this.stepData.startPoint,
+            endPoint: this.stepData.endPoint,
+            steps: this.getParameterValue('steps'),
+            width: this.getParameterValue('width'),
+            treadDepth: this.getParameterValue('treadDepth'),
+            riserHeight: this.getParameterValue('riserHeight'),
+            includeRailing: this.getParameterValue('includeRailing'),
+            includePlatform: this.getParameterValue('includePlatform'),
+            railingHeight: this.getParameterValue('railingHeight'),
+            geometry: this.stepData.geometry
+        };
+        
+        const validation = this.constructor.validate(elementData);
+        if (!validation.valid) {
+            EventBus.publish('ui:error', {
+                message: 'Invalid stairs parameters',
+                errors: validation.errors
+            });
+            return;
+        }
+        
+        this.creationManager.createElement(elementData);
+        
+        if (this.shouldRestart()) {
+            this.reset();
+        }
+    }
+    
+    static validate(elementData) {
+        const errors = [];
+        
+        // Basic validation
+        if (!elementData.startPoint || !elementData.endPoint) {
+            errors.push('Start and end points are required');
+        }
+        
+        // Stairs-specific validation
+        if (elementData.steps < 3) {
+            errors.push('Minimum 3 steps required');
+        }
+        
+        if (elementData.riserHeight > 220) {
+            errors.push('Riser height exceeds building code maximum (220mm)');
+        }
+        
+        if (elementData.treadDepth < 200) {
+            errors.push('Tread depth below building code minimum (200mm)');
+        }
+        
+        // Geometry validation
+        if (elementData.geometry) {
+            const angle = elementData.geometry.angle;
+            if (angle > 45) {
+                errors.push('Stairs angle too steep (maximum 45°)');
+            }
+            if (angle < 15) {
+                errors.push('Stairs angle too shallow (minimum 15°)');
+            }
+        }
+        
+        return {
+            valid: errors.length === 0,
+            errors: errors
+        };
+    }
+}
+
+ComponentRegistry.register('creator', 'stairs', StairsCreator);
+```
+
+Creator Lifecycle Management
+
+Creation Manager Integration
+
+```javascript
+class CreationManager {
+    constructor(core) {
+        this.core = core;
+        this.activeCreator = null;
+        this.creatorHistory = [];
+    }
+    
+    startCreation(type) {
+        // Stop current creation if active
+        if (this.activeCreator) {
+            this.stopCreation();
+        }
+        
+        // Get creator class from registry
+        const CreatorClass = ComponentRegistry.get('creator', type);
+        if (!CreatorClass) {
+            throw new Error(`Unknown creator type: ${type}`);
+        }
+        
+        // Create and initialize creator
+        this.activeCreator = new CreatorClass(this);
+        this.creatorHistory.push({
+            type: type,
+            startTime: Date.now(),
+            creator: this.activeCreator
+        });
+        
+        EventBus.publish('creation:started', {
+            type: type,
+            creator: this.activeCreator
+        });
+        
+        return this.activeCreator;
+    }
+    
+    stopCreation() {
+        if (this.activeCreator) {
+            this.activeCreator.destroy();
+            
+            EventBus.publish('creation:stopped', {
+                type: this.activeCreator.constructor.meta.type
+            });
+            
+            this.activeCreator = null;
+        }
+    }
+    
+    createElement(elementData) {
+        // Validate element data
+        const CreatorClass = ComponentRegistry.get('creator', elementData.type);
+        if (CreatorClass && typeof CreatorClass.validate === 'function') {
+            const validation = CreatorClass.validate(elementData);
+            if (!validation.valid) {
+                throw new Error(`Invalid element data: ${validation.errors.join(', ')}`);
+            }
+        }
+        
+        // Create element through ElementFactory
+        const element = ElementFactory.createElement(elementData);
+        
+        EventBus.publish('element:created', {
+            elementId: element.id,
+            elementData: element,
+            creator: this.activeCreator?.constructor.meta.type
+        });
+        
+        return element;
+    }
+}
+```
+
+Creator Extension Patterns
+
+Plugin Creator Example
+
+```javascript
+// Plugin creator extending base functionality
+class CustomConnectionCreator extends BaseCreator {
+    static meta = {
+        type: 'custom_connection',
+        name: 'Custom Connection',
+        icon: 'custom-connection-icon',
+        category: 'connections',
+        description: 'Create custom bolted connections',
+        steps: ['select_primary', 'select_secondary', 'configure'],
+        version: '1.0.0',
+        author: 'Connection Plugin v1.0'
+    };
+    
+    static getUI() {
+        return [
+            {
+                id: 'connectionType',
+                type: 'dropdown',
+                label: 'Connection Type',
+                options: [
+                    { value: 'beam_column', label: 'Beam to Column' },
+                    { value: 'beam_beam', label: 'Beam to Beam' },
+                    { value: 'column_base', label: 'Column Base Plate' }
+                ],
+                value: 'beam_column'
+            },
+            {
+                id: 'boltSize',
+                type: 'dropdown',
+                label: 'Bolt Size',
+                options: ['M12', 'M16', 'M20', 'M24'],
+                value: 'M16'
+            },
+            {
+                id: 'boltGrade',
+                type: 'dropdown',
+                label: 'Bolt Grade',
+                options: ['8.8', '10.9'],
+                value: '8.8'
+            }
+        ];
+    }
+    
+    handleStep(stepName, event) {
+        switch (stepName) {
+            case 'select_primary':
+                this.selectElement('primary', event);
+                break;
+            case 'select_secondary':
+                this.selectElement('secondary', event);
+                break;
+            case 'configure':
+                this.execute();
+                break;
+        }
+    }
+    
+    selectElement(role, event) {
+        const intersected = this.creationManager.getIntersectedElement(event);
+        if (intersected) {
+            this.stepData[role + 'Element'] = intersected;
+            this.completeCurrentStep();
+        }
+    }
+    
+    execute() {
+        const connectionData = {
+            type: 'custom_connection',
+            primaryElement: this.stepData.primaryElement.id,
+            secondaryElement: this.stepData.secondaryElement.id,
+            connectionType: this.getParameterValue('connectionType'),
+            boltSize: this.getParameterValue('boltSize'),
+            boltGrade: this.getParameterValue('boltGrade')
+        };
+        
+        this.creationManager.createElement(connectionData);
+        
+        if (this.shouldRestart()) {
+            this.reset();
+        }
+    }
+}
+
+// Register plugin creator
+ComponentRegistry.register('creator', 'custom_connection', CustomConnectionCreator);
+```
+
+The Creator Pattern provides a robust, extensible foundation for TomCAD's element creation system, enabling consistent user experience while allowing for complex, type-specific creation workflows.
+
+2.9 Three.js Integration Three.js Integration
+
+Overview
+
+TomCAD's 3D visualization is built on **Three.js r178**, providing WebGL-based rendering with professional CAD-grade visual quality. The integration emphasizes **performance**, **accuracy**, and **maintainability** while supporting real-time interaction and complex structural geometry.
+
+Core Three.js Architecture
+
+ThreeJSSetup - Scene Initialization
+
+```javascript
+class ThreeJSSetup {
+    constructor(container) {
+        this.container = container;
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+        this.controls = null;
+        
+        this.initialize();
+    }
+    
+    initialize() {
+        this.createScene();
+        this.createCamera();
+        this.createRenderer();
+        this.createLights();
+        this.createControls();
+        this.setupEventListeners();
+        this.startRenderLoop();
+    }
+    
+    createScene() {
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0xf0f0f0); // Light gray background
+        
+        // Create layers for organization
+        this.scene.userData = {
+            layers: {
+                elements: 0,     // Structural elements
+                grids: 1,        // Construction grids
+                helpers: 2,      // Visual helpers
+                ui: 3,          // UI overlays
+                preview: 4       // Creation preview
+            }
+        };
+        
+        // Add coordinate system helper
+        const axesHelper = new THREE.AxesHelper(1000);
+        axesHelper.layers.set(this.scene.userData.layers.helpers);
+        this.scene.add(axesHelper);
+    }
+    
+    createCamera() {
+        const aspect = this.container.clientWidth / this.container.clientHeight;
+        this.camera = new THREE.PerspectiveCamera(60, aspect, 10, 100000);
+        
+        // Set initial camera position (isometric-like view)
+        this.camera.position.set(5000, 5000, 5000);
+        this.camera.lookAt(0, 0, 0);
+        
+        // Add camera to scene for helper visibility
+        this.scene.add(this.camera);
+    }
+    
+    createRenderer() {
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: false,
+            powerPreference: "high-performance"
+        });
+        
+        this.renderer.setSize(
+            this.container.clientWidth, 
+            this.container.clientHeight
+        );
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        // Enable shadows for better visual quality
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+        // Better color rendering
+        this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.0;
+        
+        // Append to container
+        this.container.appendChild(this.renderer.domElement);
+    }
+    
+    createLights() {
+        // Ambient light for general illumination
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        this.scene.add(ambientLight);
+        
+        // Main directional light (sun-like)
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(10000, 10000, 5000);
+        directionalLight.castShadow = true;
+        
+        // Configure shadow map
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        directionalLight.shadow.camera.near = 1000;
+        directionalLight.shadow.camera.far = 50000;
+        directionalLight.shadow.camera.left = -10000;
+        directionalLight.shadow.camera.right = 10000;
+        directionalLight.shadow.camera.top = 10000;
+        directionalLight.shadow.camera.bottom = -10000;
+        
+        this.scene.add(directionalLight);
+        
+        // Fill light from opposite direction
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+        fillLight.position.set(-5000, -5000, 5000);
+        this.scene.add(fillLight);
+    }
+    
+    createControls() {
+        // Using OrbitControls for camera manipulation
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        
+        // Configure controls for CAD-like behavior
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+        this.controls.screenSpacePanning = false;
+        this.controls.minDistance = 100;
+        this.controls.maxDistance = 50000;
+        this.controls.maxPolarAngle = Math.PI; // Allow viewing from below
+        
+        // Set target to scene center
+        this.controls.target.set(0, 0, 1500); // Slightly above ground plane
+    }
+    
+    setupEventListeners() {
+        // Handle window resize
+        window.addEventListener('resize', this.onWindowResize.bind(this));
+        
+        // Handle visibility change (pause rendering when hidden)
+        document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
+    }
+    
+    startRenderLoop() {
+        const animate = () => {
+            requestAnimationFrame(animate);
+            
+            if (document.hidden) return; // Don't render when tab is hidden
+            
+            this.controls.update();
+            this.renderer.render(this.scene, this.camera);
+            
+            // Publish render statistics
+            EventBus.publish('render:frame', {
+                frameTime: performance.now(),
+                triangles: this.renderer.info.render.triangles,
+                drawCalls: this.renderer.info.render.calls
+            });
+        };
+        
+        animate();
+    }
+    
+    onWindowResize() {
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
+        
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height);
+    }
+    
+    onVisibilityChange() {
+        if (document.hidden) {
+            // Pause rendering optimizations when tab is hidden
+            this.renderer.setAnimationLoop(null);
+        } else {
+            this.startRenderLoop();
+        }
+    }
+    
+    // Cleanup
+    dispose() {
+        this.renderer.dispose();
+        this.controls.dispose();
+        window.removeEventListener('resize', this.onWindowResize);
+        document.removeEventListener('visibilitychange', this.onVisibilityChange);
+    }
+}
+```
+
+Mesh Generation Architecture
+
+MeshBuilder - Element to Three.js Conversion
+
+```javascript
+class MeshBuilder {
+    static materialLibrary = new Map();
+    static geometryCache = new Map();
+    
+    /**
+     * Create Three.js mesh from element data
+     * @param {Object} elementData - Element data from struktura.js
+     * @returns {THREE.Mesh} Three.js mesh object
+     */
+    static createElement(elementData) {
+        switch (elementData.type) {
+            case 'beam':
+                return this.createBeam(elementData);
+            case 'column':
+                return this.createColumn(elementData);
+            case 'plate':
+                return this.createPlate(elementData);
+            case 'stairs':
+                return this.createStairs(elementData);
+            default:
+                console.warn(`Unknown element type: ${elementData.type}`);
+                return this.createFallbackMesh(elementData);
+        }
+    }
+    
+    /**
+     * Create beam mesh
+     * @param {Object} beamData - Beam element data
+     * @returns {THREE.Mesh} Beam mesh
+     */
+    static createBeam(beamData) {
+        // Get profile geometry
+        const profile = ProfileManager.getProfile(beamData.profile);
+        if (!profile) {
+            throw new Error(`Profile not found: ${beamData.profile}`);
+        }
+        
+        // Calculate beam properties
+        const startPoint = new THREE.Vector3(...beamData.startPoint);
+        const endPoint = new THREE.Vector3(...beamData.endPoint);
+        const length = startPoint.distanceTo(endPoint);
+        const direction = new THREE.Vector3().subVectors(endPoint, startPoint).normalize();
+        
+        // Create extruded geometry
+        const geometry = this.createExtrudedProfile(profile, length);
+        
+        // Apply operations (holes, cuts, etc.)
+        if (beamData.operations && beamData.operations.length > 0) {
+            geometry = this.applyOperations(geometry, beamData.operations);
+        }
+        
+        // Create material
+        const material = this.getMaterial(beamData.material || 'S355JR', 'element');
+        
+        // Create mesh
+        const mesh = new THREE.Mesh(geometry, material);
+        
+        // Position and orient mesh
+        this.positionBeam(mesh, startPoint, endPoint, beamData.rotation || 0);
+        
+        // Add metadata
+        mesh.userData = {
+            elementId: beamData.id,
+            elementType: 'beam',
+            elementData: beamData,
+            profile: profile,
+            length: length
+        };
+        
+        // Enable shadows
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        
+        return mesh;
+    }
+    
+    /**
+     * Create extruded profile geometry
+     * @param {Object} profile - Steel profile data
+     * @param {number} length - Extrusion length
+     * @returns {THREE.ExtrudeGeometry} Extruded geometry
+     */
+    static createExtrudedProfile(profile, length) {
+        // Check cache first
+        const cacheKey = `${profile.name}_${length}`;
+        if (this.geometryCache.has(cacheKey)) {
+            return this.geometryCache.get(cacheKey).clone();
+        }
+        
+        // Create profile shape
+        const shape = this.createProfileShape(profile);
+        
+        // Extrude settings
+        const extrudeSettings = {
+            depth: length,
+            bevelEnabled: false,
+            steps: 1
+        };
+        
+        const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        
+        // Rotate to align with beam direction (Three.js extrudes along Z)
+        geometry.rotateY(Math.PI / 2);
+        geometry.translate(0, 0, -length / 2);
+        
+        // Cache geometry
+        this.geometryCache.set(cacheKey, geometry.clone());
+        
+        return geometry;
+    }
+    
+    /**
+     * Create 2D profile shape from profile data
+     * @param {Object} profile - Steel profile data
+     * @returns {THREE.Shape} Profile shape
+     */
+    static createProfileShape(profile) {
+        const shape = new THREE.Shape();
+        
+        switch (profile.type) {
+            case 'IPE':
+            case 'HEA':
+            case 'HEB':
+                return this.createIProfileShape(profile);
+            case 'RHS':
+                return this.createRHSProfileShape(profile);
+            case 'CHS':
+                return this.createCHSProfileShape(profile);
+            case 'L':
+                return this.createAngleProfileShape(profile);
+            default:
+                console.warn(`Unknown profile type: ${profile.type}`);
+                return this.createFallbackShape(profile);
+        }
+    }
+    
+    /**
+     * Create I-beam profile shape (IPE, HEA, HEB)
+     * @param {Object} profile - I-beam profile data
+     * @returns {THREE.Shape} I-beam shape
+     */
+    static createIProfileShape(profile) {
+        const shape = new THREE.Shape();
+        const { h, b, tw, tf, r } = profile.dimensions;
+        
+        const halfHeight = h / 2;
+        const halfWidth = b / 2;
+        const webHalfThickness = tw / 2;
+        
+        // Start from bottom-left
+        shape.moveTo(-halfWidth, -halfHeight);
+        
+        // Bottom flange
+        shape.lineTo(halfWidth, -halfHeight);
+        shape.lineTo(halfWidth, -halfHeight + tf);
+        
+        // Right side of web with fillet
+        shape.lineTo(webHalfThickness + r, -halfHeight + tf);
+        
+        if (r > 0) {
+            // Fillet curve
+            shape.quadraticCurveTo(
+                webHalfThickness, -halfHeight + tf,
+                webHalfThickness, -halfHeight + tf + r
+            );
+        }
+        
+        // Web right side
+        shape.lineTo(webHalfThickness, halfHeight - tf - r);
+        
+        if (r > 0) {
+            // Top fillet
+            shape.quadraticCurveTo(
+                webHalfThickness, halfHeight - tf,
+                webHalfThickness + r, halfHeight - tf
+            );
+        }
+        
+        // Top flange
+        shape.lineTo(halfWidth, halfHeight - tf);
+        shape.lineTo(halfWidth, halfHeight);
+        shape.lineTo(-halfWidth, halfHeight);
+        shape.lineTo(-halfWidth, halfHeight - tf);
+        
+        // Left side (mirror of right side)
+        shape.lineTo(-webHalfThickness - r, halfHeight - tf);
+        
+        if (r > 0) {
+            shape.quadraticCurveTo(
+                -webHalfThickness, halfHeight - tf,
+                -webHalfThickness, halfHeight - tf - r
+            );
+        }
+        
+        shape.lineTo(-webHalfThickness, -halfHeight + tf + r);
+        
+        if (r > 0) {
+            shape.quadraticCurveTo(
+                -webHalfThickness, -halfHeight + tf,
+                -webHalfThickness - r, -halfHeight + tf
+            );
+        }
+        
+        shape.lineTo(-halfWidth, -halfHeight + tf);
+        shape.closePath();
+        
+        return shape;
+    }
+    
+    /**
+     * Position beam mesh in 3D space
+     * @param {THREE.Mesh} mesh - Beam mesh
+     * @param {THREE.Vector3} startPoint - Start position
+     * @param {THREE.Vector3} endPoint - End position
+     * @param {number} rotation - Rotation around beam axis (degrees)
+     */
+    static positionBeam(mesh, startPoint, endPoint, rotation = 0) {
+        // Calculate center position
+        const center = new THREE.Vector3().addVectors(startPoint, endPoint).multiplyScalar(0.5);
+        mesh.position.copy(center);
+        
+        // Calculate direction and create rotation matrix
+        const direction = new THREE.Vector3().subVectors(endPoint, startPoint).normalize();
+        const up = new THREE.Vector3(0, 0, 1);
+        
+        // Handle vertical beams
+        if (Math.abs(direction.dot(up)) > 0.99) {
+            up.set(0, 1, 0);
+        }
+        
+        // Create rotation matrix to align beam with direction
+        const matrix = new THREE.Matrix4().lookAt(
+            new THREE.Vector3(0, 0, 0),
+            direction,
+            up
+        );
+        
+        mesh.setRotationFromMatrix(matrix);
+        
+        // Apply additional rotation around beam axis
+        if (rotation !== 0) {
+            mesh.rotateX(rotation * Math.PI / 180);
+        }
+    }
+    
+    /**
+     * Get or create material
+     * @param {string} materialName - Material identifier
+     * @param {string} type - Material type (element, preview, selected, etc.)
+     * @returns {THREE.Material} Three.js material
+     */
+    static getMaterial(materialName, type = 'element') {
+        const cacheKey = `${materialName}_${type}`;
+        
+        if (this.materialLibrary.has(cacheKey)) {
+            return this.materialLibrary.get(cacheKey);
+        }
+        
+        let material;
+        
+        switch (type) {
+            case 'element':
+                material = this.createElementMaterial(materialName);
+                break;
+            case 'preview':
+                material = this.createPreviewMaterial();
+                break;
+            case 'selected':
+                material = this.createSelectedMaterial();
+                break;
+            case 'highlighted':
+                material = this.createHighlightedMaterial();
+                break;
+            default:
+                material = this.createDefaultMaterial();
+        }
+        
+        this.materialLibrary.set(cacheKey, material);
+        return material;
+    }
+    
+    /**
+     * Create element material based on steel grade
+     * @param {string} materialName - Steel grade (S355JR, S275, etc.)
+     * @returns {THREE.MeshLambertMaterial} Element material
+     */
+    static createElementMaterial(materialName) {
+        // Material color mapping
+        const materialColors = {
+            'S235JR': 0x888888,
+            'S275JR': 0x999999,
+            'S355JR': 0xaaaaaa,
+            'S460JR': 0xbbbbbb
+        };
+        
+        const color = materialColors[materialName] || 0x888888;
+        
+        return new THREE.MeshLambertMaterial({
+            color: color,
+            transparent: false,
+            opacity: 1.0
+        });
+    }
+    
+    static createPreviewMaterial() {
+        return new THREE.MeshLambertMaterial({
+            color: 0x00ff00,
+            transparent: true,
+            opacity: 0.6
+        });
+    }
+    
+    static createSelectedMaterial() {
+        return new THREE.MeshLambertMaterial({
+            color: 0xff6600,
+            transparent: false,
+            opacity: 1.0
+        });
+    }
+    
+    /**
+     * Apply operations (holes, cuts) to geometry
+     * @param {THREE.BufferGeometry} geometry - Base geometry
+     * @param {Array} operations - Array of operation IDs
+     * @returns {THREE.BufferGeometry} Modified geometry
+     */
+    static applyOperations(geometry, operations) {
+        let resultGeometry = geometry;
+        
+        operations.forEach(operationId => {
+            const operation = strukturaData.operations.find(op => op.id === operationId);
+            if (operation) {
+                resultGeometry = this.applyOperation(resultGeometry, operation);
+            }
+        });
+        
+        return resultGeometry;
+    }
+    
+    /**
+     * Apply single operation to geometry
+     * @param {THREE.BufferGeometry} geometry - Base geometry
+     * @param {Object} operation - Operation data
+     * @returns {THREE.BufferGeometry} Modified geometry
+     */
+    static applyOperation(geometry, operation) {
+        switch (operation.type) {
+            case 'hole':
+                return this.applyHoleOperation(geometry, operation);
+            case 'slot':
+                return this.applySlotOperation(geometry, operation);
+            case 'cut':
+                return this.applyCutOperation(geometry, operation);
+            default:
+                console.warn(`Unknown operation type: ${operation.type}`);
+                return geometry;
+        }
+    }
+    
+    /**
+     * Apply hole operation using CSG
+     * @param {THREE.BufferGeometry} geometry - Base geometry
+     * @param {Object} holeData - Hole operation data
+     * @returns {THREE.BufferGeometry} Geometry with hole
+     */
+    static applyHoleOperation(geometry, holeData) {
+        // Create hole geometry
+        const holeGeometry = new THREE.CylinderGeometry(
+            holeData.diameter / 2,
+            holeData.diameter / 2,
+            1000, // Make it longer than any beam thickness
+            16
+        );
+        
+        // Position hole
+        holeGeometry.translate(
+            holeData.position[0],
+            holeData.position[1],
+            holeData.position[2]
+        );
+        
+        // Perform CSG subtraction
+        // Note: This would require a CSG library like three-csg-ts
+        return this.performCSGSubtraction(geometry, holeGeometry);
+    }
+    
+    /**
+     * CSG subtraction placeholder
+     * @param {THREE.BufferGeometry} geometryA - Base geometry
+     * @param {THREE.BufferGeometry} geometryB - Geometry to subtract
+     * @returns {THREE.BufferGeometry} Result geometry
+     */
+    static performCSGSubtraction(geometryA, geometryB) {
+        // TODO: Implement CSG operations using three-csg-ts or similar
+        // For now, return original geometry
+        console.warn('CSG operations not yet implemented');
+        return geometryA;
+    }
+    
+    /**
+     * Cleanup unused geometries and materials
+     */
+    static cleanup() {
+        // Dispose cached geometries
+        this.geometryCache.forEach(geometry => geometry.dispose());
+        this.geometryCache.clear();
+        
+        // Dispose cached materials
+        this.materialLibrary.forEach(material => material.dispose());
+        this.materialLibrary.clear();
+    }
+}
+```
+
+Scene Management
+
+Object Lifecycle Management
+
+```javascript
+class SceneManager {
+    constructor(scene) {
+        this.scene = scene;
+        this.elementObjects = new Map(); // elementId -> THREE.Object3D
+        this.gridObjects = new Map();    // gridId -> THREE.Object3D
+        this.previewObjects = new Map(); // type -> THREE.Object3D
+    }
+    
+    /**
+     * Add element to scene
+     * @param {Object} elementData - Element data
+     */
+    addElement(elementData) {
+        // Remove existing object if present
+        this.removeElement(elementData.id);
+        
+        // Create new mesh
+        const mesh = MeshBuilder.createElement(elementData);
+        
+        // Add to scene
+        this.scene.add(mesh);
+        this.elementObjects.set(elementData.id, mesh);
+        
+        EventBus.publish('scene:element:added', {
+            elementId: elementData.id,
+            mesh: mesh
+        });
+        
+        return mesh;
+    }
+    
+    /**
+     * Update element in scene
+     * @param {Object} elementData - Updated element data
+     */
+    updateElement(elementData) {
+        const existingMesh = this.elementObjects.get(elementData.id);
+        
+        if (existingMesh) {
+            // Store selection state
+            const wasSelected = existingMesh.userData.selected;
+            
+            // Remove old mesh
+            this.removeElement(elementData.id);
+            
+            // Add new mesh
+            const newMesh = this.addElement(elementData);
+            
+            // Restore selection state
+            if (wasSelected) {
+                this.setElementSelected(elementData.id, true);
+            }
+        } else {
+            // Element doesn't exist, add it
+            this.addElement(elementData);
+        }
+    }
+    
+    /**
+     * Remove element from scene
+     * @param {string} elementId - Element ID
+     */
+    removeElement(elementId) {
+        const mesh = this.elementObjects.get(elementId);
+        if (mesh) {
+            this.scene.remove(mesh);
+            this.elementObjects.delete(elementId);
+            
+            // Dispose geometry and material
+            if (mesh.geometry) mesh.geometry.dispose();
+            if (mesh.material) {
+                if (Array.isArray(mesh.material)) {
+                    mesh.material.forEach(mat => mat.dispose());
+                } else {
+                    mesh.material.dispose();
+                }
+            }
+            
+            EventBus.publish('scene:element:removed', { elementId });
+        }
+    }
+    
+    /**
+     * Set element selection state
+     * @param {string} elementId - Element ID
+     * @param {boolean} selected - Selection state
+     */
+    setElementSelected(elementId, selected) {
+        const mesh = this.elementObjects.get(elementId);
+        if (mesh) {
+            mesh.userData.selected = selected;
+            
+            if (selected) {
+                mesh.material = MeshBuilder.getMaterial(
+                    mesh.userData.elementData.material, 
+                    'selected'
+                );
+            } else {
+                mesh.material = MeshBuilder.getMaterial(
+                    mesh.userData.elementData.material, 
+                    'element'
+                );
+            }
+        }
+    }
+    
+    /**
+     * Rebuild entire scene from data
+     */
+    rebuildScene() {
+        console.time('Scene rebuild');
+        
+        // Clear existing elements
+        this.clearElements();
+        
+        // Add all elements from data
+        strukturaData.elements.forEach(element => {
+            this.addElement(element);
+        });
+        
+        // Rebuild grids
+        this.rebuildGrids();
+        
+        console.timeEnd('Scene rebuild');
+        
+        EventBus.publish('scene:rebuilt', {
+            elementCount: strukturaData.elements.length,
+            gridCount: strukturaData.grids.length
+        });
+    }
+    
+    /**
+     * Clear all elements from scene
+     */
+    clearElements() {
+        this.elementObjects.forEach((mesh, elementId) => {
+            this.removeElement(elementId);
+        });
+    }
+    
+    /**
+     * Get element mesh by ID
+     * @param {string} elementId - Element ID
+     * @returns {THREE.Mesh|null} Element mesh
+     */
+    getElementMesh(elementId) {
+        return this.elementObjects.get(elementId) || null;
+    }
+    
+    /**
+     * Get all element meshes
+     * @returns {Array<THREE.Mesh>} Array of meshes
+     */
+    getAllElementMeshes() {
+        return Array.from(this.elementObjects.values());
+    }
+    
+    /**
+     * Perform raycasting for object selection
+     * @param {THREE.Vector2} mousePosition - Normalized mouse coordinates
+     * @param {THREE.Camera} camera - Camera for raycasting
+     * @returns {Object|null} Intersection result
+     */
+    raycast(mousePosition, camera) {
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mousePosition, camera);
+        
+        const meshes = this.getAllElementMeshes();
+        const intersections = raycaster.intersectObjects(meshes, true);
+        
+        if (intersections.length > 0) {
+            const closest = intersections[0];
+            return {
+                elementId: closest.object.userData.elementId,
+                mesh: closest.object,
+                point: closest.point,
+                distance: closest.distance,
+                face: closest.face
+            };
+        }
+        
+        return null;
+    }
+}
+```
+
+Performance Optimization
+
+Level of Detail (LOD)
+
+```javascript
+class LODManager {
+    static createLODObject(elementData) {
+        const lod = new THREE.LOD();
+        
+        // High detail mesh (close view)
+        const highDetailMesh = MeshBuilder.createElement(elementData);
+        lod.addLevel(highDetailMesh, 0);
+        
+        // Medium detail mesh
+        const mediumDetailMesh = this.createSimplifiedMesh(elementData, 0.5);
+        lod.addLevel(mediumDetailMesh, 2000);
+        
+        // Low detail mesh (far view)
+        const lowDetailMesh = this.createSimplifiedMesh(elementData, 0.1);
+        lod.addLevel(lowDetailMesh, 10000);
+        
+        return lod;
+    }
+    
+    static createSimplifiedMesh(elementData, detail) {
+        // Create simplified geometry with reduced vertex count
+        const mesh = MeshBuilder.createElement(elementData);
+        
+        // Simplify geometry
+        if (mesh.geometry && detail < 1.0) {
+            mesh.geometry = this.simplifyGeometry(mesh.geometry, detail);
+        }
+        
+        return mesh;
+    }
+    
+    static simplifyGeometry(geometry, detail) {
+        // Implement geometry simplification
+        // This could use libraries like three-mesh-simplifier
+        return geometry; // Placeholder
+    }
+}
+```
+
+Frustum Culling
+
+```javascript
+class CullingManager {
+    static setupFrustumCulling(camera, scene) {
+        const frustum = new THREE.Frustum();
+        const matrix = new THREE.Matrix4();
+        
+        return {
+            update() {
+                matrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+                frustum.setFromProjectionMatrix(matrix);
+                
+                scene.traverse(object => {
+                    if (object.isMesh && object.userData.elementId) {
+                        object.visible = frustum.intersectsObject(object);
+                    }
+                });
+            }
+        };
+    }
+}
+```
+
+Development Tools
+
+Three.js Inspector
+
+```javascript
+class ThreeJSInspector {
+    static inspect(scene) {
+        const stats = {
+            objects: 0,
+            vertices: 0,
+            faces: 0,
+            materials: new Set(),
+            geometries: new Set()
+        };
+        
+        scene.traverse(object => {
+            if (object.isMesh) {
+                stats.objects++;
+                
+                if (object.geometry) {
+                    stats.geometries.add(object.geometry.uuid);
+                    
+                    if (object.geometry.attributes.position) {
+                        stats.vertices += object.geometry.attributes.position.count;
+                    }
+                    
+                    if (object.geometry.index) {
+                        stats.faces += object.geometry.index.count / 3;
+                    }
+                }
+                
+                if (object.material) {
+                    if (Array.isArray(object.material)) {
+                        object.material.forEach(mat => stats.materials.add(mat.uuid));
+                    } else {
+                        stats.materials.add(object.material.uuid);
+                    }
+                }
+            }
+        });
+        
+        stats.uniqueMaterials = stats.materials.size;
+        stats.uniqueGeometries = stats.geometries.size;
+        
+        console.table(stats);
+        return stats;
+    }
+    
+    static validateScene(scene) {
+        const issues = [];
+        
+        scene.traverse(object => {
+            if (object.isMesh) {
+                // Check for disposed geometry
+                if (object.geometry && object.geometry.attributes.position === undefined) {
+                    issues.push(`Disposed geometry on object: ${object.userData.elementId}`);
+                }
+                
+                // Check for missing materials
+                if (!object.material) {
+                    issues.push(`Missing material on object: ${object.userData.elementId}`);
+                }
+                
+                // Check for NaN positions
+                if (isNaN(object.position.x) || isNaN(object.position.y) || isNaN(object.position.z)) {
+                    issues.push(`Invalid position on object: ${object.userData.elementId}`);
+                }
+            }
+        });
+        
+        if (issues.length === 0) {
+            console.log('Scene validation passed ✓');
+        } else {
+            console.error('Scene validation issues:', issues);
+        }
+        
+        return issues;
+    }
+}
+
+// Development helpers
+window.threeDebug = {
+    inspect: ThreeJSInspector.inspect,
+    validate: ThreeJSInspector.validateScene,
+    lod: LODManager,
+    materials: () => Array.from(MeshBuilder.materialLibrary.keys()),
+    geometries: () => Array.from(MeshBuilder.geometryCache.keys())
+};
+```
+
+This Three.js integration provides a robust foundation for TomCAD's 3D visualization while maintaining the performance and visual quality needed for professional CAD applications.
+
+2.10 Performance Strategy Performance Strategy
+
+Performance Philosophy
+
+TomCAD's approach to performance is **"Make it work, then make it fast"**. Version 1.0 prioritizes functionality, stability, and maintainability over performance optimization. This strategy ensures we build a solid foundation before tackling performance improvements.
+
+Current Performance Approach (V1.0)
+
+Accepted Trade-offs
+
+**Brute-Force Over Optimization**
+```javascript
+// V1.0: Simple but inefficient
+regenerateScene() {
+    this.clearAllMeshes();
+    strukturaData.elements.forEach(element => {
+        const mesh = MeshBuilder.createElement(element);
+        this.scene.add(mesh);
+    });
+}
+
+// Future V2.0: Optimized incremental updates
+updateElement(elementId) {
+    const existingMesh = this.meshes.get(elementId);
+    const newMesh = MeshBuilder.createElement(elementData);
+    this.scene.replace(existingMesh, newMesh);
+}
+```
+
+**Simplicity Over Speed**
+- Full scene regeneration instead of incremental updates
+- Linear searches instead of indexed lookups
+- Memory allocation over object pooling
+- Clear code over micro-optimizations
+
+Why This Approach Works
+
+**Development Benefits**:
+- **Faster Feature Implementation**: No complex optimization considerations
+- **Easier Debugging**: Predictable, linear execution flow
+- **Simpler Testing**: Straightforward input/output validation
+- **Reduced Complexity**: Fewer edge cases and state management issues
+
+**Business Benefits**:
+- **Quicker Time to Market**: Focus on features users need
+- **Lower Development Costs**: Simpler code requires less experienced developers
+- **Easier Maintenance**: Performance optimizations can introduce bugs
+- **Flexible Architecture**: Easy to refactor when performance needs are clear
+
+Performance Monitoring (V1.0)
+
+Current Metrics
+
+**Basic Performance Tracking**:
+```javascript
+class PerformanceMonitor {
+    static trackOperation(name, operation) {
+        const start = performance.now();
+        const result = operation();
+        const duration = performance.now() - start;
+        
+        console.log(`[Performance] ${name}: ${duration.toFixed(2)}ms`);
+        
+        if (duration > this.thresholds[name]) {
+            console.warn(`[Performance] ${name} exceeded threshold: ${duration}ms`);
+        }
+        
+        return result;
+    }
+    
+    static thresholds = {
+        'scene:rebuild': 1000,  // 1 second
+        'element:create': 100,  // 100ms
+        'mesh:generate': 50     // 50ms
+    };
+}
+```
+
+**Usage Example**:
+```javascript
+// Track scene rebuild performance
+PerformanceMonitor.trackOperation('scene:rebuild', () => {
+    this.regenerateScene();
+});
+```
+
+Performance Budgets (V1.0)
+
+**Acceptable Performance Targets**:
+- **Scene Rebuild**: < 2 seconds for 100 elements
+- **Element Creation**: < 200ms per element
+- **UI Response**: < 100ms for user interactions
+- **Memory Usage**: < 1GB for typical projects
+
+**When to Worry**:
+- Scene rebuild takes > 5 seconds
+- UI becomes unresponsive
+- Browser crashes from memory issues
+- File export takes > 30 seconds
+
+Future Performance Strategy (V2.0+)
+
+Optimization Roadmap
+
+**Phase 1: Profiling and Measurement**
+1. **Real User Monitoring**: Collect performance data from actual usage
+2. **Bottleneck Identification**: Profile common operations
+3. **Performance Testing**: Automated benchmarks for regressions
+4. **User Experience Metrics**: Measure perceived performance
+
+**Phase 2: Low-Hanging Fruit**
+1. **Geometry Caching**: Cache frequently used profile geometries
+2. **Material Reuse**: Share materials between similar elements
+3. **Viewport Culling**: Only render visible objects
+4. **LOD Implementation**: Level-of-detail for distant objects
+
+**Phase 3: Architectural Optimizations**
+1. **Incremental Updates**: Update only changed elements
+2. **Spatial Indexing**: Fast object lookup for large scenes
+3. **Web Workers**: Background processing for heavy operations
+4. **Memory Pooling**: Reuse Three.js objects
+
+Specific Optimization Areas
+
+1. Scene Management
+```javascript
+// Future: Incremental scene updates
+class OptimizedSceneManager {
+    updateElement(elementId, changes) {
+        const mesh = this.elementMeshes.get(elementId);
+        
+        // Only update what changed
+        if (changes.position) {
+            mesh.position.copy(changes.position);
+        }
+        
+        if (changes.profile) {
+            // Only regenerate geometry if profile changed
+            mesh.geometry = MeshBuilder.getGeometry(changes.profile);
+        }
+        
+        // No full scene rebuild needed
+    }
+}
+```
+
+2. Geometry Optimization
+```javascript
+// Future: Geometry caching and sharing
+class GeometryCache {
+    static getProfileGeometry(profileName, length) {
+        const key = `${profileName}_${length}`;
+        
+        if (!this.cache.has(key)) {
+            const geometry = this.generateGeometry(profileName, length);
+            this.cache.set(key, geometry);
+        }
+        
+        return this.cache.get(key).clone();
+    }
+}
+```
+
+3. Memory Management
+```javascript
+// Future: Object pooling
+class MeshPool {
+    static borrowMesh(elementType) {
+        const pool = this.pools.get(elementType);
+        
+        if (pool.length > 0) {
+            return pool.pop();
+        }
+        
+        return this.createNewMesh(elementType);
+    }
+    
+    static returnMesh(mesh) {
+        mesh.visible = false;
+        mesh.userData = {};
+        
+        const pool = this.pools.get(mesh.userData.elementType);
+        pool.push(mesh);
+    }
+}
+```
+
+4. Rendering Optimization
+```javascript
+// Future: Frustum culling and LOD
+class RenderOptimizer {
+    static updateVisibility(camera) {
+        this.elementMeshes.forEach(mesh => {
+            const distance = camera.position.distanceTo(mesh.position);
+            
+            // Frustum culling
+            mesh.visible = this.frustum.intersectsObject(mesh);
+            
+            // Level of detail
+            if (distance > 10000) {
+                mesh.material = this.lowDetailMaterial;
+            } else {
+                mesh.material = this.highDetailMaterial;
+            }
+        });
+    }
+}
+```
+
+Performance Guidelines for Developers
+
+What NOT to Optimize in V1.0
+
+**Avoid These Premature Optimizations**:
+- Complex caching systems
+- Object pooling
+- Micro-optimizations in loops
+- Memory usage optimization
+- Advanced rendering techniques
+
+**Focus on These Instead**:
+- Clean, readable code
+- Simple algorithms
+- Clear data structures
+- Obvious performance problems only
+
+Code Review Guidelines
+
+**Performance Red Flags**:
+```javascript
+// ❌ Don't worry about this in V1.0
+for (let i = 0; i < elements.length; i++) {
+    // This is fine, even if not optimal
+}
+
+// ❌ This IS a problem - fix immediately
+function createElements() {
+    while (true) {  // Infinite loop
+        createElement();
+    }
+}
+
+// ❌ This IS a problem - memory leak
+function createElement() {
+    const mesh = new THREE.Mesh();
+    // Never disposed - fix this
+}
+```
+
+**What to Review For**:
+- Memory leaks (objects never disposed)
+- Infinite loops or recursion
+- Blocking operations on main thread
+- Obvious algorithmic problems (O(n²) when O(n) is simple)
+
+Performance Testing
+
+**Simple Performance Tests**:
+```javascript
+// Test with realistic data sizes
+describe('Performance Tests', () => {
+    it('should handle 100 elements', () => {
+        const start = performance.now();
+        
+        // Create 100 test elements
+        for (let i = 0; i < 100; i++) {
+            sceneManager.addElement(createTestElement());
+        }
+        
+        const duration = performance.now() - start;
+        expect(duration).toBeLessThan(5000); // 5 second budget
+    });
+});
+```
+
+Migration Strategy
+
+From V1.0 to V2.0
+
+**Gradual Optimization Approach**:
+1. **Keep V1.0 Code**: Don't rewrite, wrap and enhance
+2. **Feature Flags**: Enable optimizations optionally
+3. **A/B Testing**: Compare performance with user testing
+4. **Rollback Ready**: Quick fallback to V1.0 behavior
+
+**Example Migration**:
+```javascript
+class SceneManager {
+    constructor() {
+        this.useOptimizedRendering = FeatureFlags.get('optimized_rendering');
+    }
+    
+    updateElement(elementId, changes) {
+        if (this.useOptimizedRendering) {
+            return this.optimizedUpdate(elementId, changes);
+        } else {
+            return this.v1Update(elementId, changes);
+        }
+    }
+    
+    // Keep V1.0 method as fallback
+    v1Update(elementId, changes) {
+        this.regenerateScene(); // Original brute-force approach
+    }
+    
+    // New optimized method
+    optimizedUpdate(elementId, changes) {
+        this.incrementalUpdate(elementId, changes);
+    }
+}
+```
+
+Success Metrics
+
+V1.0 Success Criteria
+- **Functionality Complete**: All planned features working
+- **User Adoption**: Positive user feedback on ease of use
+- **Development Velocity**: Fast feature addition and bug fixes
+- **Code Quality**: Maintainable, testable codebase
+
+V2.0 Performance Targets
+- **50% Faster Scene Updates**: From profiling V1.0 usage
+- **Smooth 60 FPS**: For typical project sizes
+- **Memory Efficiency**: Handle 2x larger projects
+- **Startup Performance**: < 3 second initial load
+
+The key is building a solid foundation first, then optimizing based on real usage data and user feedback. This ensures we optimize the right things and deliver value to users quickly.
+

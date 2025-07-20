@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THREE.js Loading Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        .result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>THREE.js Loading Test</h1>
+    
+    <div id="results">
+        <div class="info">Loading THREE.js...</div>
+    </div>
+
+    <!-- Load THREE.js exactly as in main app -->
+    <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    
+    <script>
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.textContent = message;
+            document.getElementById('results').appendChild(div);
+        }
+
+        function testTHREE() {
+            addResult('Testing THREE.js availability...', 'info');
+            
+            // Basic THREE.js test
+            if (typeof THREE === 'undefined') {
+                addResult('❌ THREE.js is not loaded', 'error');
+                return false;
+            }
+            
+            addResult('✅ THREE.js is loaded', 'success');
+            addResult(`THREE.js version: ${THREE.REVISION}`, 'info');
+            
+            // Test core components
+            const tests = [
+                { name: 'THREE.Scene', test: () => new THREE.Scene() },
+                { name: 'THREE.PerspectiveCamera', test: () => new THREE.PerspectiveCamera(75, 1, 0.1, 1000) },
+                { name: 'THREE.WebGLRenderer', test: () => new THREE.WebGLRenderer() },
+                { name: 'THREE.Raycaster', test: () => new THREE.Raycaster() },
+                { name: 'THREE.Vector3', test: () => new THREE.Vector3() },
+                { name: 'THREE.BufferGeometry', test: () => new THREE.BufferGeometry() },
+                { name: 'THREE.LineBasicMaterial', test: () => new THREE.LineBasicMaterial() },
+                { name: 'THREE.Line', test: () => new THREE.Line() },
+                { name: 'THREE.Mesh', test: () => new THREE.Mesh() },
+                { name: 'THREE.MeshBasicMaterial', test: () => new THREE.MeshBasicMaterial() }
+            ];
+            
+            let allPassed = true;
+            
+            tests.forEach(test => {
+                try {
+                    const result = test.test();
+                    if (result) {
+                        addResult(`✅ ${test.name} works`, 'success');
+                    } else {
+                        addResult(`❌ ${test.name} failed`, 'error');
+                        allPassed = false;
+                    }
+                } catch (error) {
+                    addResult(`❌ ${test.name} error: ${error.message}`, 'error');
+                    allPassed = false;
+                }
+            });
+            
+            // Test DragControls
+            if (typeof THREE.DragControls !== 'undefined') {
+                addResult('✅ THREE.DragControls is available', 'success');
+            } else {
+                addResult('❌ THREE.DragControls is not available', 'error');
+                allPassed = false;
+            }
+            
+            return allPassed;
+        }
+
+        // Test when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('results').innerHTML = '';
+                const success = testTHREE();
+                
+                if (success) {
+                    addResult('🎉 All tests passed! THREE.js is ready for TomCAD', 'success');
+                } else {
+                    addResult('❌ Some tests failed. Check the errors above.', 'error');
+                }
+            }, 100);
+        });
+    </script>
+    
+    <!-- Load DragControls after THREE.js -->
+    <script src="src/rendering/DragControls.js"></script>
+</body>
+</html>

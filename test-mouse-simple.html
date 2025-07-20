@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Mouse Events</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #info { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; z-index: 1000; }
+        #canvas-area { width: 100vw; height: 100vh; background: #333; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h3>Mouse Event Test</h3>
+        <div id="log">Kliknij na obszar canvas...</div>
+    </div>
+    <div id="canvas-area"></div>
+
+    <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+    
+    <script>
+        let scene, camera, renderer, raycaster, mouse;
+        let cube;
+        
+        function addLog(message) {
+            const log = document.getElementById('log');
+            log.innerHTML = message + '<br>' + log.innerHTML;
+            // Keep only last 10 lines
+            const lines = log.innerHTML.split('<br>');
+            if (lines.length > 10) {
+                log.innerHTML = lines.slice(0, 10).join('<br>');
+            }
+        }
+        
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-area').appendChild(renderer.domElement);
+            
+            // Create a simple cube to click on
+            const geometry = new THREE.BoxGeometry();
+            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            
+            camera.position.z = 5;
+            
+            // Setup raycasting
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+            
+            // Add event listeners
+            renderer.domElement.addEventListener('mousedown', onMouseDown);
+            renderer.domElement.addEventListener('click', onClick);
+            
+            addLog('Scene initialized with green cube');
+            animate();
+        }
+        
+        function onMouseDown(event) {
+            addLog(`MouseDown: button=${event.button}, x=${event.clientX}, y=${event.clientY}`);
+        }
+        
+        function onClick(event) {
+            addLog(`Click: button=${event.button}, x=${event.clientX}, y=${event.clientY}`);
+            
+            // Calculate mouse position in normalized device coordinates
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            // Update the picking ray with the camera and mouse position
+            raycaster.setFromCamera(mouse, camera);
+            
+            // Check for intersections
+            const intersects = raycaster.intersectObjects([cube]);
+            
+            if (intersects.length > 0) {
+                addLog('✅ HIT CUBE! Changing color to red');
+                cube.material.color.setHex(0xff0000);
+                setTimeout(() => {
+                    cube.material.color.setHex(0x00ff00);
+                    addLog('Reset cube color to green');
+                }, 1000);
+            } else {
+                addLog('❌ No intersection with cube');
+            }
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate cube slowly
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection System Test Suite</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .test-pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .dependency-check {
+            background: #e2e3e5;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .stats {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔗 Connection System Test Suite</h1>
+        
+        <div class="stats" id="stats">
+            <strong>Test Results:</strong> <span id="test-stats">Running tests...</span>
+        </div>
+
+        <div class="test-section">
+            <h2>1. Dependency Checks</h2>
+            <div class="dependency-check" id="dependency-results">
+                Checking dependencies...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>2. Core Component Tests</h2>
+            <div id="core-tests">
+                Running core tests...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>3. Integration Tests</h2>
+            <div id="integration-tests">
+                Running integration tests...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>4. Error Handling Tests</h2>
+            <div id="error-tests">
+                Running error handling tests...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>5. Visual Tests</h2>
+            <div id="visual-tests">
+                Running visual tests...
+            </div>
+        </div>
+    </div>
+
+    <!-- Load dependencies in correct order -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+    
+    <script>
+        // Test runner
+        class TestRunner {
+            constructor() {
+                this.tests = [];
+                this.passed = 0;
+                this.failed = 0;
+                this.total = 0;
+            }
+
+            addTest(name, testFn, category = 'core') {
+                this.tests.push({ name, testFn, category });
+                this.total++;
+            }
+
+            async runTests() {
+                console.log('🧪 Starting Connection System Tests...');
+                
+                // Check dependencies first
+                this.checkDependencies();
+                
+                // Run tests by category
+                await this.runCategory('core', 'core-tests');
+                await this.runCategory('integration', 'integration-tests');
+                await this.runCategory('error', 'error-tests');
+                await this.runCategory('visual', 'visual-tests');
+                
+                this.updateStats();
+            }
+
+            checkDependencies() {
+                const deps = {
+                    'THREE.js': typeof THREE !== 'undefined',
+                    'THREE.Line3': typeof THREE !== 'undefined' && typeof THREE.Line3 !== 'undefined',
+                    'THREE.Vector3': typeof THREE !== 'undefined' && typeof THREE.Vector3 !== 'undefined',
+                    'THREE.Raycaster': typeof THREE !== 'undefined' && typeof THREE.Raycaster !== 'undefined',
+                    'THREE.BufferGeometry': typeof THREE !== 'undefined' && typeof THREE.BufferGeometry !== 'undefined',
+                    'THREE.LineBasicMaterial': typeof THREE !== 'undefined' && typeof THREE.LineBasicMaterial !== 'undefined'
+                };
+
+                let html = '<h3>Dependency Status:</h3>';
+                for (const [name, available] of Object.entries(deps)) {
+                    const status = available ? '✅ Available' : '❌ Missing';
+                    const color = available ? 'green' : 'red';
+                    html += `<div style="color: ${color}; margin: 5px 0;"><strong>${name}:</strong> ${status}</div>`;
+                }
+
+                document.getElementById('dependency-results').innerHTML = html;
+            }
+
+            async runCategory(category, containerId) {
+                const container = document.getElementById(containerId);
+                const categoryTests = this.tests.filter(t => t.category === category);
+                
+                if (categoryTests.length === 0) {
+                    container.innerHTML = '<div class="test-pending">No tests in this category</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                
+                for (const test of categoryTests) {
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = 'test-result';
+                    
+                    try {
+                        await test.testFn();
+                        resultDiv.className += ' test-pass';
+                        resultDiv.innerHTML = `✅ ${test.name}: PASSED`;
+                        this.passed++;
+                    } catch (error) {
+                        resultDiv.className += ' test-fail';
+                        resultDiv.innerHTML = `❌ ${test.name}: FAILED<br><pre>${error.message}</pre>`;
+                        this.failed++;
+                        console.error(`Test failed: ${test.name}`, error);
+                    }
+                    
+                    container.appendChild(resultDiv);
+                }
+            }
+
+            updateStats() {
+                const percentage = Math.round((this.passed / this.total) * 100);
+                document.getElementById('test-stats').innerHTML = 
+                    `${this.passed}/${this.total} tests passed (${percentage}%) - ${this.failed} failed`;
+            }
+        }
+
+        // Initialize test runner
+        const runner = new TestRunner();
+
+        // Core component tests
+        runner.addTest('THREE.js is loaded', () => {
+            if (typeof THREE === 'undefined') {
+                throw new Error('THREE.js is not loaded');
+            }
+        }, 'core');
+
+        runner.addTest('EventBus can be created', () => {
+            // We need to load EventBus first
+            if (typeof EventBus === 'undefined') {
+                throw new Error('EventBus is not loaded');
+            }
+            const eventBus = new EventBus();
+            if (!eventBus.subscribe || !eventBus.publish) {
+                throw new Error('EventBus missing required methods');
+            }
+        }, 'core');
+
+        runner.addTest('Basic THREE.js functionality', () => {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer();
+            
+            if (!scene || !camera || !renderer) {
+                throw new Error('Failed to create basic THREE.js objects');
+            }
+        }, 'core');
+
+        // Integration tests
+        runner.addTest('Mock ElementManager creation', () => {
+            const mockElementManager = {
+                getElement: (id) => ({
+                    id: id,
+                    kind: 'beam',
+                    start: [0, 0, 0],
+                    end: [1000, 0, 0]
+                }),
+                updateElementPosition: (id, updates) => {
+                    console.log('Element position updated:', id, updates);
+                },
+                setConnectionManager: (cm) => {},
+                getElementConnectionPoints: (element) => []
+            };
+            
+            if (!mockElementManager.getElement || !mockElementManager.updateElementPosition) {
+                throw new Error('Mock ElementManager missing required methods');
+            }
+        }, 'integration');
+
+        // Error handling tests
+        runner.addTest('ConnectionManager validates parameters', () => {
+            if (typeof EventBus === 'undefined') {
+                throw new Error('EventBus required for this test');
+            }
+            
+            const eventBus = new EventBus();
+            
+            try {
+                new ConnectionManager(null, eventBus);
+                throw new Error('Should have thrown error for null elementManager');
+            } catch (error) {
+                if (!error.message.includes('elementManager')) {
+                    throw new Error('Wrong error message for null elementManager');
+                }
+            }
+            
+            try {
+                new ConnectionManager({}, null);
+                throw new Error('Should have thrown error for null eventBus');
+            } catch (error) {
+                if (!error.message.includes('eventBus')) {
+                    throw new Error('Wrong error message for null eventBus');
+                }
+            }
+        }, 'error');
+
+        runner.addTest('ConnectionVisualizer validates parameters', () => {
+            try {
+                new ConnectionVisualizer(null, null);
+                throw new Error('Should have thrown error for null parameters');
+            } catch (error) {
+                if (!error.message.includes('scene')) {
+                    throw new Error('Wrong error message for null scene');
+                }
+            }
+        }, 'error');
+
+        // Visual tests
+        runner.addTest('Connection line creation', () => {
+            const scene = new THREE.Scene();
+            const material = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            const points = [
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(100, 0, 0)
+            ];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const line = new THREE.Line(geometry, material);
+            
+            if (!line || !line.geometry || !line.material) {
+                throw new Error('Failed to create connection line');
+            }
+        }, 'visual');
+
+        runner.addTest('Connection symbol creation', () => {
+            const geometry = new THREE.CircleGeometry(50, 16);
+            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const symbol = new THREE.Mesh(geometry, material);
+            
+            if (!symbol || !symbol.geometry || !symbol.material) {
+                throw new Error('Failed to create connection symbol');
+            }
+        }, 'visual');
+
+        // Load required scripts and run tests
+        async function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        async function runAllTests() {
+            try {
+                // Load EventBus
+                await loadScript('src/core/EventBus.js');
+                
+                // Add the test that requires EventBus to be loaded
+                runner.addTest('ConnectionManager can be created with valid parameters', async () => {
+                    const eventBus = new EventBus();
+                    const mockElementManager = {
+                        getElement: (id) => ({ id, kind: 'beam', start: [0,0,0], end: [1000,0,0] }),
+                        updateElementPosition: () => {},
+                        setConnectionManager: () => {},
+                        getElementConnectionPoints: () => []
+                    };
+                    
+                    await loadScript('src/managers/ConnectionManager.js');
+                    
+                    const connectionManager = new ConnectionManager(mockElementManager, eventBus);
+                    if (!connectionManager || !connectionManager.createConnection) {
+                        throw new Error('ConnectionManager not created properly');
+                    }
+                }, 'integration');
+
+                // Run all tests
+                await runner.runTests();
+                
+            } catch (error) {
+                console.error('Test execution failed:', error);
+                document.getElementById('stats').innerHTML = 
+                    `<strong>Test execution failed:</strong> ${error.message}`;
+            }
+        }
+
+        // Start tests when page loads
+        document.addEventListener('DOMContentLoaded', runAllTests);
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beam Structure Viewer</title>
+    <title>Debug Selection - Beam Structure Viewer</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
@@ -17,6 +17,10 @@
     <div id="container">
         <div id="canvas-container">
             <div id="viewcube-container"></div>
+        </div>
+        <div id="debug-info" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; max-width: 400px; max-height: 300px; overflow-y: auto;">
+            <h4>Debug Log</h4>
+            <div id="debug-log"></div>
         </div>
     </div>
 
@@ -48,57 +52,63 @@
     
     <!-- App source -->
     <script src="src/utils/GeometryUtils.js"></script>
-    <script src="src/managers/GridManager.js"></script>
-    <script src="src/managers/SnapManager.js"></script>
-    <script src="src/managers/ConnectionManager.js"></script>
-    <script src="src/rendering/CameraControls.js"></script>
-    <script src="src/rendering/ViewCubeVisuals.js"></script>
-    <script src="src/rendering/ViewCubeInteraction.js"></script>
-    <script src="src/rendering/ViewCubeAnimator.js"></script>
-    <script src="src/rendering/ViewCube.js"></script>
-    <script src="src/rendering/ConnectionVisualizer.js"></script>
-    <script src="src/managers/CopyManager.js"></script>
-    <script src="src/managers/BoxSelection.js"></script>
-    <script src="src/managers/ControlPointManager.js"></script>
-    <script src="src/managers/SelectionMouseHandler.js"></script>
-    <script src="src/managers/GridSelectionHandler.js"></script>
-    <script src="src/managers/SelectionManager.js"></script>
     <script src="src/managers/ProfileManager.js"></script>
-    <script src="src/managers/TemplateManager.js"></script>
-    <script src="src/ui/utils/FormBuilder.js"></script>
-    <script src="src/ui/panels/GenericElementEditor.js"></script>
-    <script src="src/ui/panels/ComponentEditor.js"></script>
-    <script src="src/ui/panels/SegmentManager.js"></script>
-    <script src="src/ui/panels/GridLineEditor.js"></script>
-    <script src="src/ui/panels/ElementListPanel.js"></script>
-    <script src="src/ui/panels/EditPanel.js"></script>
-    <script src="src/ui/panels/CreationPanel.js"></script>
-    <script src="src/ui/panels/ConnectionPanel.js"></script>
-    <script src="src/ui/panels/TemplatePanel.js"></script>
-    <script src="src/ui/panels/LeftSidebar.js"></script>
-    <script src="src/components/elements/MeshBuilder.js"></script>
+    <script src="src/managers/GridManager.js"></script>
+    <script src="src/managers/ConnectionManager.js"></script>
+    <script src="src/managers/ConnectionVisualizer.js"></script>
     <script src="src/components/elements/ElementFactory.js"></script>
     <script src="src/components/elements/ElementModifier.js"></script>
     <script src="src/components/elements/Manager.js"></script>
+    <script src="src/components/elements/MeshBuilder.js"></script>
+    <script src="src/managers/SelectionMouseHandler.js"></script>
+    <script src="src/managers/BoxSelection.js"></script>
+    <script src="src/managers/ControlPointManager.js"></script>
+    <script src="src/managers/GridSelectionHandler.js"></script>
+    <script src="src/managers/SelectionManager.js"></script>
+    <script src="src/ui/panels/ElementListPanel.js"></script>
+    <script src="src/ui/panels/EditPanel.js"></script>
+    <script src="src/ui/panels/CreationPanel.js"></script>
+    <script src="src/ui/panels/GridEditPanel.js"></script>
+    <script src="src/ui/panels/ConnectionPanel.js"></script>
+    <script src="src/ui/panels/LeftSidebar.js"></script>
     <script src="src/managers/UIManager.js"></script>
-    <script src="src/managers/CreationManager.js"></script>
     <script src="src/export/ImportExport.js"></script>
+    <script src="src/managers/SnapManager.js"></script>
+    <script src="src/managers/CreationManager.js"></script>
     <script src="src/managers/OperationManager.js"></script>
-    
-    <!-- IFC Export Components (load in dependency order) -->
-    <script src="src/export/IfcPropertyManager.js"></script>
-    <script src="src/export/IfcGeometryFactory.js"></script>
-    <script src="src/export/IfcProjectBuilder.js"></script>
-    <script src="src/export/IfcElementGenerator.js"></script>
-    <script src="src/export/IfcGenerator.js"></script>
-
-    <!-- Operation Definitions -->
     <script src="src/components/operations/HoleOperation.js"></script>
-    <script src="src/components/operations/SlotOperation.js"></script>
     <script src="src/components/operations/RectCutOperation.js"></script>
-
-    <!-- Main Application Logic -->
+    <script src="src/components/operations/SlotOperation.js"></script>
+    <script src="src/managers/CopyManager.js"></script>
+    <script src="src/rendering/CameraControls.js"></script>
+    <script src="src/rendering/ViewCube.js"></script>
     <script src="src/core/BeamViewer.js"></script>
-    <script src="app.js"></script>
+
+    <script>
+        // Override console.log to also show in debug panel
+        const originalLog = console.log;
+        const debugLog = document.getElementById('debug-log');
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.join(' ');
+            const div = document.createElement('div');
+            div.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            debugLog.appendChild(div);
+            debugLog.scrollTop = debugLog.scrollHeight;
+            
+            // Keep only last 50 lines
+            while (debugLog.children.length > 50) {
+                debugLog.removeChild(debugLog.firstChild);
+            }
+        };
+
+        // Initialize the application
+        window.viewer = new BeamViewer();
+        window.viewer.init();
+        
+        console.log('Debug: Application initialized');
+        console.log('Debug: Click on beams to test selection');
+    </script>
 </body>
-</html> 
+</html>

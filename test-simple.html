@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple THREE.js Test</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>THREE.js Loading Test</h1>
+    <div id="status">Loading...</div>
+    
+    <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusDiv = document.getElementById('status');
+            
+            if (typeof THREE !== 'undefined') {
+                statusDiv.innerHTML = '<div class="status success">✅ THREE.js loaded successfully!<br>Version: ' + THREE.REVISION + '</div>';
+                
+                // Test basic functionality
+                try {
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+                    const renderer = new THREE.WebGLRenderer();
+                    
+                    statusDiv.innerHTML += '<div class="status success">✅ Basic THREE.js objects created successfully!</div>';
+                    
+                    // Test if we can create connection visualization objects
+                    const material = new THREE.LineBasicMaterial({ color: 0x0000ff });
+                    const points = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(100, 0, 0)];
+                    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                    const line = new THREE.Line(geometry, material);
+                    
+                    statusDiv.innerHTML += '<div class="status success">✅ Connection visualization objects ready!</div>';
+                    
+                } catch (error) {
+                    statusDiv.innerHTML += '<div class="status error">❌ Error creating THREE.js objects: ' + error.message + '</div>';
+                }
+            } else {
+                statusDiv.innerHTML = '<div class="status error">❌ THREE.js not loaded!</div>';
+            }
+        });
+    </script>
+</body>
+</html>

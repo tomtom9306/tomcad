@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Overlay Test</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #debug { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; z-index: 1000; }
+        #container { width: 100vw; height: 100vh; position: relative; }
+        #canvas-container { 
+            width: 100%; 
+            height: 100%; 
+            background: #333; 
+            border: 3px solid red; /* Visible border */
+        }
+        #overlay-test {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            width: 200px;
+            height: 100px;
+            background: rgba(255, 255, 0, 0.5);
+            border: 2px solid yellow;
+            z-index: 10;
+            pointer-events: none; /* This should NOT block events */
+        }
+    </style>
+</head>
+<body>
+    <div id="debug">
+        <h3>Overlay Test</h3>
+        <div id="log">Kliknij na różne obszary...</div>
+    </div>
+    
+    <div id="container">
+        <div id="canvas-container">
+            <div id="overlay-test">Overlay (pointer-events: none)</div>
+        </div>
+    </div>
+
+    <script>
+        function addLog(message) {
+            const log = document.getElementById('log');
+            log.innerHTML = message + '<br>' + log.innerHTML;
+            const lines = log.innerHTML.split('<br>');
+            if (lines.length > 10) {
+                log.innerHTML = lines.slice(0, 10).join('<br>');
+            }
+        }
+        
+        // Test events on different elements
+        document.getElementById('container').addEventListener('mousedown', (e) => {
+            addLog(`Container mousedown: target=${e.target.id}`);
+        });
+        
+        document.getElementById('canvas-container').addEventListener('mousedown', (e) => {
+            addLog(`Canvas-container mousedown: target=${e.target.id}`);
+        });
+        
+        document.getElementById('overlay-test').addEventListener('mousedown', (e) => {
+            addLog(`Overlay mousedown: target=${e.target.id}`);
+        });
+        
+        // Test document level
+        document.addEventListener('mousedown', (e) => {
+            addLog(`Document mousedown: target=${e.target.id || e.target.tagName}`);
+        });
+        
+        addLog('Event listeners ready. Yellow overlay should NOT block events.');
+    </script>
+</body>
+</html>

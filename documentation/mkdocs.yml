@@ -1,0 +1,220 @@
+site_name: TomCAD - User Documentation
+site_description: Complete documentation for TomCAD structural steel design system
+site_author: TomCAD Team
+site_url: https://tomcad.docs
+
+# Repository
+repo_name: TomCAD Documentation
+repo_url: https://github.com/tomcad/documentation
+
+# Copyright
+copyright: Copyright &copy; 2025 TomCAD Team
+
+# Configuration
+theme:
+  name: material
+  language: en
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+  features:
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.share
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - content.footnote.tooltips
+    - content.action.edit
+    - content.action.view
+    - announce.dismiss
+
+  icon:
+    logo: material/ruler-square-compass
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  - awesome-pages
+  - mermaid2:
+      arguments:
+        theme: |
+          ^(JSON.parse(__md_get("__palette").index == 1)) ?
+          'dark' : 'light'
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: tomcad
+      repo: documentation
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Page tree
+nav:
+  - 1. Overview:
+    - 1.1 What is TomCAD: 01-overview/1.1-what-is-tomcad.md
+    - 1.2 Mission & Vision: 01-overview/1.2-mission-vision.md
+    - 1.3 Business Strategy: 01-overview/1.3-business-strategy.md
+    - 1.4 Design Philosophy: 01-overview/1.4-design-philosophy.md
+    - 1.5 Current Capabilities: 01-overview/1.5-current-capabilities.md
+    - 1.6 Future Roadmap: 01-overview/1.6-future-roadmap.md
+    - 1.7 Why Choose TomCAD: 01-overview/1.7-why-tomcad.md
+  - 2. Architecture:
+    - 2.1 System Overview: 02-architecture/2.1-system-overview.md
+    - 2.2 Core Principles: 02-architecture/2.2-core-principles.md
+    - 2.3 File Structure: 02-architecture/2.3-file-structure.md
+    - 2.4 Data Flow: 02-architecture/2.4-data-flow.md
+    - 2.5 Module System: 02-architecture/2.5-module-system.md
+    - 2.6 Event System: 02-architecture/2.6-event-system.md
+    - 2.7 Component Registry: 02-architecture/2.7-component-registry.md
+    - 2.8 Creator Pattern: 02-architecture/2.8-creator-pattern.md
+    - 2.9 Three.js Integration: 02-architecture/2.9-threejs-integration.md
+    - 2.10 Performance Strategy: 02-architecture/2.10-performance-strategy.md
+  - 3. User Interface:
+    - 3.1 Interface Overview: 03-user-interface/3.1-interface-overview.md
+    - 3.2 Keyboard Shortcuts: 03-user-interface/3.2-keyboard-shortcuts.md
+  - 4. Development:
+    - 4.1 Adding New Features: 04-development/4.1-adding-features.md
+    - 4.2 Code Conventions: 04-development/4.2-code-conventions.md
+    - 4.3 Testing Guidelines: 04-development/4.3-testing.md
+    - 4.4 Debugging Tools: 04-development/4.4-debugging.md
+  - 5. Camera Controls:
+    - 5.1 Navigation: 05-camera-controls/5.1-navigation.md
+  - 6. Construction Geometry:
+    - 6.1 Grids: 06-construction-geometry/6.1-grids.md
+  - 7. Steel Profiles:
+    - 7.1 Profile Library: 07-steel-profiles/7.1-profile-library.md
+  - 8. Structural Elements:
+    - 8.1 Element Types: 08-structural-elements/8.1-element-types.md
+  - 9. Modelling:
+    - 9.1 Beams: 09-modeling/9.1-beams.md
+    - 9.2 Columns: 09-modeling/9.2-columns.md
+    - 9.3 Plates: 09-modeling/9.3-plates.md
+    - 9.4 Connections: 09-modeling/9.4-connections.md
+    - 9.5 Stairs: 09-modeling/9.5-stairs.md
+    - 9.6 Goalpost Structures: 09-modeling/9.6-goalpost-structures.md
+  - 10. Operations:
+    - 10.1 Holes: 10-operations/10.1-holes.md
+    - 10.2 Slots: 10-operations/10.2-slots.md
+    - 10.3 Cuts: 10-operations/10.3-cuts.md
+    - 10.4 Bolts: 10-operations/10.4-bolts.md
+    - 10.5 Welds: 10-operations/10.5-welds.md
+  - 11. Advanced:
+    - 11.1 Parametric Modelling: 11-advanced/11.1-parametric-modelling.md
+    - 11.2 Assemblies: 11-advanced/11.2-assemblies.md
+    - 11.3 Materials: 11-advanced/11.3-materials.md
+    - 11.4 Loads: 11-advanced/11.4-loads.md
+    - 11.5 Analysis: 11-advanced/11.5-analysis.md
+  - 12. Drawings:
+    - 12.1 Creating Drawings: 12-drawings/12.1-creating-drawings.md
+    - 12.2 Annotations: 12-drawings/12.2-annotations.md
+    - 12.3 Dimensioning: 12-drawings/12.3-dimensioning.md
+    - 12.4 Details: 12-drawings/12.4-details.md
+    - 12.5 Sheet Layouts: 12-drawings/12.5-sheet-layouts.md
+  - 13. Import/Export:
+    - 13.1 Import Files: 13-import-export/13.1-import-files.md
+    - 13.2 Export Files: 13-import-export/13.2-export-files.md
+    - 13.3 IFC Format: 13-import-export/13.3-ifc-format.md
+    - 13.4 DWG/DXF Format: 13-import-export/13.4-dwg-dxf-format.md
+    - 13.5 PDF Export: 13-import-export/13.5-pdf-export.md
+  - 14. Reports:
+    - 14.1 Material Lists: 14-reports/14.1-material-lists.md
+    - 14.2 Cut Lists: 14-reports/14.2-cut-lists.md
+    - 14.3 Bolt Lists: 14-reports/14.3-bolt-lists.md
+    - 14.4 Weight Reports: 14-reports/14.4-weight-reports.md
+    - 14.5 Custom Reports: 14-reports/14.5-custom-reports.md
+  - 15. Configuration:
+    - 15.1 Settings: 15-config/15.1-settings.md
+    - 15.2 Customisation: 15-config/15.2-customisation.md
+    - 15.3 Templates: 15-config/15.3-templates.md
+    - 15.4 Libraries: 15-config/15.4-libraries.md
+  - 16. Help:
+    - 16.1 Troubleshooting: 16-help/16.1-troubleshooting.md
+    - 16.2 FAQ: 16-help/16.2-faq.md
+    - 16.3 Technical Support: 16-help/16.3-technical-support.md
+    - 16.4 Updates: 16-help/16.4-updates.md
+
+# Additional configuration
+extra:
+  version:
+    provider: mike
+    default: stable
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/tomcad
+    - icon: fontawesome/solid/envelope
+      link: mailto:support@tomcad.com
+
+# Custom CSS
+extra_css:
+  - stylesheets/extra.css
+
+# Custom JavaScript
+extra_javascript:
+  - javascripts/extra.js
+  - https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js

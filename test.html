@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection System Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #status {
+            background: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        #error {
+            background: #ffebeb;
+            color: #d00;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Connection System Test</h1>
+    <div id="status">Loading...</div>
+    <div id="error"></div>
+    
+    <script>
+        // Test EventBus
+        try {
+            console.log('Testing EventBus...');
+            const eventBus = new EventBus();
+            
+            // Test subscribe/publish
+            eventBus.subscribe('test', (data) => {
+                console.log('Event received:', data);
+            });
+            
+            eventBus.publish('test', { message: 'Hello' });
+            
+            document.getElementById('status').innerHTML = 'EventBus test passed!';
+        } catch (error) {
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('error').innerHTML = 'EventBus test failed: ' + error.message;
+            console.error('EventBus test failed:', error);
+        }
+    </script>
+    
+    <script src="src/core/EventBus.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
+    
+    <script>
+        // Test ConnectionManager
+        try {
+            console.log('Testing ConnectionManager...');
+            
+            // Mock ElementManager
+            const mockElementManager = {
+                getElement: (id) => ({
+                    id: id,
+                    kind: 'beam',
+                    start: [0, 0, 0],
+                    end: [1000, 0, 0]
+                }),
+                updateElementPosition: (id, updates) => {
+                    console.log('Element position updated:', id, updates);
+                }
+            };
+            
+            const eventBus = new EventBus();
+            const connectionManager = new ConnectionManager(mockElementManager, eventBus);
+            
+            document.getElementById('status').innerHTML = 'ConnectionManager test passed!';
+        } catch (error) {
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('error').innerHTML = 'ConnectionManager test failed: ' + error.message;
+            console.error('ConnectionManager test failed:', error);
+        }
+    </script>
+    
+    <script src="src/managers/ConnectionManager.js"></script>
+</body>
+</html>

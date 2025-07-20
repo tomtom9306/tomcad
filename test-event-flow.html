@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Event Flow</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #debug { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; z-index: 1000; }
+        #container { width: 100vw; height: 100vh; background: #333; }
+    </style>
+</head>
+<body>
+    <div id="debug">
+        <h3>Event Flow Test</h3>
+        <div id="log">Testing EventBus pattern...</div>
+    </div>
+    <div id="container"></div>
+
+    <script>
+        // Minimal EventBus implementation
+        class EventBus {
+            constructor() {
+                this.events = {};
+            }
+            subscribe(eventName, callback) {
+                if (!this.events[eventName]) {
+                    this.events[eventName] = [];
+                }
+                this.events[eventName].push(callback);
+            }
+            publish(eventName, data) {
+                console.log(`📤 EventBus publishing: ${eventName}`, data);
+                if (this.events[eventName]) {
+                    this.events[eventName].forEach(callback => {
+                        callback(data);
+                    });
+                }
+            }
+        }
+
+        // Test setup
+        const eventBus = new EventBus();
+        const container = document.getElementById('container');
+        
+        function addLog(message) {
+            const log = document.getElementById('log');
+            log.innerHTML = message + '<br>' + log.innerHTML;
+            const lines = log.innerHTML.split('<br>');
+            if (lines.length > 15) {
+                log.innerHTML = lines.slice(0, 15).join('<br>');
+            }
+        }
+
+        // EventCoordinator equivalent
+        class TestEventCoordinator {
+            constructor(eventBus, element) {
+                this.eventBus = eventBus;
+                this.element = element;
+            }
+            
+            setupListeners() {
+                console.log('🔥 TestEventCoordinator: Setting up listeners on:', this.element);
+                this.element.addEventListener('mousedown', (e) => this.onMouseDown(e));
+                addLog('✅ Event listeners added to container');
+            }
+            
+            onMouseDown(event) {
+                console.log('🔥 TestEventCoordinator: onMouseDown, button:', event.button);
+                addLog(`📥 EventCoordinator received mousedown: button=${event.button}`);
+                
+                if (event.button === 0) {
+                    this.eventBus.publish('selection:mouseDown', { event });
+                }
+            }
+        }
+
+        // SelectionManager equivalent  
+        class TestSelectionManager {
+            constructor(eventBus) {
+                this.eventBus = eventBus;
+                this.setupSubscriptions();
+            }
+            
+            setupSubscriptions() {
+                if (this.eventBus) {
+                    console.log('🔥 TestSelectionManager: Subscribing to events');
+                    addLog('✅ SelectionManager subscribing to events');
+                    
+                    this.eventBus.subscribe('selection:mouseDown', (data) => {
+                        console.log('🔥 TestSelectionManager: Received selection:mouseDown');
+                        addLog('📨 SelectionManager received selection:mouseDown');
+                        this.handleMouseDown(data.event);
+                    });
+                } else {
+                    console.error('🔥 TestSelectionManager: No eventBus!');
+                    addLog('❌ SelectionManager: No eventBus!');
+                }
+            }
+            
+            handleMouseDown(event) {
+                console.log('🔥 TestSelectionManager: handleMouseDown');
+                addLog(`🎯 SelectionManager handling mousedown: x=${event.clientX}, y=${event.clientY}`);
+            }
+        }
+
+        // Initialize test
+        const coordinator = new TestEventCoordinator(eventBus, container);
+        const selectionManager = new TestSelectionManager(eventBus);
+        
+        coordinator.setupListeners();
+        
+        addLog('🚀 Test setup complete - click on gray area');
+        console.log('🔥 Test setup complete');
+        
+        // Test eventBus directly
+        setTimeout(() => {
+            addLog('🧪 Testing EventBus directly...');
+            eventBus.publish('test:event', { test: 'data' });
+        }, 2000);
+        
+        // Subscribe to test event
+        eventBus.subscribe('test:event', (data) => {
+            addLog('✅ EventBus direct test successful');
+            console.log('🔥 Direct EventBus test worked:', data);
+        });
+    </script>
+</body>
+</html>

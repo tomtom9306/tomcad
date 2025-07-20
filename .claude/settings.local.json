@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv:*)",
+      "Bash(ls:*)",
+      "Bash(rmdir:*)",
+      "Bash(powershell:*)",
+      "Bash(node:*)",
+      "Bash(rm:*)",
+      "Bash(python:*)",
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(mkdocs new:*)",
+      "Bash(mkdir:*)",
+      "Bash(mkdocs:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(start test-simple.html)",
+      "Bash(start index.html)",
+      "Bash(start \"\" \"C:\\Users\\t93to\\Desktop\\tomcad cc\\minimal-test.html\")",
+      "Bash(explorer minimal-test.html)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}

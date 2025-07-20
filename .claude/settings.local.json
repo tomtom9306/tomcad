@@ -19,7 +19,10 @@
       "Bash(start index.html)",
       "Bash(start \"\" \"C:\\Users\\t93to\\Desktop\\tomcad cc\\minimal-test.html\")",
       "Bash(explorer minimal-test.html)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }

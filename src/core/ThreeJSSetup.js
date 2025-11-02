@@ -14,7 +14,8 @@ window.ThreeJSSetup = class ThreeJSSetup {
         
         // Scene
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0x1a1a1a);
+        // Use a clean white background for a modern look
+        this.scene.background = new THREE.Color(0xffffff);
         
         // Camera
         const aspect = container.clientWidth / container.clientHeight;

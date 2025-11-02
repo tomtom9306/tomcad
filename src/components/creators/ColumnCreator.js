@@ -14,8 +14,10 @@ class ColumnCreator extends BaseCreator {
     }
 
     execute() {
+        console.log('🔧 ColumnCreator.execute() called with points:', this.points.length);
         const point = this.points[0];
         const params = this.creationManager.getParams();
+        console.log('🔧 ColumnCreator creating column at:', point, 'with params:', params);
         this.creationManager.createElement('column', point.clone(), params);
     }
 

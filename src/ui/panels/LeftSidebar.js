@@ -92,7 +92,8 @@ class LeftSidebar {
             
             // Ensure profiles are populated
             if (window.viewer?.profiles) {
-                creationPanel.populateProfileDropdowns(window.viewer.profiles.getProfileNames());
+                const profileNames = window.viewer.profiles.getProfileNames();
+                creationPanel.populateProfileDropdowns(profileNames);
             }
             
             creationPanel.show(creatorClass);
@@ -123,14 +124,23 @@ class LeftSidebar {
             // Update sidebar header and footer
             document.getElementById('sidebar-title').innerHTML = `${creatorClass.meta.name}`;
             document.getElementById('sidebar-footer').style.display = 'block';
-            const actionBtn = document.getElementById('sidebar-action-btn');
-            actionBtn.textContent = 'Cancel';
-            actionBtn.onclick = () => this.cancel();
             
-            // Activate creation mode in CreationManager
-            if (window.viewer?.creationManager) {
-                window.viewer.creationManager.startCreation(creatorClass);
-            }
+            // Setup footer with Start and Cancel buttons
+            const footer = document.getElementById('sidebar-footer');
+            footer.innerHTML = `
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="leftSidebar.cancel()">Cancel</button>
+                    <button class="btn btn-primary" id="sidebar-start-btn">Start Creation</button>
+                </div>
+            `;
+            
+            // Setup start button to begin creation with parameters
+            document.getElementById('sidebar-start-btn').onclick = () => {
+                if (window.viewer?.creationManager) {
+                    const params = window.viewer.uiManager.creationPanel.getParams();
+                    window.viewer.creationManager.startCreationWithParameters(creatorClass.meta.type, params);
+                }
+            };
             
             this.show();
         }
@@ -196,10 +206,11 @@ class LeftSidebar {
      */
     showOperation(operationType) {
         this.currentOperation = operationType;
-
         // Get creator class for this operation
         const creatorType = operationType.replace('add-', ''); // 'add-beam' -> 'beam'
+        console.log('🔧 LeftSidebar: Looking for creator type:', creatorType);
         const CreatorClass = window.viewer?.creationManager?.getCreatorClass(creatorType);
+        console.log('🔧 LeftSidebar: Found CreatorClass:', CreatorClass);
         
         if (CreatorClass) {
             // Show creation panel from the creator

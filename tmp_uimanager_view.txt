@@ -1,4 +1,4 @@
-// UI management functionality
+﻿// UI management functionality
 class UIManager {
     constructor(viewer, eventBus) {
         this.viewer = viewer;
@@ -131,13 +131,13 @@ class UIManager {
         topToolbar.id = 'top-toolbar';
 
         // Dynamically create buttons from the creator registry
-        console.log('🔧 UIManager: Creating toolbar, componentRegistry exists:', !!window.componentRegistry);
+        console.log('ðŸ”§ UIManager: Creating toolbar, componentRegistry exists:', !!window.componentRegistry);
         if (!window.componentRegistry) {
-            console.error('❌ UIManager: ComponentRegistry not available!');
+            console.error('âŒ UIManager: ComponentRegistry not available!');
             return topToolbar;
         }
         const creators = window.componentRegistry.getAllCreators();
-        console.log('🔧 UIManager: Found creators:', creators.length);
+        console.log('ðŸ”§ UIManager: Found creators:', creators.length);
         creators.forEach(CreatorClass => {
             const meta = CreatorClass.meta;
             if (!meta) return;
@@ -175,7 +175,7 @@ class UIManager {
 
         const connectionsBtn = document.createElement('button');
         connectionsBtn.id = 'connections-btn';
-        connectionsBtn.textContent = '🔗 Connections';
+        connectionsBtn.textContent = 'ðŸ”— Connections';
         connectionsBtn.className = 'btn';
         connectionsBtn.addEventListener('click', () => this.connectionPanel.toggle());
         topToolbar.appendChild(connectionsBtn);
@@ -183,7 +183,7 @@ class UIManager {
         // Add Hole operation button
         const holeBtn = document.createElement('button');
         holeBtn.id = 'add-hole-btn';
-        holeBtn.textContent = '⚫ Add Hole';
+        holeBtn.textContent = 'âš« Add Hole';
         holeBtn.className = 'btn';
         holeBtn.addEventListener('click', () => {
             if (window.leftSidebar) {
@@ -262,9 +262,9 @@ class UIManager {
             <button id="snap-edges" class="snap-button" title="Snap to edges">D</button>
             <button id="snap-corners" class="snap-button" title="Snap to corners">C</button>
             <button id="snap-axis" class="snap-button" title="Snap to axis">A</button>
-            <button id="snap-connections" class="snap-button" title="Snap to connection points">🔗</button>
+            <button id="snap-connections" class="snap-button" title="Snap to connection points">ðŸ”—</button>
             <div class="snap-separator"></div>
-            <button id="connection-mode" class="snap-button connection-mode" title="Enable connection mode">🔗</button>`;
+            <button id="connection-mode" class="snap-button connection-mode" title="Enable connection mode">ðŸ”—</button>`;
         return snapToolbar;
     }
 
@@ -332,7 +332,7 @@ class UIManager {
                         }
                         window.leftSidebar.showEditPanel(element, uiConfig);
                     } else {
-                        console.warn('❌ LeftSidebar not available - element editing disabled');
+                        console.warn('âŒ LeftSidebar not available - element editing disabled');
                     }
                 }
                 this.updateStatusBar(null);

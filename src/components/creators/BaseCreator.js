@@ -30,6 +30,7 @@ class BaseCreator {
     handleCanvasClick(point) {
         this.points.push(point.clone());
         const requiredSteps = this.constructor.meta.steps;
+        console.log(`🔧 BaseCreator.handleCanvasClick: points=${this.points.length}, requiredSteps=${requiredSteps}, type=${this.constructor.meta.type}`);
 
         if (this.points.length === 1 && requiredSteps > 1) {
             this.state = 'awaiting_point_2';
@@ -39,12 +40,21 @@ class BaseCreator {
         }
 
         if (this.points.length >= requiredSteps) {
+            console.log(`🔧 BaseCreator: Executing creation for ${this.constructor.meta.type}`);
             this.execute(); // Wywołaj logikę tworzenia
             if (this.shouldRestart()) {
-                this.points = [this.points[this.points.length - 1].clone()]; // Zacznij od nowa z ostatniego punktu
-                 this.creationManager.endAxisSnap();
-                 this.creationManager.startAxisSnap(this.points[0]);
-                 this.updatePreview(point);
+                if (requiredSteps === 1) {
+                    // For single-point creators (like columns), start fresh
+                    this.points = [];
+                    this.state = 'awaiting_point_1';
+                    this.creationManager.setStatus(`Pick position for the new ${this.constructor.meta.name}`);
+                } else {
+                    // For multi-point creators (like beams), start from last point
+                    this.points = [this.points[this.points.length - 1].clone()];
+                    this.creationManager.endAxisSnap();
+                    this.creationManager.startAxisSnap(this.points[0]);
+                    this.updatePreview(point);
+                }
             } else {
                 this.creationManager.cancelCreation();
             }

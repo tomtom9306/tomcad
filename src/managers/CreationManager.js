@@ -20,11 +20,17 @@ class CreationManager {
     }
 
     getCreatorClass(type) {
+        console.log('🔧 CreationManager.getCreatorClass() called with type:', type);
+        console.log('🔧 window.componentRegistry exists:', !!window.componentRegistry);
+        
         // Sprawdź nowy ComponentRegistry
         if (window.componentRegistry && window.componentRegistry.hasCreator(type)) {
-            return window.componentRegistry.getCreator(type);
+            const creator = window.componentRegistry.getCreator(type);
+            console.log('🔧 CreationManager returning creator:', creator);
+            return creator;
         }
         
+        console.log('🔧 CreationManager: No creator found for type:', type);
         return null;
     }
 
@@ -123,6 +129,7 @@ class CreationManager {
     }
 
     createElement(type, ...args) {
+        console.log(`🔧 CreationManager.createElement: type=${type}, args=`, args);
         // Map primitive types to their creation methods in ElementManager/ElementFactory
         const factoryMethods = {
             'beam': 'addNewBeam',
@@ -135,6 +142,7 @@ class CreationManager {
         const methodName = factoryMethods[type];
         
         if (methodName && typeof this.viewer.elementManager[methodName] === 'function') {
+            console.log(`🔧 CreationManager: Calling ${methodName} with args:`, args);
             return this.viewer.elementManager[methodName](...args);
         } else {
             console.error(`Unknown or unsupported primitive element type to create: ${type}`);

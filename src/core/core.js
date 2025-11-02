@@ -10,17 +10,36 @@
 class ComponentRegistry {
     constructor() {
         this.creators = new Map();
-        this.registerDefaultCreators();
+        this.isInitialized = false;
+    }
+
+    ensureInitialized() {
+        if (!this.isInitialized) {
+            console.log('🔧 ComponentRegistry: Initializing lazy loading...');
+            this.registerDefaultCreators();
+            this.isInitialized = true;
+            console.log('🔧 ComponentRegistry: Registered creators:', this.creators.size);
+        }
     }
 
     registerDefaultCreators() {
         // Rejestrujemy istniejące kreatory jako komponenty
-        this.register('beam', BeamCreator);
-        this.register('column', ColumnCreator);
-        this.register('goalpost', GoalPostCreator);
-        this.register('boxframe', BoxFrameCreator);
-        // Nowe komponenty kompozytowe
-        this.register('stairs', StairsCreator); // Proof of concept zaimplementowany!
+        console.log('🔧 ComponentRegistry: Registering BeamCreator:', typeof BeamCreator);
+        if (typeof BeamCreator !== 'undefined') {
+            this.register('beam', BeamCreator);
+        }
+        if (typeof ColumnCreator !== 'undefined') {
+            this.register('column', ColumnCreator);
+        }
+        if (typeof GoalPostCreator !== 'undefined') {
+            this.register('goalpost', GoalPostCreator);
+        }
+        if (typeof BoxFrameCreator !== 'undefined') {
+            this.register('boxframe', BoxFrameCreator);
+        }
+        if (typeof StairsCreator !== 'undefined') {
+            this.register('stairs', StairsCreator);
+        }
     }
 
     register(componentType, CreatorClass) {
@@ -28,18 +47,24 @@ class ComponentRegistry {
     }
 
     getCreator(componentType) {
-        return this.creators.get(componentType);
+        this.ensureInitialized();
+        const creator = this.creators.get(componentType);
+        console.log(`🔧 ComponentRegistry: getCreator(${componentType}) = `, creator);
+        return creator;
     }
 
     hasCreator(componentType) {
+        this.ensureInitialized();
         return this.creators.has(componentType) && this.creators.get(componentType) !== null;
     }
 
     getAllCreators() {
+        this.ensureInitialized();
         return Array.from(this.creators.values());
     }
 
     getAllTypes() {
+        this.ensureInitialized();
         return Array.from(this.creators.keys());
     }
 }

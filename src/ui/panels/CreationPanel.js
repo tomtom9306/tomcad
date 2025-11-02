@@ -36,6 +36,7 @@ class CreationPanel {
     }
 
     show(creatorClass) {
+        console.log('🔧 CreationPanel.show() called with:', creatorClass);
         this.currentCreatorClass = creatorClass;
         this.panel.style.display = 'block';
 
@@ -43,7 +44,11 @@ class CreationPanel {
         container.innerHTML = '';
 
         const uiConfig = creatorClass.getUI();
-        if (!uiConfig) return;
+        console.log('🔧 CreationPanel UI config:', uiConfig);
+        if (!uiConfig) {
+            console.warn('⚠️ CreationPanel: No UI config found');
+            return;
+        }
 
         uiConfig.forEach(field => {
             const fieldId = `create-${this.currentCreatorClass.meta.type}-${field.id}`;

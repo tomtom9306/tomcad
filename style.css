@@ -1025,7 +1025,6 @@ body {
 #canvas-container canvas {
     display: block;
     pointer-events: auto; /* Ensure canvas receives events */
-    border: 3px solid red !important; /* DEBUG: Make canvas visible */
 }
 
 .loading {

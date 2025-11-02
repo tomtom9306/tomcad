@@ -558,17 +558,10 @@ body {
     background: #777;
 }
 
-/* Canvas adjustment for persistent sidebar */
+/* Canvas remains full-width with sidebar overlaying it */
 #canvas-container {
-    margin-left: 320px;
-    width: calc(100vw - 320px);
-    transition: margin-left 0.3s ease, width 0.3s ease;
-}
-
-/* Responsive panel positioning based on sidebar state */
-.left-sidebar.collapsed ~ #canvas-container {
-    margin-left: 60px;
-    width: calc(100vw - 60px);
+    margin-left: 0;
+    width: 100%;
 }
 
 /* Adjust other panels when sidebar is collapsed */
@@ -605,8 +598,8 @@ body {
     }
     
     .left-sidebar.visible ~ #canvas-container {
-        margin-left: 280px;
-        width: calc(100vw - 280px);
+        margin-left: 0;
+        width: 100%;
     }
 }
 

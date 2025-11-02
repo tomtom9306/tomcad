@@ -423,21 +423,11 @@ class LeftSidebar {
         const canvasContainer = document.getElementById('canvas-container');
         if (!canvasContainer) return;
 
-        let leftMargin = '0';
-        let canvasWidth = '100vw';
-
-        if (sidebarVisible) {
-            if (isCollapsed) {
-                leftMargin = '60px';  // Collapsed width
-                canvasWidth = 'calc(100vw - 60px)';
-            } else {
-                leftMargin = '320px';  // Full width
-                canvasWidth = 'calc(100vw - 320px)';
-            }
-        }
-
-        canvasContainer.style.marginLeft = leftMargin;
-        canvasContainer.style.width = canvasWidth;
+        // Sidebar now overlays the canvas rather than resizing it.
+        // Clear any inline styles that might have been set previously so
+        // CSS can keep the canvas full-width.
+        canvasContainer.style.marginLeft = '';
+        canvasContainer.style.width = '';
 
         // Trigger canvas resize
         if (window.viewer?.renderer) {
